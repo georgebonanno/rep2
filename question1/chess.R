@@ -4,9 +4,10 @@ pastePrint <- function(...,sepr=" ") {
   print(paste(list(...),sep = sepr))
 }
 
-#based on https://www.r-bloggers.com/read-line-by-line-of-a-file-in-r/
+
 readPgnFile <- function(path) {
-  
+  #based on https://www.r-bloggers.com/read-line-by-line-of-a-file-in-r/
+  #reads all the games from a given path
   con <- file(description=path,open="r");
   
   i <- 0;
