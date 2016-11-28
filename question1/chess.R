@@ -29,12 +29,12 @@ readPgnGame <- function(con) {
   tagPairs <- list()
   allMoves <- "";
   readMoveLine <- TRUE
-  print(paste("start of reading....",parseTagPairs,readMoveLine))
+  #print(paste("start of reading....",parseTagPairs,readMoveLine))
   while(readMoveLine & (length(line <- readLines(con,n=1,encoding="UTF-8"))) > 0) {
-    print(paste("line read: ",line,parseTagPairs))
+    #print(paste("line read: ",line,parseTagPairs))
     i <- i+1
     if (parseTagPairs) {
-      print("in parse tag pairs");
+      #print("in parse tag pairs");
       if (startsWith(line,"[")) {
         tagPattern <- "\\[([^ ]+) \"([^\"]+)\""
         m <- str_match(line,tagPattern)
@@ -44,13 +44,13 @@ readPgnGame <- function(con) {
           #store tag in tagPairs
           tagPairs[[m[,2]]] <- m[,3]
         }
-        pastePrint(line)
+        #pastePrint(line)
       } else {
-        pastePrint("not tag pair",line)
+        #pastePrint("not tag pair",line)
         parseTagPairs=FALSE
       }
     } else {
-      print(paste("not tags",line,str_length(line)))
+      #print(paste("not tags",line,str_length(line)))
       if (str_length(line) == 0) {
         readMoveLine <- FALSE
       }
@@ -59,7 +59,7 @@ readPgnGame <- function(con) {
       }
     }
   }
-  print(paste("lines read: ",i))
+  #print(paste("lines read: ",i))
   if (length(tagPairs) > 0 & str_length(allMoves) > 0) {
     pgnDoc[["TagPairs"]] <- tagPairs
     pgnDoc[["Moves"]] <- parseMoves(allMoves)
@@ -67,7 +67,7 @@ readPgnGame <- function(con) {
   return(pgnDoc)
 }
 
-readPgnFile <- function(path) {
+readPgnFile <- function(path,gameProcessor) {
   #based on https://www.r-bloggers.com/read-line-by-line-of-a-file-in-r/
   #reads all the games from a given path
   pgnDocs <- tryCatch({
@@ -75,7 +75,7 @@ readPgnFile <- function(path) {
     pgnDocs <- list()
     i <- 1
     while(length(pgnDoc <- readPgnGame(con)) > 0) {
-      pgnDocs[[i]] <- pgnDoc
+      gameProcessor(pgnDoc)
       i <- i+1
     }
     return(pgnDocs)
@@ -86,4 +86,13 @@ readPgnFile <- function(path) {
   return (pgnDoc)
 }
 
-game <- readPgnFile('test.txt')
+gameCounter <<- 0
+gProcessor <- function(gameDetails) {
+  gameCounter <<- gameCounter + 1
+  print(paste(gameDetails$TagPairs$Round,gameCounter))
+  if (gameCounter %% 100 == 0) {
+    gc()
+  }
+}
+
+readPgnFile('temp.txt',gProcessor)
