@@ -1,4 +1,5 @@
 library(stringr)
+library("RSQLite")
 
 pastePrint <- function(...,sepr=" ") {
   print(paste(list(...),sep = sepr))
@@ -88,11 +89,30 @@ readPgnFile <- function(path,gameProcessor) {
 
 gameCounter <<- 0
 gProcessor <- function(gameDetails) {
-  gameCounter <<- gameCounter + 1
-  print(paste(gameDetails$TagPairs$Round,gameCounter))
-  if (gameCounter %% 100 == 0) {
-    gc()
-  }
+  tryCatch(
+    {
+      con = dbConnect(RSQLite::SQLite(), dbname="chess.db")
+      gameCounter <<- gameCounter + 1
+      print(paste(gameDetails$TagPairs$Round,gameCounter))
+      if (gameCounter %% 100 == 0) {
+        gc()
+      }
+    },
+    finally = {
+      dbDisconnect(con)
+    }
+  )
+
+}
+
+storeGame <- function(conn,index,game) {
+  insertQuery = paste("INSERT INTO games (game_id,event,site,result,first_move) VALUES (",
+                      index,",",
+                      game$TagPairs$Event,",",
+                      game$TagPairs$Event",",
+                      game$TagPairs$Event",",
+                      )",
+                      sep = "");
 }
 
 readPgnFile('temp.txt',gProcessor)
