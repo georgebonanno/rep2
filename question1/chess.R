@@ -1,27 +1,11 @@
 library(stringr)
 library("RSQLite")
+library("ParseMoves.R")
 
 pastePrint <- function(...,sepr=" ") {
   print(paste(list(...),sep = sepr))
 }
 
-parseMoves <- function(moves,endResult) {
-  #move pattern consists of a number, space followed
-  #by the steps of each players separated by steps
-  movePattern="(\\d+)\\.([^ ]+) ([^ ]+) "
-  matches <- str_match_all(moves,pattern = movePattern)
-  matches <- matches[[1]]
-  rowCount <- dim(matches)[1]
-  moves <- list()
-  if (rowCount > 0) {
-    for(i in seq(1,rowCount)) {
-      movePlyr1 <- matches[i,3]
-      movePlyr2 <- matches[i,4]
-      moves[[i]] <- c(movePlyr1, movePlyr2)
-    }
-  }
-  return(moves)
-}
 
 readPgnGame <- function(con) {
   i <- 0;
@@ -30,9 +14,9 @@ readPgnGame <- function(con) {
   tagPairs <- list()
   allMoves <- "";
   readMoveLine <- TRUE
+  LINEBUFFER <- 1
   #print(paste("start of reading....",parseTagPairs,readMoveLine))
-  while(readMoveLine & (length(line <- readLines(con,n=1,encoding="UTF-8"))) > 0) {
-    #print(paste("line read: ",line,parseTagPairs))
+  while(readMoveLine & (length(line <- readLines(con,n=LINEBUFFER,encoding="UTF-8"))) > 0) {
     i <- i+1
     if (parseTagPairs) {
       #print("in parse tag pairs");
@@ -68,7 +52,7 @@ readPgnGame <- function(con) {
   return(pgnDoc)
 }
 
-readPgnFile <- function(path,gameProcessor) {
+readPgnFile <- function(path,gameProcessor,dbConn) {
   #based on https://www.r-bloggers.com/read-line-by-line-of-a-file-in-r/
   #reads all the games from a given path
   pgnDocs <- tryCatch({
@@ -76,7 +60,7 @@ readPgnFile <- function(path,gameProcessor) {
     pgnDocs <- list()
     i <- 1
     while(length(pgnDoc <- readPgnGame(con)) > 0) {
-      gameProcessor(pgnDoc)
+      gameProcessor(pgnDoc,dbConn)
       i <- i+1
     }
     return(pgnDocs)
@@ -88,31 +72,73 @@ readPgnFile <- function(path,gameProcessor) {
 }
 
 gameCounter <<- 0
-gProcessor <- function(gameDetails) {
+gProcessor <- function(gameDetails,con) {
   tryCatch(
     {
-      con = dbConnect(RSQLite::SQLite(), dbname="chess.db")
+      
       gameCounter <<- gameCounter + 1
       print(paste(gameDetails$TagPairs$Round,gameCounter))
+      storeGame(con,gameCounter,gameDetails)
       if (gameCounter %% 100 == 0) {
         gc()
       }
     },
     finally = {
-      dbDisconnect(con)
     }
   )
 
 }
 
-storeGame <- function(conn,index,game) {
-  insertQuery = paste("INSERT INTO games (game_id,event,site,result,first_move) VALUES (",
-                      index,",",
-                      game$TagPairs$Event,",",
-                      game$TagPairs$Event",",
-                      game$TagPairs$Event",",
-                      )",
-                      sep = "");
+findFirstMoveOfWinning <- function(game) {
+  res <- game$TagPairs$Result
+  if (length(game$Moves) > 0) {
+    firstMove <- game$Moves[[1]]
+    if (res == "1-0") {
+      winningMove <- firstMove[1]
+    } else if (res == "0-1") {
+      winningMove <- firstMove[2]
+    } else {
+      winningMove <- ""
+    }
+  } else {
+    winningMove <- ""
+  }
+  return (winningMove)
 }
 
-readPgnFile('temp.txt',gProcessor)
+storeGame <- function(conn,index,game) {
+  firstMove <- findFirstMoveOfWinning(game)
+  insertQuery = paste("INSERT INTO games (game_id,event,site,result,first_move) VALUES (",
+                      index,",'",
+                      game$TagPairs$Event,"',\"",
+                      game$TagPairs$Site,"\",'",
+                      game$TagPairs$Result,"','",
+                      firstMove,"')",
+                      sep = "");
+  
+  
+  print(paste("first move:",game$Moves[[1]][1],game$Moves[[1]][2]))
+  print(paste("insertquery: ",insertQuery))
+  tryCatch({
+    q <- dbSendQuery(conn,insertQuery)
+    fetch(q,n=-1)  
+  }, finally = {
+    dbClearResult(q)  
+  })
+}
+
+readPgnFile <- function(fileName) {
+  con <- NULL
+  tryCatch({
+    con = dbConnect(RSQLite::SQLite(), dbname="chess.db")
+    readPgnFile(fileName,gProcessor,con)
+  },
+  finally = {
+    if (!is.null(con)) {
+      dbDisconnect(con)
+    }
+  })
+}
+
+#readPgnFile(fileName)
+
