@@ -1,6 +1,6 @@
 library(stringr)
 library("RSQLite")
-library("ParseMoves.R")
+source("ParseMoves.R")
 
 pastePrint <- function(...,sepr=" ") {
   print(paste(list(...),sep = sepr))
@@ -47,7 +47,7 @@ readPgnGame <- function(con) {
   #print(paste("lines read: ",i))
   if (length(tagPairs) > 0 & str_length(allMoves) > 0) {
     pgnDoc[["TagPairs"]] <- tagPairs
-    pgnDoc[["Moves"]] <- parseMoves(allMoves)
+    pgnDoc[["Moves"]] <- parseMoves(allMoves,tagPairs$Result)
   }
   return(pgnDoc)
 }
@@ -127,7 +127,7 @@ storeGame <- function(conn,index,game) {
   })
 }
 
-readPgnFile <- function(fileName) {
+loadPgnFile <- function(fileName) {
   con <- NULL
   tryCatch({
     con = dbConnect(RSQLite::SQLite(), dbname="chess.db")
@@ -140,5 +140,7 @@ readPgnFile <- function(fileName) {
   })
 }
 
-#readPgnFile(fileName)
+#loadPgnFile(fileName)
+
+loadPgnFile('temp.txt')
 
