@@ -106,7 +106,6 @@ storeGames <- function(con,gameCounter,gameDetails=NA) {
   dbCommit(con)
 }
 
-gameCounter <<- 0
 gamesToStore <<- list()
 STORE_BUF_SIZE <<- 20
 gProcessor <- function(gameDetails,con) {
@@ -163,10 +162,48 @@ storeGame <- function(conn,index,game) {
   })
 }
 
+executeAndGetAllRows <- function(conn,query) {
+  rows <- tryCatch({
+    q <- dbSendQuery(conn,query)
+    rows <- fetch(q)
+    rows;
+  },finally= {
+    dbClearResult(q)  
+  })
+  return(rows)
+  
+}
+
+nextGameIdToInsertWith <- function(conn) {
+  # returns the next game id with which the next game that
+  # is parsed from file is inserted in the games table.
+  # The games tables is created if it does no exist.
+  tabs <- dbListTables(conn);
+  createTableQuery <- paste("create table games (",
+                              "game_id int primary key,",
+                              "event varchar(30),",
+                              "site varchar(30),",
+                              "result varchar(10),",
+                              "first_move varchar(10)",
+                            ")")
+  tableMissing <- (length(tabs[tabs=="games"]) == 0)
+  if (tableMissing) {
+    print("table 'games' will be created.")
+    executeAndGetAllRows(conn,createTableQuery)
+    count <- 1
+  } else {
+    q <- executeAndGetAllRows(conn,"select max(game_id)+1 n from games")
+    count <- q$n[1]
+  }
+  return(count)
+}
+
 loadPgnFile <- function(fileName) {
   con <- NULL
   tryCatch({
     con = dbConnect(RSQLite::SQLite(), dbname="chess.db")
+    gameCounter <<- nextGameIdToInsertWith(con)
+    print(paste("starting inserting games from id ",gameCounter))
     readPgnFile(fileName,gProcessor,con)
   },
   finally = {
@@ -176,7 +213,7 @@ loadPgnFile <- function(fileName) {
   })
 }
 
-#loadPgnFile(fileName)
+
 bufferPos<<--1
 system.time(loadPgnFile('KingBase2016-03-A00-A39.pgn'))
 

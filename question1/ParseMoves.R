@@ -57,15 +57,13 @@ parseMove <- function(i,moves) {
 
 lastMoveIndex <- function(moves,endResult) {
   lastIndex <- str_length(moves)
-  if (endResult != "*") {
-    if (endsWith(moves,endResult)) {
-      lastIndex <- lastIndex-str_length(endResult)
-      while(indexOf(moves,lastIndex) == " ") {
-        lastIndex<-lastIndex - 1
-      }
-    } else {
-      stop(paste("result '",endResult,"' not found at end of these moves:",moves))
+  if (endsWith(moves,endResult)) {
+    lastIndex <- lastIndex-str_length(endResult)
+    while(indexOf(moves,lastIndex) == " ") {
+      lastIndex<-lastIndex - 1
     }
+  } else {
+    stop(paste("result '",endResult,"' not found at end of these moves:",moves))
   }
   return(lastIndex)
 }
@@ -130,3 +128,5 @@ parseMoves <- function(moves,endResult) {
   }
   return(parsedMoves)
 }
+
+parseMoves("1.Nf3 Nf6 2.g3 g6 3.Bg2 Bg7 4.O-O O-O 5.d3 d5 6.Nbd2 Nc6 7.c4 d4 8.a3 a5  9.b3 Nd7 10.Rb1 Nc5 11.Ne1 e5 12.Nc2 f5 13.b4 axb4 14.axb4 Na4 15.Bb2 e4  16.Nb3 Nxb2 17.Rxb2 Kh8 18.Rb1 exd3 19.exd3 f4 20.Nc5 Ra7 21.Ra1 Rxa1 22. Qxa1 f3 23.Bh1 Nxb4 24.Nxb4 Qe7 25.Qa7 b6 26.Nca6 Bh3 27.Rb1 Re8 28.Nc2  Qe2 29.Nab4 h5 30.Qa1 Qxf2+ 31.Kxf2 Re2+ 32.Kxf3 Bg4+ 33.Kf4 Bh6# *","*")
