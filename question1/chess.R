@@ -1,8 +1,8 @@
 library(stringr)
 library("RSQLite")
 source("ParseMoves.R")
-pastePrint <- function(...,sepr=" ") {
-  print(paste(list(...),sep = sepr))
+pastePrint <- function(...) {
+  print(paste(...,sep = " "))
 }
 
 readNextLine <- function(con,bufferSize) {
@@ -87,11 +87,11 @@ readPgnFile <- function(path,gameProcessor,dbConn) {
   return (pgnDoc)
 }
 
-storeGames <- function(con,gameCounter,gameDetails=NA) {
+storeGames <- function(con,gameCounter,gameDetails=list()) {
   dbBegin(con)
   bufferedGameCount <- length(gamesToStore)
   #print(paste("l gamste",length(gamesToStore)))
-  if (!is.na(gameDetails)) {
+  if (length(gameDetails) > 0) {
     gamesToStore[[bufferedGameCount+1]] <<- gameDetails
   }
   #print(paste("l gamste 2",length(gamesToStore),STORE_BUF_SIZE))
@@ -214,6 +214,12 @@ loadPgnFile <- function(fileName) {
 }
 
 
+args <- commandArgs(trailingOnly=TRUE)
+print(paste("args: ",args))
 bufferPos<<--1
-system.time(loadPgnFile('KingBase2016-03-A00-A39.pgn'))
-
+gc()
+for (f in args) {
+  print(paste("loading pgns from file",f))
+  system.time(loadPgnFile(f))
+}
+gc()
