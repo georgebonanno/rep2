@@ -22,7 +22,7 @@ parseMoveNumber <- function(i,moves) {
   if (currentChar == '.') {
     i <- i+1
   } else {
-    stop(paste("'.' expected after step number",moveNumber, "and not",currentChar,'at position',i))
+    stop(paste("'.' expected after step number",moveNumber, "and not",currentChar,'at position',i,"for moves",moves))
   }
   return(list(number=moveNumber,lookahead=i))
 } 

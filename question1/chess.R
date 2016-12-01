@@ -1,7 +1,6 @@
 library(stringr)
 library("RSQLite")
 source("ParseMoves.R")
-
 pastePrint <- function(...,sepr=" ") {
   print(paste(list(...),sep = sepr))
 }
@@ -12,7 +11,7 @@ readNextLine <- function(con,bufferSize) {
   #and read again if all buffer read.
   if(bufferPos == -1 || bufferPos > length(buf)) {
     buf <<- readLines(con,n=bufferSize,encoding="UTF-8")  
-    print(paste(length(buf),"lines read from buffer",bufferSize))
+    #print(paste(length(buf),"lines read from buffer",bufferSize))
     bufferPos <<- 1
   }
   if (length(buf) > 0) {
@@ -31,7 +30,7 @@ readPgnGame <- function(con) {
   tagPairs <- list()
   allMoves <- "";
   readMoveLine <- TRUE
-  LINEBUFFER <- 50
+  LINEBUFFER <- 10000
   #print(paste("start of reading....",parseTagPairs,readMoveLine))
   while(readMoveLine & (length(line <- readNextLine(con,LINEBUFFER))) > 0) {
     i <- i+1
@@ -56,7 +55,7 @@ readPgnGame <- function(con) {
         readMoveLine <- FALSE
       }
       if (readMoveLine & !parseTagPairs) {
-        allMoves <- paste(allMoves,line,sep="")
+        allMoves <- paste(allMoves,line,sep=" ")
       }
     }
   }
@@ -79,6 +78,7 @@ readPgnFile <- function(path,gameProcessor,dbConn) {
       gameProcessor(pgnDoc,dbConn)
       i <- i+1
     }
+    storeGames(dbConn,i)
     return(pgnDocs)
   },finally = {
     close(con)
@@ -87,14 +87,34 @@ readPgnFile <- function(path,gameProcessor,dbConn) {
   return (pgnDoc)
 }
 
+storeGames <- function(con,gameCounter,gameDetails=NA) {
+  dbBegin(con)
+  bufferedGameCount <- length(gamesToStore)
+  #print(paste("l gamste",length(gamesToStore)))
+  if (!is.na(gameDetails)) {
+    gamesToStore[[bufferedGameCount+1]] <<- gameDetails
+  }
+  #print(paste("l gamste 2",length(gamesToStore),STORE_BUF_SIZE))
+  if (length(gamesToStore) >= STORE_BUF_SIZE) {
+    for (i in 1:length(gamesToStore)) {
+      index <- gameCounter-(STORE_BUF_SIZE-i)
+      #print(paste("inserting",index))
+      storeGame(con,index,gamesToStore[[i]])
+    }
+    gamesToStore <<- list()
+  } 
+  dbCommit(con)
+}
+
 gameCounter <<- 0
+gamesToStore <<- list()
+STORE_BUF_SIZE <<- 20
 gProcessor <- function(gameDetails,con) {
   tryCatch(
     {
-      
       gameCounter <<- gameCounter + 1
-      print(paste(gameDetails$TagPairs$Round,gameCounter))
-      storeGame(con,gameCounter,gameDetails)
+      #print(paste("game",gameDetails$TagPairs$Round,gameCounter))
+      storeGames(con,gameCounter,gameDetails)
       if (gameCounter %% 100 == 0) {
         gc()
       }
@@ -133,8 +153,8 @@ storeGame <- function(conn,index,game) {
                       sep = "");
   
   
-  print(paste("first move:",game$Moves[[1]][1],game$Moves[[1]][2]))
-  print(paste("insertquery: ",insertQuery))
+  #print(paste("first move:",game$Moves[[1]][1],game$Moves[[1]][2]))
+  #print(paste("insertquery: ",insertQuery))
   tryCatch({
     q <- dbSendQuery(conn,insertQuery)
     fetch(q,n=-1)  
@@ -158,5 +178,5 @@ loadPgnFile <- function(fileName) {
 
 #loadPgnFile(fileName)
 bufferPos<<--1
-system.time(loadPgnFile('temp.txt'))
+system.time(loadPgnFile('KingBase2016-03-A00-A39.pgn'))
 
