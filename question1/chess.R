@@ -6,6 +6,23 @@ pastePrint <- function(...,sepr=" ") {
   print(paste(list(...),sep = sepr))
 }
 
+readNextLine <- function(con,bufferSize) {
+  #read next line from buffered line
+  #read next bufferSize line in buffer
+  #and read again if all buffer read.
+  if(bufferPos == -1 || bufferPos > length(buf)) {
+    buf <<- readLines(con,n=bufferSize,encoding="UTF-8")  
+    print(paste(length(buf),"lines read from buffer",bufferSize))
+    bufferPos <<- 1
+  }
+  if (length(buf) > 0) {
+    nextLine=c(buf[bufferPos])
+    bufferPos <<- bufferPos + 1
+  } else {
+    nextLine = c()
+  }
+  return(nextLine)
+}
 
 readPgnGame <- function(con) {
   i <- 0;
@@ -14,12 +31,11 @@ readPgnGame <- function(con) {
   tagPairs <- list()
   allMoves <- "";
   readMoveLine <- TRUE
-  LINEBUFFER <- 1
+  LINEBUFFER <- 50
   #print(paste("start of reading....",parseTagPairs,readMoveLine))
-  while(readMoveLine & (length(line <- readLines(con,n=LINEBUFFER,encoding="UTF-8"))) > 0) {
+  while(readMoveLine & (length(line <- readNextLine(con,LINEBUFFER))) > 0) {
     i <- i+1
     if (parseTagPairs) {
-      #print("in parse tag pairs");
       if (startsWith(line,"[")) {
         tagPattern <- "\\[([^ ]+) \"([^\"]+)\""
         m <- str_match(line,tagPattern)
@@ -141,6 +157,6 @@ loadPgnFile <- function(fileName) {
 }
 
 #loadPgnFile(fileName)
-
-loadPgnFile('temp.txt')
+bufferPos<<--1
+system.time(loadPgnFile('temp.txt'))
 

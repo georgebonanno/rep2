@@ -37,20 +37,16 @@ parseMove <- function(i,moves) {
   while(!check && i <= str_length(moves) && indexOf(moves,i) != ' ') {
     move <- paste(move,indexOf(moves,i),sep="");
     
-    print(indexOf(moves,i))
     if (indexOf(moves,i) == '#'
         || indexOf(moves,i) == '+') {
       #move ends if check or checkmate symbol found
       check=TRUE
-      print("checked!!!")
     } else if (isDigit(indexOf(moves,i))) {
-        print("check is next digit is number...")
         if (isDigit(indexOf(moves,i+1))) {
           #when current char is a number and the next is a number
           #the last number pertains to the next move number
           #e.g. e616.
           check=TRUE
-          print("number!!!")
         }
     }
     i <- i+1
@@ -87,7 +83,6 @@ moveNumberFound <- function(i,moves,lastIndex) {
     i<-i+1
   }
   numFound <- !twoDigitsFound && (indexOf(moves,i)=='.' || indexOf(moves,i)=='+' && indexOf(moves,i) == '=')
-  print(paste("moveNumberFound",numFound,indexOf(moves,i),i,lastIndex))
   return(numFound)
 }
 
@@ -135,5 +130,3 @@ parseMoves <- function(moves,endResult) {
   }
   return(parsedMoves)
 }
-
-parseMoves("1.d4 e6 2.Nf3 b6 3.e4 d5 4.Bd3 Nf6 5.e5 Nfd7 6.O-O Be7 7.c4 c6 8.Nc3 Na6 9.a3 Nc7 10.b4 Ba6 11.c5 Bxd3 12.Qxd3 a5 13.Bd2 O-O 14.Rfe1 Qc8 15.Bg5 Re816.Bxe7 Rxe7 17.Ng5 f5 18.exf6 gxf6 19.Nh3 b5 20.Qg3+ Kf7 21.Qf4 Nf8 22.Qh6 Ne8 23.Nf4 Kg8 24.Rab1 axb4 25.axb4 Ra3 26.Re3 Rg7 27.Ncxd5 Rxe3 28.Nxe3 Qd7 29.Rd1 Qa7 30.Qh5 Nc7 31.Qf3 Nd5 32.Nfxd5 exd5 33.Qxf6 Qa4 34.Qxc6 Qb3 35.Kf4+ 1-0","1-0");
