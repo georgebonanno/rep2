@@ -143,8 +143,15 @@ findFirstMoveOfWinning <- function(game) {
 
 storeGame <- function(conn,index,game) {
   firstMove <- findFirstMoveOfWinning(game)
-  insertQuery = paste("INSERT INTO games (game_id,event,site,result,first_move) VALUES (",
+  if(is.na(game$TagPairs$Date)) {
+    gameDate <- ""
+  } else {
+    gameDate <- str_replace_all(game$TagPairs$Date,"\\.","_")  
+  }
+  
+  insertQuery = paste("INSERT INTO games (game_id,date_of_game,event,site,result,first_move) VALUES (",
                       index,",'",
+                      gameDate,"','",
                       game$TagPairs$Event,"',\"",
                       game$TagPairs$Site,"\",'",
                       game$TagPairs$Result,"','",
@@ -182,6 +189,7 @@ nextGameIdToInsertWith <- function(conn) {
   createTableQuery <- paste("create table games (",
                               "game_id int primary key,",
                               "event varchar(30),",
+                              "date_of_game text,",
                               "site varchar(30),",
                               "result varchar(10),",
                               "first_move varchar(10)",
@@ -192,7 +200,7 @@ nextGameIdToInsertWith <- function(conn) {
     executeAndGetAllRows(conn,createTableQuery)
     count <- 1
   } else {
-    q <- executeAndGetAllRows(conn,"select max(game_id)+1 n from games")
+    q <- executeAndGetAllRows(conn,"select ifnull(max(game_id),0)+1 n from games")
     count <- q$n[1]
   }
   return(count)
