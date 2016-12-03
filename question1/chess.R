@@ -1,6 +1,8 @@
 library(stringr)
-library("RSQLite")
+
 source("ParseMoves.R")
+source("chessDataSource.R")
+
 pastePrint <- function(...) {
   print(paste(...,sep = " "))
 }
@@ -173,17 +175,7 @@ storeGame <- function(conn,index,game) {
   })
 }
 
-executeAndGetAllRows <- function(conn,query) {
-  rows <- tryCatch({
-    q <- dbSendQuery(conn,query)
-    rows <- fetch(q)
-    rows;
-  },finally= {
-    dbClearResult(q)  
-  })
-  return(rows)
-  
-}
+
 
 nextGameIdToInsertWith <- function(conn) {
   # returns the next game id with which the next game that
@@ -213,7 +205,7 @@ nextGameIdToInsertWith <- function(conn) {
 loadPgnFile <- function(fileName) {
   con <- NULL
   tryCatch({
-    con = dbConnect(RSQLite::SQLite(), dbname="chess.db")
+    con <- dbChessConnection();
     gameCounter <<- nextGameIdToInsertWith(con)
     print(paste("starting inserting games from id ",gameCounter))
     readPgnFile(fileName,gProcessor,con)
