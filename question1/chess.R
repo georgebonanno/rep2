@@ -78,7 +78,7 @@ readPgnFile <- function(path,gameProcessor,dbConn) {
       gameProcessor(pgnDoc,dbConn)
       i <- i+1
     }
-    storeGames(dbConn,i)
+    storeGames(dbConn)
     return(pgnDocs)
   },finally = {
     close(con)
@@ -87,7 +87,7 @@ readPgnFile <- function(path,gameProcessor,dbConn) {
   return (pgnDoc)
 }
 
-storeGames <- function(con,gameCounter,gameDetails=list()) {
+storeGames <- function(con,gameDetails=list()) {
   dbBegin(con)
   bufferedGameCount <- length(gamesToStore)
   #print(paste("l gamste",length(gamesToStore)))
@@ -95,11 +95,17 @@ storeGames <- function(con,gameCounter,gameDetails=list()) {
     gamesToStore[[bufferedGameCount+1]] <<- gameDetails
   }
   #print(paste("l gamste 2",length(gamesToStore),STORE_BUF_SIZE))
-  if (length(gamesToStore) >= STORE_BUF_SIZE) {
+  if (length(gameDetails) == 0 || length(gamesToStore) >= STORE_BUF_SIZE) {
     for (i in 1:length(gamesToStore)) {
-      index <- gameCounter-(STORE_BUF_SIZE-i)
+      
+      gameCounter <<- gameCounter+1
+      
+      if (length(gameDetails) == 0) {
+        print(paste("counter",gameCounter))
+      }
+      
       #print(paste("inserting",index))
-      storeGame(con,index,gamesToStore[[i]])
+      storeGame(con,gameCounter,gamesToStore[[i]])
     }
     gamesToStore <<- list()
   } 
@@ -111,9 +117,7 @@ STORE_BUF_SIZE <<- 20
 gProcessor <- function(gameDetails,con) {
   tryCatch(
     {
-      gameCounter <<- gameCounter + 1
-      #print(paste("game",gameDetails$TagPairs$Round,gameCounter))
-      storeGames(con,gameCounter,gameDetails)
+      storeGames(con,gameDetails)
       if (gameCounter %% 100 == 0) {
         gc()
       }
