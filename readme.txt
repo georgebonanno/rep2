@@ -1,1 +1,1 @@
-Libraries: RSQLite,RODBCext
+Libraries: RSQLite,RODBCext,rvest
