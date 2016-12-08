@@ -1,0 +1,812 @@
+
+R version 3.3.2 (2016-10-31) -- "Sincere Pumpkin Patch"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(rvest)
+> library(stringi)
+> library(stringr)
+> 
+> readForPropertyForSale <- function(f) {
++   html <- read_html(f)
++   as <- html %>% html_nodes('li > p,.classified_date') %>% html_text()
++   classDate <- ""
++   for (a in as) {
++     propSaleLen <- str_length('\nProperty For Sale\n')
++     
++     if (startsWith(a,'\nProperty For Sale\n') & str_length(a) > propSaleLen) {
++       len <- substr(a,propSaleLen+1,str_length(a))
++       
++       print(paste(classDate,len,sep="|"))
++     } else {
++       classDate <- a;
++     }
++   }
++ }
+> 
+> extractDataFromDir <- function(sourceDir) {
++   htmlFiles <- list.files(sourceDir,pattern="*.html*")
++   fileToHtmlTextInfo <- list()
++   
++   htmlFiles <- htmlFiles[1:1]
++   for (htmlFile in htmlFiles) {
++     pathName <- paste('data','/',htmlFile,sep = "")
++     readForPropertyForSale(pathName)
++   }
++ }
+> 
+> extractDataFromDir('data')
+Thursday, April 23, 2015|18,033 PROPERTIES for sale on Malta's best rated property website: {00d0c9ea79f9bace118c8200aa004ba90b0200000003000000e0c9ea79f9bace118c8200aa004ba90b5200000068007400740070003a002f002f007700770077002e00730069006d006f006e0065007300740061007400650073002e0063006f006d002f000000795881f43b1d7f48af2c825dc485276300000000a5ab0000000000000000 Phone 2388 0009, 7900 8287.
+Thursday, April 23, 2015|BALZAN. Finished large three bedroom apartment. Must view €152,000. Phone 2163 2918.
+Thursday, April 23, 2015|GOZO, GĦAJNSIELEM. An ideal residential plot of land for investment or for a good sized terraced house, situated in a three story-height zone. €185,000. Phone 9947 6959.
+Thursday, April 23, 2015|GOZO, NADUR: 3 double bedroom house of character with lots of traditional features and a small pool. Worth viewing. €293,000. Phone 7947 0419.
+Thursday, April 23, 2015|GOZO, VICTORIA: Spacious ground floor maisonette ideal for first time buyers or retired couple. Superb property in very good condition. €145,000. Phone 9949 2695.
+Thursday, April 23, 2015|MARSASCALA. Finished two bedroom apartment close to St Thomas bay. €85,000. Phone 2163 2919.
+Thursday, April 23, 2015|QAWRA. Apartment, three bedrooms, furnished, open plan, balconies, freehold. €140,000 (Lm60,102 ). Phone 9905 6212.
+Thursday, April 23, 2015|QAWRA. Bargain. One / two / three bedroom maisonettes, apartments and penthouses being offered fully finished from €75,500 on plan with open views. Phone owner 9922 0023. 
+Thursday, April 23, 2015|SIĠĠIEWI. Three bedroom ground floor maisonette. No steps. €120,000 negotiable. Phone owner 9982 6148. 
+Thursday, April 23, 2015|ST PAUL' S BAY. Seafront, new finished three bedroom apartment enjoying spectacular seaviews of St Paul' s Bay and Xemxija. €250,000. Phone owner 9922 0023. 
+Thursday, April 23, 2015|ST VENERA. One bedroom penthouse with a very large surrounding terrace finished including a free one car garage at €94,000. Phone owner 9922 0023.
+Thursday, April 23, 2015|ST VENERA. Two bedroom ground floor marionette with back yard highly finished with a free one car garage at €110,000. Phone owner 9922 0023.
+Thursday, April 23, 2015|TA' XBIEX. Spacious detached villa enjoying lovely views of Valletta across front terrace, garden, three bedrooms, two-car garage. €850,000. Phone 9925 2868.
+Thursday, April 23, 2015|TARXIEN. Bargain. One / two / three bedroom maisonettes, apartments and penthouses to be sold fully finished at your choice form €75,000. Phone owner 9922 0023. 
+Thursday, April 23, 2015|THE VILLAGE. Ground floor maisonette, ready to move into, two bedrooms with modern fitted kitchen. €205,00. Phone 7943 1977.
+Thursday, April 23, 2015|VICTORIA GARDENS. New on the market. Fully detached bungalow on .11ha (1 tumolo) having four bedrooms with en-suite bathrooms, large hall, sitting / dining, kitchen / breakfast, cinema / gym, three garages, surrounding garden with large pool and showers. Freehold. €1,600,000. Phone owner 9949 7924.
+Thursday, April 23, 2015|ŻEBBUĠ. Fully detached three bedroom farmhouse on 1,200 sqm of landscaped land with pool. Drive access, three bedrooms, needs refurbishment. €950,000. Phone 9947 5444. 
+Wednesday, April 22, 2015|18,033 PROPERTIES for sale on Malta' s best rated property website: {00d0c9ea79f9bace118c8200aa004ba90b0200000003000000e0c9ea79f9bace118c8200aa004ba90b5200000068007400740070003a002f002f007700770077002e00730069006d006f006e0065007300740061007400650073002e0063006f006d002f000000795881f43b1d7f48af2c825dc485276300000000a5ab0000006500ff00ffffff00fff4 Phone 2388 0009, 7900 8287.
+Wednesday, April 22, 2015|ATTARD. Semi-detached villa in a very nice quiet area, with garden and ample space for pool. €450,000. Phone 7927 8517.
+Wednesday, April 22, 2015|BALZAN. New, large, two bedroom, highly finished apartment. €147,000. Phone 2163 2918.
+Wednesday, April 22, 2015|BALZAN. New, luxury, large, corner three bedroom flat. Two luxury bathrooms, large open plan kitchen, sitting / dining room, lift. €150,000, garage optional. Phone 9950 9048. 
+Wednesday, April 22, 2015|BIRKIRKARA, old church area. Finished three bedroom apartment €150,000; two bedroom penthouse €125,000. Phone owner 7988 4466.
+Wednesday, April 22, 2015|BIRKIRKARA. Two double bedroom, nearly finished penthouse, big terrace, lift. Failed engagement. €108,000. Phone 2138 5451.
+Wednesday, April 22, 2015|COSPICUA (Bormla). Seafront townhouse with garden and terrace with panoramic view. €275,000. Phone 2388 0010, 7900 8287.
+Wednesday, April 22, 2015|FLEUR-DE-LYS. Ready to move into, four bedroom terraced house and yard with well. Phone 9947 1938. 
+Wednesday, April 22, 2015|GOZO, FONTANA. Finished three bedroom apartment. Washroom, terrace. €99,000, priced to sell. Bargain. Phone 7749 1115.ine GOZO, NADUR. Highlyfinished three bedroom house. Pool, garage, countryviews. €345,000. Quick sale. Phone 7967 9111.
+Wednesday, April 22, 2015|GOZO, MARSALFORN. Bright / airy, furnished three bedroom apartment, five minutes from seafront. Living room, kitchen / dining combined, three balconies. Ready to move into. €80,000. Phone owner 7928 7992. 
+Wednesday, April 22, 2015|GOZO, SANNAT. A two double bedroom penthouse with large terrace and balcony overlooking views. €165,000. Phone 9942 2146.
+Wednesday, April 22, 2015|GOZO, XAGĦRA. A three bedroom house of character with front balcony and large terrace at the back. €260,000. Phone 9942 2146.
+Wednesday, April 22, 2015|KAPPARA. Large semi-detached villa. Four bedrooms, three lounges, kitchen / living / breakfast, three-car street level garages, terraces, pool and flatlet. Ideal for a large family, embassy or residential unit for a school. In need of renovation. €650,000, negotiable. No agents. Phone 9929 4188.
+Wednesday, April 22, 2015|MARSASCALA, Żonqor. Elevated groundfloor apartment. Living room, three bedrooms, bathroom, kitchen, balcony with sea views, two yards and washroom. Excellent finish, ready to move into. Reduced to €125,000. Phone 7963 6800 or 2163 6800.
+Wednesday, April 22, 2015|MARSASCALA. Large, highly finished apartment with fitted kitchen, consisting of good sized terrace, sitting, kitchen, dining, three double bedrooms, en-suite, bathroom and back terrace. €175,000. Phone 2163 2919.
+Wednesday, April 22, 2015|MĠARR. Groundfloor maisonette ready to move into. Three bedrooms, internal yard and large back yard. Phone 9947 1938.
+Wednesday, April 22, 2015|MTARFA. Ready to move into terraced house with a six-car garage. FH. Phone 9947 1938. 
+Wednesday, April 22, 2015|NAXXAR. House of character, real nice family home. Four bedrooms with en-suite and terraces, pool, two-car garage. €875,000. Phone owner 9947 3065.
+Wednesday, April 22, 2015|SAN PAWL TAT-TARĠA. Duplex, designer finished, semi- furnished masionette. Two bathrooms, four terraces. Solar panels. €255,000, garage optional. Phone 7900 8286.
+Wednesday, April 22, 2015|SANTA LUĊIJA. Three bedroom corner terraced house with one-car garage. €250,000. Phone owner 7940 5038.
+Wednesday, April 22, 2015|SIĠĠIEWI, central. Groundfloor three bedroom maisonette with front patio and back yard. Phone 7939 2939, 2388 0059.
+Wednesday, April 22, 2015|SLIEMA. 175sqm three bedroom apartment 80m away from the seafront. €220,000. Phone 2388 0028/7944 6072.
+Wednesday, April 22, 2015|SLIEMA. Smart, newly built three bedroom penthouse with large front terrace. Offered finished complete apart from bathrooms / internal doors. Genuinely priced at €360,000. Phone 9925 2868. 
+Wednesday, April 22, 2015|ST PAUL' S BAY. One bedroom, furnished penthouse. Living / kitchen / dining. Unobstructed views. Large terrace plus BBQ. €194,250, interconnected one-car space included. Phone 7942 9090/2388 0030.
+Wednesday, April 22, 2015|ST VENERA. Maisonette behind Romeo Romano Gardens. Finished. €95,000. Phone 2163 2918.
+Wednesday, April 22, 2015|ST VENERA. Three bedroom apartment in a block of four, selling fully furnished, with own washroom and part of roof. €90,000, negotiable. Phone 7925 3429.
+Wednesday, April 22, 2015|TA' XBIEX. 270sqm, seafront, three bedroom apartment. Large terrace and two garages. €850,000. Phone 2388 0023/7944 6072.
+Wednesday, April 22, 2015|THE VILLAGE. Three / four bedroom, highly finished, semi-detached villa. Big garage, garden, unobstructed valley views. €510,000. Phone owner 2138 5451 or 9947 3904.
+Wednesday, April 22, 2015|VALLETTA. Converted top floor apartment with roof terrace. €295,000. Phone 2388 0010, 7900 8287.
+Wednesday, April 22, 2015|VALLETTA. Eight room townhouse with permits to convert into apartments. €390,000. Phone 7979 8282, 2388 0026.
+Wednesday, April 22, 2015|VALLETTA. Seven room townhouse with lots of traditional features. €710,000. Phone 7979 8282, 2388 0026.
+Wednesday, April 22, 2015|VALLETTA. Shop in good position. Phone 9995 1115. 
+Wednesday, April 22, 2015|ŻABBAR. Brand new, semi-furnished, first floor, three bedroom spacious maisonette. Own roof with washroom and airspace. €200,000. Phone 7909 2280.
+Wednesday, April 22, 2015|ŻEBBUĠ. Fully detached three bedroom farmhouse on 1,200sqm of landscaped land with pool. Drive access, three bedrooms. Needs refurbishment. €950,000. Phone 9947 5444. 
+Wednesday, April 22, 2015|ŻEBBUĠ. Unconverted house of character with mill room, easily converted into three bedroom home and garage. €175,000. Phone 9986 2850.
+Tuesday, April 21, 2015|18,033 PROPERTIES for sale on Malta' s best rated property website: {00d0c9ea79f9bace118c8200aa004ba90b0200000003000000e0c9ea79f9bace118c8200aa004ba90b5200000068007400740070003a002f002f007700770077002e00730069006d006f006e0065007300740061007400650073002e0063006f006d002f000000795881f43b1d7f48af2c825dc485276300000000a5ab000000ffff Phone 2388 0009, 7900 8287.
+Tuesday, April 21, 2015|BALZAN. Finished, large three bedroom apartment. Must view. €152,000. Phone 2163 2918.
+Tuesday, April 21, 2015|GOZO, GĦAJNSIELEM. Elevated groundfloor apartment being sold in shell form. Three bedrooms and one en-suite. Priced to sell. €90,500. Phone 7947 0419.
+Tuesday, April 21, 2015|GOZO, NADUR. Priced to sell plot of land suitable for a small terraced house with ample space for swimming pool. €80,000. Phone 9947 6959.
+Tuesday, April 21, 2015|GOZO, QALA. Four roomed unconverted farmhouse tucked away in a quaint alley. Can be extended on first floor, having south-facing views. €90,000. Phone 9949 2695.
+Tuesday, April 21, 2015|MARSASCALA. Finished two bedroom apartment close to St Thomas Bay. €85,000. Phone 2163 2919.
+Tuesday, April 21, 2015|QAWRA. Bargain. One / two / three bedroom maisonettes, apartments and penthouses with open views, being offered fully finished, from €75,500 on plan. Phone owner 9922 0023. 
+Tuesday, April 21, 2015|ST PAUL' S BAY. Seafront, new finished three bedroom apartment enjoying spectacular sea views of St Paul' s Bay and Xemxija. €250,000. Phone owner 9922 0023. 
+Tuesday, April 21, 2015|ST VENERA. One bedroom finished penthouse with a very large surrounding terrace, including a free one-car garage. €94,000. Phone owner 9922 0023.
+Tuesday, April 21, 2015|ST VENERA. Two bedroom, highly finished groundfloor maisonette with back yard and a free one-car garage, €110,000. Phone owner 9922 0023.
+Tuesday, April 21, 2015|TARXIEN. Bargain. One / two / three bedroom maisonettes, apartments and penthouses to be sold fully finished to your choice, from €75,000. Phone owner 9922 0023. 
+Monday, April 20, 2015|18,033 PROPERTIES for sale on Malta' s best rated property website: {00d0c9ea79f9bace118c8200aa004ba90b0200000003000000e0c9ea79f9bace118c8200aa004ba90b5200000068007400740070003a002f002f007700770077002e00730069006d006f006e0065007300740061007400650073002e0063006f006d002f000000795881f43b1d7f48af2c825dc485276300000000a5ab000000ff Phone 2388 0009, 7900 8287.
+Monday, April 20, 2015|GOZO, MARSALFORN. A two double bedroom apartment overlooking views, minutes away from the sea. €105,000. Phone 9942 2146.
+Monday, April 20, 2015|GOZO, MARSALFORN. Bargain, owner leaving island. Two bedroom, fully furnished apartment. Front and back terraces enjoying country views. €70,000. Phone 9942 3775.
+Monday, April 20, 2015|GOZO, XEWKIJA. A three bedroom bungalow with large roof terrace and garage. €220,000. Phone 9942 2146.
+Monday, April 20, 2015|NAXXAR. House of character. Real nice family home. Four bedrooms with en-suite and terraces, pool, two-car garage. €875,000. Phone owner 9947 3065.
+Monday, April 20, 2015|SLIEMA, Milner Grove. Overseas owner regretfully selling four bedroom apartment, very large terrace. Viewing through power of attorney. €550,000, negotiable, garage included. Phone 9986 8012.
+Sunday, April 19, 2015|PROPERTY FOR SALE
+Sunday, April 19, 2015|1% ANNE PULLICINO (sensara) www.anneproperties.com Phone 9942 2749.
+Sunday, April 19, 2015|10 PRICE REDUCTIONS this week on properties for sale at Ben Estates Ltd. Visit our website www.benestates.com or phone 9999 9983.
+Sunday, April 19, 2015|10,000 PROPERTIES for sale on www.simonmamo.com Phone 2142 1000.
+Sunday, April 19, 2015|18,033 PROPERTIES for sale on Malta' s best rated property website: www.simonestates.com Phone 2388 0009, 7900 8287.
+Sunday, April 19, 2015|A RESTAURANT situated in a prominent / central area, with good clientele. Phone 7750 5060. 
+Sunday, April 19, 2015|APARTMENTS, maisonettes, etc. Phone 9905 6212.
+Sunday, April 19, 2015|ATTARD, Misraħ Kola area. 150msq three bedroom, finished apartment ready to move into, separate kitchen. €163,000. Phone 9942 2256.
+Sunday, April 19, 2015|ATTARD, Misraħ Kola area. Modern corner three bedroom apartment with balconies. Ready to move into. €163,000. Phone 7947 8478.
+Sunday, April 19, 2015|ATTARD, Misraħ Kola area. Modern, spacious, three bedroom semi-basement maisonette with front terrace. Ready to move into. €135,000. Phone 7947 8478.
+Sunday, April 19, 2015|ATTARD. 130sqm, open plan maisonette. Three double bedrooms, bathroom, en-suite, front / back terrace. New block. €130,000. Shell. Phone owner 7904 9464. 
+Sunday, April 19, 2015|ATTARD. Block of two. Fully furnished three bedroom apartment. Large washroom on own part of roof, three-car garage. €220,000. Phone 7900 5544.
+Sunday, April 19, 2015|ATTARD. Bungalow or semi-detached, area 328sqm, with permits approved. 40% building with permits in hand. Phone 7947 5593.
+Sunday, April 19, 2015|ATTARD. Corner terraced house. Three-car garage, three bedrooms,garden. €265,000. Phone 9944 4456.
+Sunday, April 19, 2015|ATTARD. Designer finished, first floor apartment, two bedrooms, box room, use of roof. Phone 7929 4648.
+Sunday, April 19, 2015|ATTARD. Four bedroom terraed house, underlying garage. €350,000. Phone 9945 3678.
+Sunday, April 19, 2015|ATTARD. Highly finished and furnished penthouse, having a total of circa 300sqm. €320,000. Phone 7927 8517.
+Sunday, April 19, 2015|ATTARD. Highly finished, fully furnished, three bedroom, first floor maisonette. Open plan, three double bedrooms, washroom, full roof with garden furniture. €275,000, garage optional. Phone 7928 3504.
+Sunday, April 19, 2015|ATTARD. Maisonette. Three bedrooms, highly finished, garage. From €140,000. Phone 7945 6423.
+Sunday, April 19, 2015|ATTARD. Opposite green area. Finished, three bedroom apartment served with lift, open plan, en-suite. Smart block. €140,000. Phone 9957 8736.
+Sunday, April 19, 2015|ATTARD. Over 200sqm, luxurious penthouse. Three bedrooms, three bathrooms, surrounding terrace, garage. €210,000. Phone 7945 6423.
+Sunday, April 19, 2015|ATTARD. Penthouse two bedrooms fully furnished, ready to move into. €215,000, garage optional. Phone+356 9983 5960.
+Sunday, April 19, 2015|ATTARD. Semi-basement maisonette with front terrace. Also ideal for an office. Being sold finished. €128,150. Phone 7947 8478.
+Sunday, April 19, 2015|ATTARD. Semi-detached villa. Tranquil area. Three bedrooms, main with en-suite, drive-in, garage + back garden. €450,000. Phone 7947 3138.
+Sunday, April 19, 2015|ATTARD. Semi-detached, four bedroom villa having a BBQ / deck / pool area, and a newly renovated flatlet. €645,000. Phone 9953 6947.
+Sunday, April 19, 2015|ATTARD. Spacious, semi-detached villa including three bedrooms, roof top terrace, living and kitchen area, gym, office and washroom facilities. €500,000.Phone 7974 7721.
+Sunday, April 19, 2015|ATTARD / Naxxar / Mosta: houses of character, terraced houses, flats, maisonettes, bungalows, plots. Phone 2143 1695 or 7921 1403.
+Sunday, April 19, 2015|BAHAR IĊ-ĊAGĦAQ. New on the market luxury finished three bedroom wide fronted penthouse situated at level 5, having large terrace overlooking Madliena Cliffs and sea views, privet pool and communal pool, three-car lock-up garage. Phone 7949 3537.
+Sunday, April 19, 2015|BAĦAR IĊ-ĊAGĦAQ. Semi-detached villa with pool, sundeck, garden. Spacious rooms. Quiet location. Country views, partial sea views. €650,000.Phone 7942 9711.
+Sunday, April 19, 2015|BAĦAR IĊ-ĊAGĦAQ. Semi-detached, 360sqm villa facing a green area, kitchen / breakfast leading out to pool area, sitting / dining, three double bedrooms underlying two-car garage and games room. €650,000. Phone 9940 4303. 
+Sunday, April 19, 2015|BAĦAR IĊ-ĊAGĦAQ. Studio apartment with communal pool, quiet area near seafront. €106,000. Phone 7953 7114.
+Sunday, April 19, 2015|BAHAR IĊ-ĊAGĦAQ. Three bedroom furnished maisonette, quiet area near seafront. €207,000. Phone 7953 7114.
+Sunday, April 19, 2015|BAĦAR IĊ-ĊAGĦAQ. Three bedroom maisonette enjoying use of communal pool and garden. Sold finished. Completion date July 2015. €275,000. Phone 7999 0501.
+Sunday, April 19, 2015|BAĦRIJA. Finished three bedroom penthouse, fantastic views. €165,000. Phone 7970 7879.
+Sunday, April 19, 2015|BAĦRIJA. New on the market. Three bed apartment. Designer built. Finished €121,000. Bargain. Phone owner 7944 5991.
+Sunday, April 19, 2015|BALZAN VALLEY. First floor two / three bedroom apartment including airspace. €140,000. Phone owner 7927 7963.
+Sunday, April 19, 2015|BALZAN. 145sqm, designer finished, furnished three bedroom apartment, garage. €248,000. Phone 7990 0738.
+Sunday, April 19, 2015|BALZAN. 150sqm apartment. Three double bedroom, open plan leading onto terrace with open views. €150,000. Finished. Phone owner 7904 9464.
+Sunday, April 19, 2015|BALZAN. Charming converted townhouse. Large sunny rear courtyard, fitted kitchen / dining. €370,000. Phone 9947 3268.
+Sunday, April 19, 2015|BALZAN. Direct from owner highly finished three bedroom apartments. €175,000. No agents. Phone 7958 4801.
+Sunday, April 19, 2015|BALZAN. Direct from owner highly finished two bedroom apartments. €155,000. No agents. Phone 7958 4801.
+Sunday, April 19, 2015|BALZAN. Finished first floor maisonette, block of two. Separate sitting, three bedrooms, full roof. €222,000. Phone 9949 5041.
+Sunday, April 19, 2015|BALZAN. Finished large three bedroom apartment. Must view €152,000. Phone 7947 0510. 
+Sunday, April 19, 2015|BALZAN. Highly designed groundfloor maisonette. Two double bedrooms, office / third bedroom, back yard, washroom. €198,000, garage optional. Phone 7928 3504.
+Sunday, April 19, 2015|BALZAN. Large corner second floor three bedroom luxury finished new flat, lift. €149,000, garage optional. Phone 9991 9343.
+Sunday, April 19, 2015|BALZAN. Large, four bedroom, modern, first floor, 200sqm maisonette. Full roof and airspace. €245,000, garage optional. Phone 9980 1017.
+Sunday, April 19, 2015|BALZAN. Luxuriously finished duplex penthouse with three bedrooms, two living areas, large terrace and two-car garage. Phone 7921 2191.
+Sunday, April 19, 2015|BALZAN. Luxuriously finished three bedroom apartment with large living / kitchen / dining and optional garage. Phone 7921 2191.
+Sunday, April 19, 2015|BALZAN. Luxury finished penthouse. Large open plan, two bedrooms, large terraces, views, airspace. €177,000. Phone 9988 3854.
+Sunday, April 19, 2015|BALZAN. New luxury decorated first floor two bedroom apartment, two luxury bathrooms, large open plan kitchen, sitting / dining room, lift. €145,000, garage optional. Phone7944 0132.
+Sunday, April 19, 2015|BALZAN. Site measuring approx. .22ha (two tumoli) on two roads. Can also be developed into an old people 's home. €2,750,000. Phone 7900 2400. 
+Sunday, April 19, 2015|BALZAN. Spacious one-car garage. Street level. €38,000. Phone 7906 3476.
+Sunday, April 19, 2015|BALZAN. Two bedroom luxury decorated penthouse large open plan lift. €168,000. Phone 9950 9048.
+Sunday, April 19, 2015|BALZAN. Very spacious one bedroom penthouse with views. Finished. €127,000. Phone 9945 3678.
+Sunday, April 19, 2015|BIRGUMA. 160sqm penthouse. Three bedrooms, open plan, terraces, views. €225,000, garage optional. Phone 9949 5041.
+Sunday, April 19, 2015|BIRGUMA. Apartment. Finished, two double bedrooms, large open plan, panoramic views. €143,000, garage optional. Phone 9942 2256.
+Sunday, April 19, 2015|BIRGUMA. Large three bedroom penthouse, open views from all terraces, 60sqm open plan. €235,000 Phone 7981 8181.
+Sunday, April 19, 2015|BIRKIRKARA (F.S. Caruana Street). Groundfloor maisonette with own roof and one-car garage. All big rooms. Ideal for offices with separate rooms or as a clinic. Please phone owner 7945 5666.
+Sunday, April 19, 2015|BIRKIRKARA, close to St Aloysius College. Bright three bedroom apartment having squarish layout, lift and use of roof. New fitted kitchen. €120,000. Phone owner 9942 4842.
+Sunday, April 19, 2015|BIRKIRKARA, old church. First floor maisonette. Open plan, sitting, three double bedrooms, box room, washroom on full roof. €245,000, three-car garage optional. Phone 7948 6346.
+Sunday, April 19, 2015|BIRKIRKARA, Swatar / Ta' Paris. New on the market. Elevated maisonette, three bedrooms with two yards €163,000. Apartment, three bedrooms with large open plan €150,000. Penthouse, three bedrooms €163,000. All highly finished. Phone owner 7711 4545.
+Sunday, April 19, 2015|BIRKIRKARA, Ta' Paris new area. Newly finished two bedroom maisonette with a large front patio. €98,000. Phone owner 9994 6417.
+Sunday, April 19, 2015|BIRKIRKARA, Ta' Paris / Swatar. Looking for an XXL property? Newly built 230sqm three / four bedroom maisonette with a large yard. €177,000. Finished. Phone owner 9944 7922.
+Sunday, April 19, 2015|BIRKIRKARA. Best prices in Birkirkara. Three bedroom apartments, very good area, newly built block. Fantastic finishes. Starting €100,000. Phone owner 7927 2465.
+Sunday, April 19, 2015|BIRKIRKARA. Corner maisonette. Full roof, Three bedrooms, kitchen, washroom. €138,000. Phone 7990 0738.
+Sunday, April 19, 2015|BIRKIRKARA. Eight-car garage, 14 courses high, street level. Water / electricity, yard, toilet, store, remote control shutter. €127,000 Phone 9988 3854.
+Sunday, April 19, 2015|BIRKIRKARA. Elevated house with kitchen, living, dining, two box rooms, three bedrooms, two bathrooms, terrace and full roof. €128,000. Phone 7932 8754. 
+Sunday, April 19, 2015|BIRKIRKARA. Finished two bedroom maisonette with interconnected garage. Large back yard. €129,000. Phone 7945 0155.
+Sunday, April 19, 2015|BIRKIRKARA. Groundfloor three bedroom maisonette, kitchen / dining sitting room, bathroom, yard, one-car garage, roof. €112,000. Phone 7980 2750 or 7923 1275.
+Sunday, April 19, 2015|BIRKIRKARA. House of character, large mill room, kitchen, three bedrooms en-suite, main bathroom, guest toilet, washroom, roof garden, cellar €315,000. Phone owner 7949 6097.
+Sunday, April 19, 2015|BIRKIRKARA. Looking for a bargain? Newly built two bedroom, second floor apartment in a block of only three. €65,000 shell. No lift. Phone owner 9913 7275.
+Sunday, April 19, 2015|BIRKIRKARA. Maisonette. Own roof, three bedrooms, large roof terrace, garage. €185,000. Phone 9902 2280.
+Sunday, April 19, 2015|BIRKIRKARA. New three bedroom first floor flat, luxury decorated, lift. €98,000. Phone 9910 0989.
+Sunday, April 19, 2015|BIRKIRKARA. Two bedroom maisonette, finished, with a large open plan, two bedrooms, bathroom, en-suite and large back yard. €112,000. Phone owner 7927 2465.
+Sunday, April 19, 2015|BIRKIRKARA. Two double bedroom, nearly finished penthouse, big terrace, lift, broken engagement. €108,000. Phone 2138 5451.
+Sunday, April 19, 2015|BIRKIRKARA.Unconverted, three bedroom townhouse. €70,000. Phone 9967 0019,
+Sunday, April 19, 2015|BIRŻEBBUĠA, Qajjenza. Apartments two bedrooms finished including bathrooms / internal doors. €85,000. Phone 7965 2339.
+Sunday, April 19, 2015|BIRŻEBBUĠA. Corner two bedroom apartment, fitted kitchen / dining, bathroom, roof. €95,000. Phone 7980 2750, 7923 1275.
+Sunday, April 19, 2015|BIRŻEBBUĠA. Groundfloor maisonette comprising two bedrooms, bathroom, living kitchen open plan internal back yard to be sold finished with bathroom doors €93,000 (Lm39,900). Phone 7926 2048.
+Sunday, April 19, 2015|BIRŻEBBUĠA. New, four bedroom terraced house with seven-car garage, street level with house measuring 5.7m (19ft) facade x 20.10m (67ft) depth. €210,000. Phone owner 7927 2465.
+Sunday, April 19, 2015|BIRŻEBBUĠA. Plot for terraced house. €150,000. Phone owner 7927 2465.
+Sunday, April 19, 2015|BUĠIBBA, near San Pawl Hotel. Apartment in a block of four, fully furnished, having two bedrooms, one bathroom, kitchen, living and dining room with balcony and own roof space. Ideal for first time buyer or as a rental investment. €79,000. Phone 7999 3873 or 9989 3558.
+Sunday, April 19, 2015|BUĠIBBA. First floor, open plan seafront apartment. Two bedrooms (main with en-suite), bathroom, box room, front / back balcony. €115,000. Phone 9988 4893.
+Sunday, April 19, 2015|BUĠIBBA. Good area. Luxuriously finished two bedroom apartment, lift. €95,000. Phone 9924 9188.
+Sunday, April 19, 2015|BUĠIBBA. Large three bedroom flat living / dining kitchen, fitted cupboards, large balcony, €114,000. Phone 2149 0902 or 9947 1810.
+Sunday, April 19, 2015|BUĠIBBA. Top floor three bedrooms flat with own roof and washroom. Phone 2145 3742 or 9944 6627.
+Sunday, April 19, 2015|BUĠIBBA.Spacious three double bedroom apartment located close to Buġibba square. New kitchen€110,000. Phone 9970 3135.
+Sunday, April 19, 2015|COSPICUA (Bormla). Centrally located one bedroom apartment. Ideal rental investment. €51,000. Phone 9992 4271.
+Sunday, April 19, 2015|COSPICUA (Bormla). One-of-a-kind 1954 palazzo. Two floors, views. Ideal as a boutique hotel. €280,000. Phone 9948 7001.
+Sunday, April 19, 2015|COSPICUA (Bormla). Seafront townhouse with garden and terrace with panoramic view. €275,000. Phone 2388 0010, 7900 8287.
+Sunday, April 19, 2015|COSPICUA (Bormla). Two bedroom maisonette in shell form, with wooden doors ready and aluminium finishes. €75,000. Phone 9937 3635.
+Sunday, April 19, 2015|DINGLI. 100-year-old, completely unconverted farmhouse set in a quiet location, set on .11ha (tumolo) land. Unobstructed country views. €370,000. Phone 9947 6949.
+Sunday, April 19, 2015|DINGLI. Corner penthouse. 260sqm. Fantastic country views. Large open plan facing 12sqm terrace. Phone 7984 7353.
+Sunday, April 19, 2015|DINGLI. Groundfloor, three bedroom maisonette. Back yard, country views. Rare opportunity. €146,000. Phone 9916 0750.
+Sunday, April 19, 2015|DINGLI. New terraced houses shell three bedrooms,unobstructed sea and country views €180,000. Phone 7965 2339.
+Sunday, April 19, 2015|FGURA (Żabbar Road). Site, 8.1 x 22.5m (27 x 75ft), with permit for shops or offices. €256,500. Phone 7947 0510. 
+Sunday, April 19, 2015|FGURA. Apartment. Three bedrooms, large open plan, bathroom, en-suite. €90,000, finished including doors and bathrooms. Phone owner 7904 9464.
+Sunday, April 19, 2015|FGURA. Bright, larger than usual three bedroom apartments and two bedroom penthouse to be sold finished. Starting from €125,000. Early viewing recommended. Phone 9902 0929.
+Sunday, April 19, 2015|FGURA. Extremely spacious, over 200sqm four bedroom apartment, in a block of only two. Must be seen. €115,000. Phone owner 9944 7922.
+Sunday, April 19, 2015|FGURA. Finished first floor apartment in a block of only three units. Separate kitchen / dining, sitting room, three bedrooms, bathroom and balcony with lift. €90,000. Phone 9955 5508.
+Sunday, April 19, 2015|FGURA. Finished large three bedroom apartment in a sought after area. €115,000. Phone 9989 5393.
+Sunday, April 19, 2015|FGURA. First floor finished apartment in a block of only three, served with lift. Kitchen / living, separate dining, two double bedrooms (one with en-suite), one single bedroom, bathroom and front balcony. €90,000. Phone 7972 4797.
+Sunday, April 19, 2015|FGURA. First floor maisonette, full roof, kitchen, living room, dining, washroom, roof. €150,000. Phone 7980 1965.
+Sunday, April 19, 2015|FGURA. Groundfloor maisonette, highly finished, three double bedrooms, back yard. €130,000. Phone 9972 7242.
+Sunday, April 19, 2015|FGURA. New development massive squarish apartment with large open plan living kitchen, dining, three double bedrooms, en-suite bathroom, large verandah to be sold finished with bathrooms and doors €105,000. (Lm45,000). Phone 7926 2048.
+Sunday, April 19, 2015|FGURA. Penthouse 163sqm, designer finish, ready to move in only €168,000. Phone 7986 7766.
+Sunday, April 19, 2015|FGURA. Penthouse, three bedrooms, two bathrooms, terrace, fully furnished with lift. €129,000. Phone 9943 7612.
+Sunday, April 19, 2015|FGURA. Selection of one / two and three bedroom apartments having also en-suite bathroom, living kitchen, open plan verandah yards or part of roof to be sold finished with bathroom doors from only €63,000. (Lm27,000). No Deposit needed. Phone 7992 5513.
+Sunday, April 19, 2015|FGURA. Three bedroom terraced house with large yard. €200,000. Phone 7970 7879.
+Sunday, April 19, 2015|FLEUR-DE-LYS. Furnished two bedroom apartment. Terrace, half roof, washroom. €127,000, negotiable. Phone 9999 9982.
+Sunday, April 19, 2015|FLEUR-DE-LYS. Two bedroom, duplex penthouse. Lovely, large terrace, bright open plan, Mdina views. €185,000. Phone 9942 1969.
+Sunday, April 19, 2015|FORT CAMBRIDGE. New, three bedroom squarish layout apartment. Two large terraces and great views. €518,000. Phone 7931 0238.
+Sunday, April 19, 2015|GĦARGĦUR. 155sqm apartment, three double bedrooms, large open plan, bathroom, en-suite. €180,000. Finished. Phone owner 7904 9464.
+Sunday, April 19, 2015|GĦARGĦUR. House of character with mill room, courtyard, unconverted. €173,000. Phone 9987 3162.
+Sunday, April 19, 2015|GĦARGĦUR. New, large, three bedroom apartment overlooking two roads, shell form, lift. €150,000. Phone 7937 3415.
+Sunday, April 19, 2015|GĦochARGĦochUR. New, two / three bedroom apartments, corner block. Finished, from €och164,000. Phone 9949 3677.
+Sunday, April 19, 2015|GĦARGĦUR. Selection of two shell form penthouses. Three double bedrooms, large terraces enjoying open country views. Starting from €200,000. Phone 7988 5330.
+Sunday, April 19, 2015|GĦARGĦUR. Spacious three bedroom apartment on plan, to be sold finished. €195,000. Phone 7996 3357.
+Sunday, April 19, 2015|GĦAXAQ. Converted luxury farmhouse on .275ha (2½ tumoli), pool, landscaped gardens, high rubble walls, extensive entertaining areas, conservatory and much more. €995,000. Phone 9942 6479.
+Sunday, April 19, 2015|GĦAXAQ. Wide fronted nearly finished new penthouse with spacious open plan, two bedrooms, en-suite, bathroom, large front veranda and lift. €97,000. Phone 9950 1830. 
+Sunday, April 19, 2015|GOZO, GĦARB. Bargain. Finished house of character. Pool, deck area, basement, views, two bedrooms, study, laundry. Reduced €258,000. Phone 7949 0827.
+Sunday, April 19, 2015|GOZO, GĦARB. Plot measuring 7.2m (24ft) frontage x 27.6m (92ft) length. Freehold. Reasonable price. Phone 9984 7320.
+Sunday, April 19, 2015|GOZO, MARSALFORN. Bargain, owner leaving the island. Two bedroom apartment, fully furnished. Front and back terrace enjoying country views. €70,000. Phone 9942 3775.
+Sunday, April 19, 2015|GOZO, MARSALFORN. Brand new, two bedroom apartments in a very smart block situated very close to the bay, finished to very high standard €80,000. Phone owner 9949 7322, website: www.propertymaltagozo.com
+Sunday, April 19, 2015|GOZO, MARSALFORN. Bright / airy three bedroom apartment, five minutes from seafront. Living room, kitchen / dining combined, three balconies, furnished, ready to move into. €80,000. Phone owner 7928 7992. 
+Sunday, April 19, 2015|GOZO, MARSALFORN. Fully furnished brand new apartment offering guaranteed views in a luxurious block €170,000. Phone 7922 1227.
+Sunday, April 19, 2015|GOZO, MUNXAR. Plot measuring 6.9 x 42m (23 x 140ft) facing ODZ area with full permit, great location. €205,000. Phone 7922 1227.
+Sunday, April 19, 2015|GOZO, NADUR. A four bedroom farmhouse, with a large pool and outdoor space. €450,000. Phone 9942 2146.
+Sunday, April 19, 2015|GOZO, NADUR. A large new three bedroom apartment with high specifications, finished with a large open plan. €110,000. Phone owner 7927 2465.
+Sunday, April 19, 2015|GOZO, NADUR. Finished / furnished maisonette, roof. Separate living, three bedrooms, laundry, terraces, views. €155,000, three-car garage optional. Phone7949 0827.
+Sunday, April 19, 2015|GOZO, NADUR. From owner, furnished large apartment overlooking unobstructed sea and valley views. €189,000. Phone 7991 1234. 
+Sunday, April 19, 2015|GOZO, NADUR. Furnished apartment. Three bedrooms, box room, balconies, views. Reduced, €110,000. Phone 7949 0827.
+Sunday, April 19, 2015|GOZO, NADUR. Hard to find. This groundfloor furnished apartment with a massive sunny pool / deck area, two bedrooms, one bath, one en-suite, open plan living, interconnected lock up garage. €174,000. Phone 9982 9745.
+Sunday, April 19, 2015|GOZO, NADUR. Price reduced. Imposing house of character situated on the valley edge, offers comfortable living space, entertainment areas, indoor heated pool and outdoor swimming pool, deck / bbq area, five double bedrooms (four en-suite) gym, terrace, carport. Furnished and ready to move into. €580,000. Phone 9982 9745.
+Sunday, April 19, 2015|GOZO, QALA. A bargain not to be missed. Two bedroom apartment in this lovely village, within walking distance to the square. Open plan kitchen and dining area. Large terrace and washroom at top enjoying country views. €72,000. Phone 9996 1008.
+Sunday, April 19, 2015|GOZO, QALA. Large penthouse, three bedrooms,with front and back terrace, views, lift. Sold furnished €245,000. Phone 9945 9426.
+Sunday, April 19, 2015|GOZO, QALA. Last remaining second floor apartment, country views, terrace, three bedrooms and lift €86,000. Phone 7926 4305.
+Sunday, April 19, 2015|GOZO, QALA. Three bedroom highly finished and furnished apartment with roof ownership €123,000. Phone 9942 9158.
+Sunday, April 19, 2015|GOZO, SAN LAWRENZ. Furnished four bedroom house. Pool, large garage. Priced to sell, €375,000. Phone 9949 1115.
+Sunday, April 19, 2015|GOZO, VICTORIA. A three bedroom maisonette with a balcony and back terrace. €250,000. Phone 9942 2146.
+Sunday, April 19, 2015|GOZO, VICTORIA. Plot of land very centrally located, enjoying country views measuring 6.3 x 30m (21 x 100ft). Part exchange for farmhouse considered. Phone owner 9942 9340.
+Sunday, April 19, 2015|GOZO, XAGĦRA. Bargain. Three bedroom house enjoying pool, underlying garage, washroom and roof terrace €180,000. Phone 7926 4305.
+Sunday, April 19, 2015|GOZO, XAGĦRA. Three bedroom converted farmhouse with pool €190,000. Phone 9942 9158.
+Sunday, April 19, 2015|GOZO, XEWKIJA. Maisonette, bargain, newly furnished maisonette with front terrace, two bedrooms. €77,000. Phone 9945 9426.
+Sunday, April 19, 2015|GOZO, XLENDI. Business opportunity. Block of three apartments situated just corner away from the beach, with the possibility to add another two floors. €350,000. Phone 9988 7720. 
+Sunday, April 19, 2015|GOZO, XLENDI. Foreign owned, attractive apartment, ideal holiday home or buy to let. €149,500. Phone 9928 7784.
+Sunday, April 19, 2015|GOZO, ŻEBBUĠ. Apartment. Valley and open sea views Furnished, two bedrooms, poll, private garden. €360,000. Phone 9905 4096.
+Sunday, April 19, 2015|GOZO, ŻEBBUĠ. Cliff-edge two bedroom apartment, terrace, countryandseaviews, €169,000. Phone 7967 9111.
+Sunday, April 19, 2015|GOZO, ŻEBBUĠ. Land 1.35ha (4½ tumoli). Entrance from road overlooking sea coast. Phone owner 7959 4790 or 7959 4784 or 2123 9506.
+Sunday, April 19, 2015|GOZO, ŻEBBUĠ. Luxury finished apartments with impressive sea and country views from a cliff edge location. Property also enjoys a communal pool with jacuzzi, 1.32ha (12 tumoli) of private garden with a lot of unique features and a waterfall. €218,000. Phone direct owner 9922 8085.
+Sunday, April 19, 2015|GOZO, ŻEBBUĠ. Unique townhouse finished with modern taste, own use or buy to let. €255,000. Phone 7926 1021.
+Sunday, April 19, 2015|GOZO. Avery largebrand new apartment ready to move in with three bedrooms and back yard. Priced to sell, €85,000. Phone 7920 5520.
+Sunday, April 19, 2015|GOZO. Best areas new apartments with lift / maisonettes and penthouses also available. Starting from €60,000. Phone 9945 9394.
+Sunday, April 19, 2015|GOZO. Cliff edge three bedrooms maisonettes with own airspace, terraces, square layout. New block. Phone 9945 5029. 
+Sunday, April 19, 2015|GOZO. Reduced for quick sale. Large spacious three double bedroom apartment south facing at the Dukes. Apartment is completely finished with internal doors and bathrooms. €195,000, negotiable, lock-up one-car garage included. Phone owners 9947 0222.
+Sunday, April 19, 2015|GUARDAMANGIA. Highly finished two bedroom apartment. Large open-plan kitchen / dining / living, large balcony. €101,000. Phone 9917 0000.
+Sunday, April 19, 2015|GUARDAMANGIA. Maisonettes, apartments, penthouses, highlyfinished. Furniture includes equipped kitchen, unit, sofa, two bedrooms, air-conditioner, Decor lights etc. Completion end 2015. From €115,000. Phone 9999 9982.
+Sunday, April 19, 2015|GUARDAMANGIA / PIETÀ. Airspace for seven units (two bedrooms). €210,000. Phone owner 7959 2925.
+Sunday, April 19, 2015|GUDJA. Last remaining three bedrooms, apartment having spacious open plan en-suite bathroom, large verandahs to be sold finished with bathrooms doors, €105,000. (Lm45,000). Phone 7926 2048.
+Sunday, April 19, 2015|GUDJA. Quiet area. Two bedrooms apartments having also living kitchen open plan en-suite bathroom with yards or verandahs from €87,500 (Lm37,500). Phone 7992 5513.
+Sunday, April 19, 2015|GUDJA. Terraced house sitting / dining, kitchen / living, back yard, three bedrooms, bathroom, study, roof, one-car garage. €295,000. Phone 9949 7468.
+Sunday, April 19, 2015|GŻIRA. Bright, excellently located, three bedroom penthouse. €218,000. Phone 7997 9960.
+Sunday, April 19, 2015|GŻIRA. Fully furnished one bedroom close to university. An excellent rental investment €95,000. Phone Steve Faenza 9911 3535. 
+Sunday, April 19, 2015|GŻIRA. Large three bedroom apartment, very close to seafront €129,000. Phone 9942 6955.
+Sunday, April 19, 2015|GŻIRA. New, highly finished, three bedroom apartment, large open plan. €196,000, garage optional. Phone 7725 3502.
+Sunday, April 19, 2015|GŻIRA. Newly built, truly larger than usual 123sqm two double bedroom apartment. Block of four with lift. Phone owner 7711 4545.
+Sunday, April 19, 2015|GŻIRA. Penthouse. Three bedrooms, 220sqm. Good location. €230,000 Phone 9949 0068.
+Sunday, April 19, 2015|GŻIRA. Rental investment. Just off Strand, Sliema side. Recently modernised block continuously rented out. €485,000. Phone 9942 1969.
+Sunday, April 19, 2015|GŻIRA. Seafront two bedroom apartment. €245,000. Phone Mario 7942 8990.
+Sunday, April 19, 2015|ĦAMRUN. Finished three bedroom terraced house, fitted kitchen / dining, living, two bathrooms, large garden, roof. €180,000. Phone 7923 1275 or 7980 2750.
+Sunday, April 19, 2015|ĦAMRUN. Garage with work permit, 6.3 x 16.5m (21 x 55ft), with back yard 6 x 3m (20 x 10ft). €120,000. Phone 9932 2845.
+Sunday, April 19, 2015|ĦAMRUN. Three bedroom apartment, washroom and balconies on plan €95,700. Phone +356 9983 5960.
+Sunday, April 19, 2015|IKLIN. Large apartment, quiet area. Open plan, small block, front / back terraces. €170,000. Phone 7945 6423.
+Sunday, April 19, 2015|IKLIN. Three-car garage, 15 x 3.45m in a yard, street level, complete with electricity and water. €55,000. Phone 7980 9009.
+Sunday, April 19, 2015|KALKARA. Highly finished terraced house, three bedrooms, three bathrooms, sea views. €264,750, garage optional. Phone 9943 7612. 
+Sunday, April 19, 2015|KALKARA. New, three bedroom, shell terraced houses including four-car garage. €185,000 each. Phone 7965 2339.
+Sunday, April 19, 2015|KAPPARA. 25sqm commercial premises, Class 4 permits. Ideal as stationery or hairdresser / nail technician. Premium €3000 and €15 daily. Offers considered. Phone 9947 3268.
+Sunday, April 19, 2015|KAPPARA. Large semi-detached villa, four bedrooms, three lounges, kitchen / living / breakfast, three-car street level garages, terraces, pool and flatlet. Ideal for a large family, embassy or residential unit for a school. In need of renovations. €650,000, negotiable. No agents. Phone 9929 4188.
+Sunday, April 19, 2015|KAPPARA. New on the market, three bedroom semi-detached villa offered on plan and sold shell, with pool, underlying six-car garage. €485,000. Phone 7970 1937.
+Sunday, April 19, 2015|KAPPARA. Semi-detached, three bedroom villa including full basement, surrounding garden, pool, views. €485,000. Phone 7947 5593.
+Sunday, April 19, 2015|KIRKOP. Furnished and expertly converted house of character with country views. Central courtyard and original features. €328,000, negotiable. No agents. Phone 9984 8380.
+Sunday, April 19, 2015|KIRKOP. New first floor large luxury decorated three bed room maisonette, €114,000. Phone 9991 9343.
+Sunday, April 19, 2015|KIRKOP. Penthouse. Kitchen / living, one bedroom en-suite, two terraces. €99,000. Phone 9988 3480.
+Sunday, April 19, 2015|LIJA. Beautiful three bedroom house of character, yard, garage €275,000. Phone 9942 6955.
+Sunday, April 19, 2015|LIJA. Detached three bedroom villa. Kitchen, living / dining, conservatory, sitting, garden, washroom, views, two garages. €475,000. Phone 7900 5544.
+Sunday, April 19, 2015|LIJA. Finished, three bedroom house of character €198,000. Optional basement garage at walking distance €19,000. Phone owner 7920 3141.
+Sunday, April 19, 2015|LIJA. Foreign owned double fronted house of character with four bedrooms, pool, lawn and garage. A rare find. Phone 7933 4118.
+Sunday, April 19, 2015|LIJA. Groundfloor, open plan maisonette. Three double bedrooms, ýlarge yard, lock-up garage. €189,000. Phone 9967 0019.
+Sunday, April 19, 2015|LIJA. Highly finished, corner apartment. Three double bedrooms, large sitting / dining, separate kitchen. Wide square layout (no corridors). Views. Small block. €172,000, negotiable. Motivated sellers. Phone 7928 3504.
+Sunday, April 19, 2015|LIJA. Palazzino. Structurally converted, three bedrooms, large living areas, large back garden with permit for pool. Sought after area. €700,000. Phone 7947 5593.
+Sunday, April 19, 2015|LIJA. Site 1,800sqm of building, to be sold as one. Price on request. Phone 9949 8243.
+Sunday, April 19, 2015|LUQA. Corner, terraced bungalow facing green area. No stepsto access property. Ideal for elderly persons, or wheel chair access. On two plots. POR. Phone 9945 6442.
+Sunday, April 19, 2015|LUQA. Three bedroom townhouse. Features include height ceilings, patterned tiles, spiral staircase (garigor), two bathrooms, yard and pool. €320,000 FH, negotiable. Phone 9947 5138.
+Sunday, April 19, 2015|MADLIENA. 145sqm apartment. Three double bedrooms. One-car garage. Excellent location; good value. €299,500. Phone 9923 3055.
+Sunday, April 19, 2015|MADLIENA. Detached villa, views, 2,400sqm. €940,000. Phone 9949 0068.
+Sunday, April 19, 2015|MADLIENA. Semi-detached bungalow offered on plan, set on approximately 567sqm of land, having three double bedrooms, large swimming pool and a four-car garage. Tranquil location and unobstructed sea views. €1,134,000 (shell form) or €1,332,000 (finished state). Phone 7942 6774.
+Sunday, April 19, 2015|MADLIENA. Unique opportunity to acquire 160sqm three bedroom apartment with breathtaking views. €262,000. Phone 7981 8181.
+Sunday, April 19, 2015|MANIKATA. Newly built, three double bedroom apartment with an XXL open plan, must be seen. Block of three served with lift. €152,000 shell or €164,000 finished. Phone owner 9944 7922.
+Sunday, April 19, 2015|MANIKATA. Semi-detached villa, finished three bedrooms, eight-car garage, pool €730,000. Phone 7929 4648.
+Sunday, April 19, 2015|MANIKATA. Spacious, terraced house, two-car garage, study, open plan, three double bedrooms (en-suite), garden (24 x 20) €310,000. Phone 7742 7745.
+Sunday, April 19, 2015|MARSA. Groundfloor maisonette. No stairs. Two bedrooms, kitchen/ living, bathroom, veranda. €60,000. Phone 2123 2182 or 7909 5068.
+Sunday, April 19, 2015|MARSA. Villa with large garden, eight bedrooms with en-suite bathrooms, sala nobile. Permits for offices in hand. Phone 9999 3332.
+Sunday, April 19, 2015|MARSASCALA, Bella Vista. Looking for a maisonette? Newly built. Maisonette two bedroom with yard €111,000. Maisonette three bedroom with yard €132,000. Maisonette elevated, two bedrooms €106,000. Maisonette elevated, three bedrooms €133,000. All highly finished. Phone owner 9944 7922.
+Sunday, April 19, 2015|MARSASCALA, Bella Vista. Maisonette, apartments, penthouse finished semi-finished shell, country views. Starting €97,000. Phone 7900 2064.
+Sunday, April 19, 2015|MARSASCALA, Bella Vista. Why rent if you can buy? New on the market one bedroom €70,000. Two bedroom apartment €90,000. Finished. Served with lift. Phone owner 9994 6417.
+Sunday, April 19, 2015|MARSASCALA, St Thomas. Newly finished, including doors and bathrooms, extremely bright and spacious two bedroom apartment. €95,000 or three bedroom €105,000. Phone owner 7711 4545.
+Sunday, April 19, 2015|MARSASCALA, Żonqor. Elevated groundfloor apartment. Living room, three bedrooms, bathroom, kitchen, balcony with sea views, two yards and washroom. Excellent finish, ready to move into. Reduced to €125,000. Phone 7963 6800 or 2163 6800.
+Sunday, April 19, 2015|MARSASCALA. €385,000. Large corner three bedroom terraced house facing green area with large basement garage. Luxuriously finished by owners. Phone 9985 6553.
+Sunday, April 19, 2015|MARSASCALA. €98,000. Second floor apartment, ideal for first time buyers or letting investment. Fully furnished and equipped, air-conditioned, ownership of half roof. Foreign owners. Best buy in town. Phone 9985 6553.
+Sunday, April 19, 2015|MARSASCALA. Brand new furnished studio apartment, terrace, sea views, communal pool, lift. €197,000. Phone 9949 1115.
+Sunday, April 19, 2015|MARSASCALA. Corner, elevated, groundfloor maisonette. Squarish layout having a spacious open plan, three double bedrooms, en-suite, bathroom, box room and yard. Furnished, including kitchen and four air-conditioners. €170,000, two-car garage included. Phone 9971 5555.
+Sunday, April 19, 2015|MARSASCALA. Elevated groundfloor maisonette with open plan kitchen / dining / living area, three bedrooms, bathroom, en-suite, box room and spacious back yard. €135,500. Phone 9932 3741. 
+Sunday, April 19, 2015|MARSASCALA. Finished two bedroom apartment consisting of a living, separate kitchen, dining, bathroom with shower, two double bedrooms and front balcony. €75,000 FH. Phone 7972 4797.
+Sunday, April 19, 2015|MARSASCALA. First floor maisonette with hall, living area leading to front balcony, separate kitchen-dining, three bedrooms, main with space for en-suite, washroom, two roofs. €225,000, semi-basement eight-car garage with storage room included. Phone 9950 1830.
+Sunday, April 19, 2015|MARSASCALA. Fully furnished apartment,spacious kitchen/ living/ dining, three bedrooms. Two-car garage, roof. €135,000. Phone 7993 6413.
+Sunday, April 19, 2015|MARSASCALA. Guesthouse 10 bedrooms, eight en-suite. Permit for another two floors. Phone 7959 2925.
+Sunday, April 19, 2015|MARSASCALA. Luxury furnished, three bedroom penthouse. Unobstructed sea views, full airspace, interconnecting one-car garage. €348,500, negotiable. 160sqm internally, 50sqm externally. Phone 9926 3750.
+Sunday, April 19, 2015|MARSASCALA. New development: maisonettes, apartments and penthouses two bedrooms to be sold finished and served with lift. Starting from €93,700. Phone 9932 3741.
+Sunday, April 19, 2015|MARSASCALA. New duplex one bedroom apartment kitchen living, shower room, two balconies and rare use of top terrace Bargain. €64,000. Phone 7965 2339.
+Sunday, April 19, 2015|MARSASCALA. New luxury decorated three bedroom duplex penthouse, bay views, terraces, own roof. €148,000, garage optional. Phone 9950 9048.
+Sunday, April 19, 2015|MARSASCALA. New on the market. Three bedroom, luxuriously furnished maisonette, ownership of roof. Quiet area. €198,000. Phone 9999 9982.
+Sunday, April 19, 2015|MARSASCALA. Seafront apartment, two bedrooms, terrace with stunning views. €235,000. Phone 9946 7721.
+Sunday, April 19, 2015|MARSASCALA. Terraced house situated in a sought after area consisting of entrance hall sitting, separate kitchen / dining, terrace, three bedrooms, two bathrooms, washroom, yard, roof and interconnecting two-car garage. Bargain. €281,500. Phone 9950 1830.
+Sunday, April 19, 2015|MARSASCALA. Three bedroom apartment being sold luxuriously finished with fitted kitchen and new appliances. Reduced to sell, €123,500. Phone 9971 5555.
+Sunday, April 19, 2015|MARSASCALA. Three bedroom duplex penthouse with large terraces enjoying sea views. €150,000. Phone 7952 3657.
+Sunday, April 19, 2015|MARSASCALA. Three bedroom terraced house with one-car garage, enjoying unobstructed country views. €240,000 (Lm103,000). Phone 9986 1713.
+Sunday, April 19, 2015|MARSAXLOKK. Second floor maisonette with own roof. Consists of three double bedrooms, en-suite, bathroom and a huge naturally lit open plan. €220,000, street level three-car garage available. Phone 9971 5555.
+Sunday, April 19, 2015|MARSAXLOKK. Very large apartment with very large front balcony and back terrace, served with lift, having good quality finishes. Large open plan, two bathrooms, three double bedrooms. €118,000. Phone 7965 9777.
+Sunday, April 19, 2015|MELLIEĦA, Heights. Elevated groundfloor flat, three bedrooms, terrace, small block €210,000. Phone 7929 5125.
+Sunday, April 19, 2015|MELLIEĦA, Heights. Elevated groundfloor maisonette, three bedrooms, views, garage €234,000. Phone 7929 5125.
+Sunday, April 19, 2015|MELLIEĦA, Il-Qortin. Three bedroom terraced house, 10 car garage. €395,000. Phone 9912 5070.
+Sunday, April 19, 2015|MELLIEĦA, Kortin area. Fully detached, 970sqm bungalow. Three bedrooms, two bathrooms, garden with space for pool, street level seven-car garage. €690,000. Phone 9945 0827.
+Sunday, April 19, 2015|MELLIEĦA, Tas-Sellum. Spacious, furnished, corner, groundfloor apartment, prestige complex. Sitting / dining leading two terraces with views, common pool, three bedrooms, en-suite / walk-in wardrobe, jacuzzi, two storages. €650,000, including two-car garage. Phone 9980 1702.
+Sunday, April 19, 2015|MELLIEĦA. Apartment with views. Open plan, two bedrooms, balconies. €117,000. Phone 9907 2108.
+Sunday, April 19, 2015|MELLIEĦA. Brand new three bedroom, spacious apartment with large terrace, own washroom and airspace enjoying unobstructed panoramic views. Highly finished. €285,000. Phone 9945 6442.
+Sunday, April 19, 2015|MELLIEĦA. Central blockofthree bedroomapartments,lift, terraces,parking.€148,000. Phone 9970 3135.
+Sunday, April 19, 2015|MELLIEĦA. Direct from owner a well kept attractive terraced house, three bedrooms, three bathrooms (one en-suite + 2) seperate living room with fireplace, study, large oak kitchen / dining, patio and large back yard with well. 6.6 x 30m (22 x 100' ) with underlying semi-basement garage. €365,000 FH. Phone 7952 1234.
+Sunday, April 19, 2015|MELLIEĦA. First floor three bedroom maisonette with own full airspace. €180,000, two-car garage optional. Phone 9949 7468.
+Sunday, April 19, 2015|MELLIEĦA. Garage. Window to street. 6 x 3.3m. €20,000, negotiable. Phone 9944 1016.
+Sunday, April 19, 2015|MELLIEĦA. Luxury apartment. Large 50sqm open plan, three bedrooms, bathroom / en-suite, front balcony. €142,000. Phone 7987 1787.
+Sunday, April 19, 2015|MELLIEĦA. Penthouse double fronted, large terraces 9.9 x 3.9m (33 x 13ft) front and back with great views overlooking Sta Maria Estate, sea views, three bedrooms. €280,000.Finished. Phone owner 7904 9464.
+Sunday, April 19, 2015|MELLIEĦA. Three bedroom corner elevated groundfloor maisonette, 145sqm. Completion date December 2015. €155,000. Phone 9923 3055.
+Sunday, April 19, 2015|MELLIEĦA. Three bedroom maisonette with private courtyard and large balcony in quiet street. Fully furnished €210,000. Phone 9970 3135.
+Sunday, April 19, 2015|MELLIEĦA. Three bedroom maisonette, own roof, two-car garage. €240,000. Phone 9940 7275.
+Sunday, April 19, 2015|MELLIEĦA. Two bedroom penthouse, quiet area, nicely finished, small block €135,000. Phone 7929 5125.
+Sunday, April 19, 2015|MELLIEĦA. Two bedroom, furnished apartment including kitchen. Views of Santa Maria Estate. €115,000. Phone 7937 3415.
+Sunday, April 19, 2015|MELLIEĦA. Two bedroom, furnished penthouse, terrace, lift. €120,000 FH. Phone 9942 4194.
+Sunday, April 19, 2015|MELLIEĦA. Well finished groundfloor apartment. Spacious layout, open plan, three double bedrooms, back yard, use of roof. No common area expenses. €198,000. Phone 9945 1845.
+Sunday, April 19, 2015|MĠARR. Field rectangular shape, 912sqm. Very good soil, good location. €21,500. Phone 9947 6191.
+Sunday, April 19, 2015|MĠARR. Finished penthouse with views, three bedrooms, two bathrooms. €190,000, garage optional. Phone 9945 0827.
+Sunday, April 19, 2015|MĠARR. Fully furnished three bedroom maisonette, large back yard. Garage optional. Phone 9982 6909. 
+Sunday, April 19, 2015|MĠARR. Large luxury decorated penthouse, three bedrooms, two bathrooms, large terrace, own roof, lift. €198,000, garage optional. Phone 9991 9343.
+Sunday, April 19, 2015|MĠARR. Over 160sqm three bedroom apartment, sold luxuriously finished. €158,000. Phone 9999 9982.
+Sunday, April 19, 2015|MĠARR. Three bedroom brand new flat, small block, outskirts of Mġarr. €117,000. Phone 7929 5125.
+Sunday, April 19, 2015|MOSTA, industrial estate. Corner site for sale with building permits, ready to build. Groundfloor level for Snack Bar and garage, first floor industrial kitchen, second floor stores / manufacturing and sales. Penthouse level for offices. Permits can be changes. €470,000. Phone owner 9985 8585.
+Sunday, April 19, 2015|MOSTA, Santa Margherita. Bright, airy terraced house. Kitchen, dining, living, three bedrooms, back yard, washroom, full roof with PV panels + semi-basement four-car garage. €319,000. Phone 7948 6346.
+Sunday, April 19, 2015|MOSTA, Ta' Żokkrija. Well finished semi-detached villa. Separate living, fitted kitchen / dining, three bedrooms, bathroom / en-suite, 86sqm terrace with views, underlying five-car garage, independent furnished flatlet. €680,000 FH. Phone 9988 4893.
+Sunday, April 19, 2015|MOSTA. 18 plots, sold together / separately. Total area 3,000sqm. Price on request. Phone 9949 8243.
+Sunday, April 19, 2015|MOSTA. A brand new partly furnished apartment brilliant for first time buyers. €165,000. Phone 7975 9018.
+Sunday, April 19, 2015|MOSTA. Converted house of character retaining all original features. €141,000. Phone 9901 1740.
+Sunday, April 19, 2015|MOSTA. Converted house of character with largegarden and pool. €345,000. Phone 7725 3502.
+Sunday, April 19, 2015|MOSTA. Corner groundfloor maisonette. Three bedrooms, terrace, roof, views. €215,000. Phone 9949 5041.
+Sunday, April 19, 2015|MOSTA. Duplex three bedroom penthouse measuring over 200sqm being sold finished. €225,000. Phone 9993 1483. 
+Sunday, April 19, 2015|MOSTA. Excellent location. Double fronted house of character three bedrooms with full roof and car space. Priced to sell, €209,000.FH. Phone Chris Cachia 7700 7700.
+Sunday, April 19, 2015|MOSTA. Finished three double bedroom apartment, main with walk-in wardrobe, wide balcony €129,000. Phone 7945 0155.
+Sunday, April 19, 2015|MOSTA. First floor, three bedroom maisonette, two-car garage. €225,000. Phone 9922 1024.
+Sunday, April 19, 2015|MOSTA. Four bedroom semi-detached villa with garden and two-car garage. €450,000. Phone 7922 0904.
+Sunday, April 19, 2015|MOSTA. House of character, expertly converted, fully fitted kitchen, three bedrooms, two bathrooms. Ready to move into. Direct from owner. €245,000, rental garage optional. Phone 9974 0117.
+Sunday, April 19, 2015|MOSTA. Imposing, wide-fronted terraced house. A well-lit accommodation being sold fully furnished, air-conditioned and with solar panels. €319,000, semi-basement, four-car garage included. Phone 7974 7721.
+Sunday, April 19, 2015|MOSTA. Large new three bedroom flat with valley views, luxury two bathrooms, lift. €148,000, garage optional. Phone 9991 9343.
+Sunday, April 19, 2015|MOSTA. Luxury finished / furnished house of character including kitchen, living room, two bedrooms, etc. Phone 7942 0276.
+Sunday, April 19, 2015|MOSTA. Maisonette. Large open plan, three bedrooms, balcony. The property is well finished and it will be sold excluding bathrooms and internal doors. Phone 9902 2280.
+Sunday, April 19, 2015|MOSTA. Maisonette. Living room, kitchen / dining, three bedrooms, balcony. €172,000. Phone 9902 2280.
+Sunday, April 19, 2015|MOSTA. Maisonette. Two bedrooms, combined kitchen / dining room, yard. €155,000. Phone 9902 2280.
+Sunday, April 19, 2015|MOSTA. New block. Apartment three bedroom, large open plan, bathroom, en-suite. Front / back terraces. €140,000. Finished. Phone owner 7904 9464.
+Sunday, April 19, 2015|MOSTA. New development shops apartments and penthouses two and three bedrooms from €95,000. Phone 7965 2339. 
+Sunday, April 19, 2015|MOSTA. New, never lived in, spacious three bedroom apartment, partly furnished, with life. €165,000 FH. Phone 7900 1236.
+Sunday, April 19, 2015|MOSTA. On plan, finished penthouse, valley views. Open plan, large terraces, two bedrooms, washroom. €159,000, garage optional. Phone 9988 3854.
+Sunday, April 19, 2015|MOSTA. On plan, over 190sqm maisonettes, apartment, penthouses from €184,000. Phone 9967 0019.
+Sunday, April 19, 2015|MOSTA. Penthouse finished. Lift, two bedrooms. Bargain. Phone 9946 0241.
+Sunday, April 19, 2015|MOSTA. Penthouse. Three bedrooms, semi-finished. Phone 7929 4648. 
+Sunday, April 19, 2015|MOSTA. Quiet area. Terraced house. Finished, four bedrooms, separate living, street level garage. €330,000. Phone 9942 2256.
+Sunday, April 19, 2015|MOSTA. Recently finished three bedroom townhouse, central and large back yard, garage. Phone 9945 0385.
+Sunday, April 19, 2015|MOSTA. Small fully converted and furnished two bedroom house of character in excellent location. €141,000. FH. Phone Chris Cachia 7700 7700.
+Sunday, April 19, 2015|MOSTA. Street level, 10 x 50ft garage with well, yard, airspace. €89,900. Phone 9967 0019,
+Sunday, April 19, 2015|MOSTA. Terraced house. Four bedrooms, sitting, kitchen / dining, bathroom, back yard, garage. Full airspace. €330,000 FH. Phone 7947 3138.
+Sunday, April 19, 2015|MOSTA. Three bedroom groundfloor maisonette. Kitchen, living, 62sqm back yard. €186,000, two-car garage optional. Phone 9949 1688.
+Sunday, April 19, 2015|MOSTA. Three bedroom townhouseretaining many original features, recently renovated and furnished, yard, terrace. €325,000. Phone 9949 1688.
+Sunday, April 19, 2015|MOSTA. Townhouse measuring 37 x 6.3m, 10m large garden, area for swimming pool. €280,000. Phone owner 9985 8585.
+Sunday, April 19, 2015|MOSTA. Unconverted house of character comprising ten rooms, courtyard, three-car garage. Impressive frontage, full of features. €335,000. Phone 7986 0258.
+Sunday, April 19, 2015|MOSTA. Unconverted house of character set on 230sqm land, including garden space measuring 115sqm, with possibility for further optional connecting land. €239,000. Phone 9947 6949.
+Sunday, April 19, 2015|MOSTA / ŻURRIEQ. Three bedroom solitary maisonette. Phone 7946 3278.
+Sunday, April 19, 2015|MQABBA. Four double bedroom terraced house, two bathrooms, kitchen / dining, washroom, own airspace. Country views. €326,000 (Lm140,000), including six-car garage. Phone 7928 3031.
+Sunday, April 19, 2015|MQABBA. New penthouse two large bedrooms kitchen / living bath, en-suite airspace with lift €96,000. Phone 7965 2339.
+Sunday, April 19, 2015|MQABBA. New three bedroom apartment kitchen / dining,sitting room bathroom, en-suite lift. €96,500 Phone 7923 1275 or 988 2976.
+Sunday, April 19, 2015|MQABBA / MARSASCALA. Three bedroom terraced house with large garage. Phone 7946 3278. 
+Sunday, April 19, 2015|MSIDA CIRCUS. New on the market. 125sqm three / four bedroom finished apartment. €125,000, negotiable. A+ rental. Phone 9945 1505.
+Sunday, April 19, 2015|MSIDA, outskirts. Well maintained, three bedroom terraced house. Study, two bathrooms, large interconnecting 13-car garage. €340,000. Phone 9947 1413.
+Sunday, April 19, 2015|MSIDA, university area.Last reaming two bedroom apartments measuring up to 90sqm complimented with large terraces and pool €99,000. Phone 7949 3537.{_GoBackMSIDA, University Heights. Fully furnished, one bedroom. Rental investment. €120,000. Phone 7992 2265.
+Sunday, April 19, 2015|MSIDA, University Heights. Studio apartment fully furnished with great return on investment. €110,000. Phone 9949 8660.
+Sunday, April 19, 2015|MSIDA. Apartment. Two bedrooms, open plan with large front terrace. €100,000, finished and including one-car lock-up garage. Phone owner 7904 9464.
+Sunday, April 19, 2015|MSIDA. Commercial Class 4 premises, very good location. €och60,000. Letting considered. Phone 9940 2298.
+Sunday, April 19, 2015|MSIDA. Four studio penthouses, designer finished / furnished, ready to be rented. €119,000 per unit. Phone 7786 2546.
+Sunday, April 19, 2015|MSIDA. Fully furnished studio apartment, close to university. An excellent rental investment €79,000. Phone Steve Faenza 9911 3535. 
+Sunday, April 19, 2015|MSIDA. Highly finished three bedroom apartment. Priced to sell. Phone 7701 3997.
+Sunday, April 19, 2015|MSIDA. Large three bedroom apartment, ideal for first time buyers, or buy-to-let. €135,000. Phone owner 9946 0974.
+Sunday, April 19, 2015|MSIDA. New block of two bedroom apartments few minutes away from university. Combined living / dining, good sized bedrooms, common parts / lift included. Shell form, €102,000. One bedroom penthouse also available. €110,000. Phone 9982 9745.
+Sunday, April 19, 2015|MSIDA. New, 100sqm two bedroom apartment. Large kitchen/ living/ dining, bathroom, en-suite. Block of three. €110,000. Phone 7923 1275 or 7988 2976.
+Sunday, April 19, 2015|MSIDA. One bedroom apartment situated close to university. A great rental investment €96,000. Phone Steve Faenza 9911 3535.
+Sunday, April 19, 2015|MSIDA. Still on plan maisonette, apartments and penthouse. Good rental investment. Phone 7921 2191.
+Sunday, April 19, 2015|MSIDA. Two bedroom penthouse, front / rear terraces with views. €152,000 finished, new development. Phone 9987 3162.
+Sunday, April 19, 2015|NAXXAR. Apartment. Three double bedrooms, open plan, bathroom, en-suite, large front terrace with open green are views. €150,000, finished, including doors and bathrooms of your choice. Phone owner 7904 9464.
+Sunday, April 19, 2015|NAXXAR. Direct from owner, finished 180sqm open plan three bedroom, second floor apartment and two-car interconnected garage. €205,000. Phone 7949 6949.
+Sunday, April 19, 2015|NAXXAR. Double fronted house of character with garage, two yards and garden. Can be converted into boutique hotel with pool. €718,000. Phone 7947 3138.
+Sunday, April 19, 2015|NAXXAR. Expert conversion.House of character three bedroom all en-suite with 60sqm garden with pool.€710,000. Phone 9999 1933.
+Sunday, April 19, 2015|NAXXAR. House of character six bedrooms with land of .165ha (1.5 tumoli) unconverted in village core. €980,000. Phone 9999 1933.
+Sunday, April 19, 2015|NAXXAR. House of character, real nice family home. Four bedrooms with en-suite and terraces. Pool, two-car garage. €875,000. Phone owner 9947 3065. 
+Sunday, April 19, 2015|NAXXAR. Modern bungalow set on .121ha (1.1 tumoli) of land in San Pawl tat-Tarġa area. Please phone me for more information on 7959 4840.
+Sunday, April 19, 2015|NAXXAR. New on the market, selection of three bedroom apartments being fully finished. Phone 7949 3537.
+Sunday, April 19, 2015|NAXXAR. New three bedroom apartment. Large balcony, yard, views. €115,000. Phone 7937 3415.
+Sunday, April 19, 2015|NAXXAR. Prime area. Apartments, penthouses and garages near Vascas. Phone 9944 0128.
+Sunday, April 19, 2015|NAXXAR. Semi-detached villa (30 x 80), sitting / dining, guest bathroom, kitchen / living / dining, four bedrooms (en-suite), washroom, eight-car garage. €540,000. Phone 7742 7745.
+Sunday, April 19, 2015|NAXXAR. Three bedroom first floor maisonette complete with airspace, a five-car garage and rooftop pool. Lift accessing all levels. Open views €395,000. Phone 9952 4111.
+Sunday, April 19, 2015|NAXXAR. Wonderful, charming, perfectly maintained, three / four bedroom townhouse. Courtyard, garden, garage. €950,000. Phone 9942 1969.
+Sunday, April 19, 2015|PAOLA. €200,000. Corner two storey open plan warehouse ideal for supermarket. 12 x 16.8m (40 x 56'). Central location. Phone 9963 2449.
+Sunday, April 19, 2015|PAOLA. Corner three bedroom terraced house, kitchen, dining, sitting yard, bathroom, en-suite, roof, garage. €270,300. Phone 7923 1275 or 7988 2976.
+Sunday, April 19, 2015|PAOLA. Corner, luxuriously finished terraced house with one-car garage, front patio, kitchen / dining, separate large sitting, three bedrooms, walk-in wardrobe, two bathrooms, large front terrace, laundry and roof. Fantastic country views. €285,000. Phone 9955 5508.
+Sunday, April 19, 2015|PAOLA. Four bedroom maisonette, full roof, tranquil area,€130,000 Phone 9904 9596.
+Sunday, April 19, 2015|PAOLA. New development in quiet area spacious three bedroom apartments to be sold finished with bathroom doors, open plan living kitchen, dining, laundry en-suite bathroom, yards or verandahs. €100,000 (Lm42,900), one-car garage included; or with two-car garage only €107,000 (Lm45,000). Phone 7992 5513.
+Sunday, April 19, 2015|PAOLA. One bedroom apartment to be sold finished with bathroom doors having also spacious open plan large terrace, only €63,000 (Lm27,000) or two bedrooms, duplex penthouse with large verandahs own airspace. €85,000 (Lm36,500). Phone 7926 2048.
+Sunday, April 19, 2015|PAOLA. Two bedroom house with own garden and roof. €110,000. Phone 7930 3168.
+Sunday, April 19, 2015|PIETÀ. Apartment. Three bedrooms, open plan, bathroom. Needs upgrading. €85,000. Phone 7982 4803.
+Sunday, April 19, 2015|PIETÀ. Large, unconverted townhouse, over 230sqm, close to marina. Spacious rooms / large garden. Great potential. €265,000. Phone 9947 2768.
+Sunday, April 19, 2015|PORTOMASO. Corner, sixth floor, three bedroom, terrace, marina view apartment. Furnished. Car space. Phone 9982 2955.
+Sunday, April 19, 2015|PORTOMASO. Excellent rental investment. Furnished, open-plan living / dining / kitchen, bedroom, bathroom, balcony. €318,000.Phone 7942 9711.
+Sunday, April 19, 2015|PORTOMASO. Fantastic and unique two bedroom duplex apartment in this prestigious development, great rental investment or fabulous home. €483,000. Phone 9983 9210.
+Sunday, April 19, 2015|PWALES, Xemxija Bay. New spacious three bedroom luxury apartment. €115,000, garage optional. Phone 9991 9343.
+Sunday, April 19, 2015|QAWRA, close to Qawra church. Fully furnished two bedroom apartment. Front balcony, use of roof. €75,000. Phone 9980 1702.
+Sunday, April 19, 2015|QAWRA, Fra Ben area. New, spacious, two bedroom, front terrace, sea views. Small block. €160,000. Phone 7905 5248.
+Sunday, April 19, 2015|QAWRA, Point area. Outstanding penthouse with unobstructed sea views, spacious open plan, front terrace, three bedrooms, bathroom / en-suite, washroom, back terrace. €385,000. Phone 9988 4893.
+Sunday, April 19, 2015|QAWRA. 270sqm maisonette, squarish layout, large surrounding garden, car port. €185,000. Phone 9942 6955.
+Sunday, April 19, 2015|QAWRA. Apartment minutes from sea. Kitchen / living, bathroom, three bedrooms. €110,000. Phone 7777 9012.
+Sunday, April 19, 2015|QAWRA. Apartments. Two / three bedrooms, open plan, terraces. From €87,000. Phone 9907 2108.
+Sunday, April 19, 2015|QAWRA. Bargain. Newly built highly finished two bedroom apartment including one-car garage. €86,500. Phone 7957 9360.
+Sunday, April 19, 2015|QAWRA. Bargain. One / two / three bedroom maisonettes, apartments and penthouses being offered fully finished from €75,500 on plan with open views. Phone owner 9922 0023. 
+Sunday, April 19, 2015|QAWRA. Deluxe duplex four bedroom penthouse with sea views. €400,000. Phone 9945 7133.
+Sunday, April 19, 2015|QAWRA. Finished semi-detached maisonette. Airspace, views, three bedrooms, bathroom / en-suite. €220,000, including one-car lock-up garage. Phone 9945 1845.
+Sunday, April 19, 2015|QAWRA. Luxuriously finished corner three bedroom apartment. Direct from Owner. €135,000. Phone 9939 5686.
+Sunday, April 19, 2015|QAWRA. New three bedroom apartment ready and finished, two balconies €107,000. Phone 7930 5899.
+Sunday, April 19, 2015|QAWRA. New, finished three bedroom apartment, lift, side sea views. Good area. €96,000. Phone 7937 3415.
+Sunday, April 19, 2015|QAWRA. Penthouse three bedrooms, two bathrooms, sea views, nine meter front terrace, ready built. €165,000. Phone 9942 7372.
+Sunday, April 19, 2015|QAWRA. Penthouse. Luxuriously finished, terrace 9 x 6m, views, three bedrooms, two-car garage. €340,000. Phone 7777 9012.
+Sunday, April 19, 2015|QAWRA. Ready to move into, two bedroom penthouse with large terrace and sea views. Great rental opportunity. €180,000. Phone 7974 7720.
+Sunday, April 19, 2015|QAWRA. Seafront penthouse, three bedrooms, two terraces, finished. €320,000. Phone 9909 5070.
+Sunday, April 19, 2015|QAWRA. Three bedroom, luxuriously finished apartment, best area. €100,000. Phone 9912 5070.
+Sunday, April 19, 2015|QAWRA. Two bedrooms, terraces, unobstructed views, newly furnished penthouse. €180,000. Phone 9909 5070.
+Sunday, April 19, 2015|QAWRA. Two-car garage, basement level underneath seascape apartments, size 8 x 3m. €17,800. Phone owner 7949 9117.
+Sunday, April 19, 2015|QORMI (Valletta Road). Warehouse and offices. Own airspace. On two floors, 370sqm each floor, including lift and 3 phase. Containers can be loaded / unloaded indoors. For viewing please phone 7927 7963.
+Sunday, April 19, 2015|QORMI, San Ġorġ. Finished, 175sqm solitary maisonette. Garage optional. Phone 7947 6637.
+Sunday, April 19, 2015|QORMI. Facing a green area. Plot 105 x 21 with permits in hand. Garages, shop, maisonette, two apartments, penthouse. All with views. €238,000. Phone 7711 4545.
+Sunday, April 19, 2015|QORMI. Garage 30 x 6.3m (100 x 21ft) x 14 courses high. €185,000. Phone 9905 4096.
+Sunday, April 19, 2015|QORMI. Groundfloor apartment having three bedrooms en-suite bathroom spacious open plan, living kitchen, dining, internal back yard to be sold finished with bathroom doors. €107,000 (Lm46,000). Phone 7992 5513.
+Sunday, April 19, 2015|QORMI. Massive 200sqm apartments having three double bedrooms en-suite bathroom box room, massive open plan living kitchen, dining, back front verandahs facing garden one-car garage €126,000 (Lm54,000). Phone 7926 2048.
+Sunday, April 19, 2015|QORMI. Solitary maisonette enjoying lots of private outdoor entertaining areas, terrace, three bedrooms, roof deck with pool area. €195,000. Phone 7982 4803.
+Sunday, April 19, 2015|QORMI. Very highly finished terraced house hree bedrooms, inluding three-car garage €250,000. Hone9945 3678.
+Sunday, April 19, 2015|QRENDI. An unconverted house of character. Large yard and garden. Phone 9989 4235 or 2124 6146.
+Sunday, April 19, 2015|QRENDI. Field .11ha (tumolo) of agricultural land. Direct road access, electricity and water supply, open country views and large carrob tree. €55,000 FH. Phone 7981 2051.
+Sunday, April 19, 2015|RABAT, Tal-Virtú. Duplex luxury apartment with castle views, three double bedroom, three bathrooms, 2 x 9 meter terraces, kitchen, fireplace and extras. €370,000. Phone owner 9942 7372.
+Sunday, April 19, 2015|RABAT. 190sqm apartment, 11.7m (39ft) open plan leading onto terrace with open green area views, three double bedrooms, bathroom, en-suite, washroom, box room. €170,000. Finished. Phone owner 7904 9464.
+Sunday, April 19, 2015|RABAT. Bargain. Immaculate, converted, three bedroom, fully furnished house of character close to Mdina. Ready to move into. €200,000. Phone 7934 3333.
+Sunday, April 19, 2015|RABAT. Beautiful, furnished three bedroom penthouse. Sea / country views, two-car garage. €450,000. Phone 9948 7001.
+Sunday, April 19, 2015|RABAT. Converted house of character. Fully fitted kitchen with branded appliances, living room with fireplace, entertainment room, three large bedrooms, walk-in wardrobe, yard, washroom + roof terrace. €270,000. Phone 7948 6346.
+Sunday, April 19, 2015|RABAT. Converted house of character. Three bedrooms, courtyard, cellar and shelter. Phone 7947 6637.
+Sunday, April 19, 2015|RABAT. Duplex maisonette ultra-modern quiet area and fantastic views. 50sqm terrace. 14m frontage. 285,000. Phone 7984 7353. 
+Sunday, April 19, 2015|RABAT. Finished two bedroom apartment, fitted kitchen / dining, bathroom, en-suite, roof. Bargain €79,000. Phone 7980 2750 or 7923 1275.
+Sunday, April 19, 2015|RABAT. Period villa in Vjal Santu Wistin with front and back garden. needs restoration. €550,000. Phone 7986 0258.
+Sunday, April 19, 2015|RABAT. Top floor, 180sqm, three bedroom apartment, block of only two. Phone 7947 6637.
+Sunday, April 19, 2015|RABAT. Townhouse, three bedrooms, two bathrooms, kitchen, wash-room, yard, roof and garage. Phone owner 9940 8024.
+Sunday, April 19, 2015|SALINA.Farmhouse on 850sqm semi-converted with sea views, large garage, pool and garden. €650,000. Phone 9942 7372.
+Sunday, April 19, 2015|SAN ĠWANN, just off Monte Rosa Gardens. Spacious groundfloor maisonette, two large double bedrooms, separate kitchen, dining, living, bathroom, guest toilet, two yards. €125,000. Phone owner 7934 5281. 
+Sunday, April 19, 2015|SAN ĠWANN. 100sqm two bedroom apartment, close to all amenities. Phone 7930 2133.
+Sunday, April 19, 2015|SAN ĠWANN. Apartments. Two / three bedrooms, open plan, balconies. From €123,000. Phone 9907 2108.
+Sunday, April 19, 2015|SAN ĠWANN. Bargain. Three bedroom apartment, block of three, centrally located. Ideal buy to rent. €103,000. Phone 9957 8736.
+Sunday, April 19, 2015|SAN ĠWANN. Central terraced house with an interconnecting nine-car garage. Phone 9985 9419.
+Sunday, April 19, 2015|SAN ĠWANN. Large 150sqm, three bedroom apartment. Washroom and shared roof ownership. €150,000. Phone 9942 9313.
+Sunday, April 19, 2015|SAN ĠWANN. Modern, fully furnished, one bedroom apartment. Priced to sell, €70,000. Good rental investment. Phone 9924 9188.
+Sunday, April 19, 2015|SAN ĠWANN. New three bedroom with large terrace enjoying distant sea views. Phone 9945 0385.
+Sunday, April 19, 2015|SAN ĠWANN. New, highly finished apartments. Open plan, kitchen / living / dining, three bedrooms, balconies.€138,000, garage optional. Phone 9945 0592
+Sunday, April 19, 2015|SAN ĠWANN. Penthouse, two large terraces. Open plan, two bedrooms, airspace. €197,500. Phone 9907 2108.
+Sunday, April 19, 2015|SAN ĠWANN. Studio apartment, one bedroom fully finished, very good rental investment. €72,000. Phone owner 7927 2465.
+Sunday, April 19, 2015|SAN ĠWANN. Terraced house, interesting layout, sitting / dining, guest bathroom, large kitchen / living / dining, back yard, three bedrooms (en-suite), five-car garage. €425,000. Phone 7742 7745.
+Sunday, April 19, 2015|SAN ĠWANN. Three bedroom apartment on first floor, needs some refurbishment. Ideal as rental investment. €103,000. Phone 9925 0999.
+Sunday, April 19, 2015|SAN ĠWANN. Three bedroom apartment with bathrooms / doors. €153,000. Phone 7985 8239.
+Sunday, April 19, 2015|SAN ĠWANN. Two bedroom apartment. Fully furnished. €128,000. Phone Mario 7942 8990.
+Sunday, April 19, 2015|SAN ĠWANN. Valley views. New on the market, three bedroom apartment finished. Great location, A+ rental investment. €125,000. Must sell. Phone 9945 1505.
+Sunday, April 19, 2015|SAN PAWL TAT-TARĠA. Duplex designer finished masionette. Semi- furnished. Two bathrooms. Four terraces. Solar panels. €255,000, garage optional. Phone 7900 8286.
+Sunday, April 19, 2015|SAN PAWL TAT-TARĠA. Luxuriously finished three bedroom apartment. €214,000. Phone 9939 5686.
+Sunday, April 19, 2015|SAN PAWL TAT-TARĠA. New on the market semi-detached villas located in a prime area, overlooking unobstructed views, being sold in shell form €465,000. Phone 7949 3537.
+Sunday, April 19, 2015|SAN PAWL TAT-TARĠA. New, 139sqm three bedroom apartment with 285sqm terrace. €214,000, garage optional. Phone 9948 7001.
+Sunday, April 19, 2015|SAN PAWL TAT-TARĠA. Semi-detached villa with pool. Spacious living / dining, large new kitchen, three bedrooms, flatlet and garage. €585,000. No agents. Phone owner 7991 1923. 
+Sunday, April 19, 2015|SAN PAWL TAT-TARĠA. Semi-finished, three bedroom apartments / maisonettes. Excellent location. €225,000. No agents please. Phone 7974 7721.
+Sunday, April 19, 2015|SANTA LUĊIJA. Terraced house. Three bedrooms, 55sqm back yard, space for pool, garage.€310,000. Phone 9922 1024.
+Sunday, April 19, 2015|SANTA MARIA ESTATE. Plot over 1,000sqm, for a detached bungalow, with permits. Good views, excellent location. €595,000. Phone 9947 2768.
+Sunday, April 19, 2015|SANTA MARIA ESTATE. Three bedroom bungalow,large garage, level garden. €690,000. Phone 9970 3135.
+Sunday, April 19, 2015|SELLING YOUR HOUSE? Buying a new home? Phone Matthew on+356 9983 5960.
+Sunday, April 19, 2015|SENGLEA (L-Isla). €35,000 premium for the remaining eight year ground rent. Fully newly furnished. Two bedroom townhouse. Nicely decorated and converted. Phone owner 9994 6417.
+Sunday, April 19, 2015|SIĠĠIEWI. €180,000. Charming foreign owned townhouse near main piazza tastefully converted. Two bedroom, yard and roof terrace with views. Ready to move into. Phone 9985 6553. 
+Sunday, April 19, 2015|SIĠĠIEWI. 200sqm maisonette. Three / four double bedrooms, finished with high sepcifications and a large yard. Phone owner. €182,000. Phone 7927 2465.
+Sunday, April 19, 2015|SIĠĠIEWI. 400sqm, three bedroom house of character. 200sqm mature garden / pool, flatlet, garage. Freehold. Phone 9982 2955.
+Sunday, April 19, 2015|SIĠĠIEWI. Central groundfloor three bedroom maisonette with front patio and back yard. Phone 7939 2939, 2388 0059.
+Sunday, April 19, 2015|SIĠĠIEWI. Converted house of character, interconnecting garage. €325,000 Phone 7997 9960.
+Sunday, April 19, 2015|SIĠĠIEWI. Highly finished larger than usual four bedroom apartment. Consisting of open plan with fully fitted kitchen, en-suite, main bathroom, back terrace and solar water heater. 189sqm. €175 000. Phone 9926 2406.
+Sunday, April 19, 2015|SIĠĠIEWI. House of character set on 512sqm. Expert conversion. Landscaped garden, swimming pool, garage. €950,000. Phone 9947 3268.
+Sunday, April 19, 2015|SIĠĠIEWI. Open plan terraced house. Four bedrooms, four-car level garage. €218,000. Phone 9944 4456.
+Sunday, April 19, 2015|SIĠĠIEWI. Three bedroom apartments, all with a large front terrace and huge open plan, new block, finished. Starting from €127,000, including free garage. Phone owner 7927 2465.
+Sunday, April 19, 2015|SIĠĠIEWI. Three bedroom groundfloor maisonette. No steps. €120,000, negotiable. Phone owner 9982 6148. 
+Sunday, April 19, 2015|SLIEMA (Tower Road). Finished three bedroom apartment on fourth floor level measuring approximately 150sqm enjoying unobstructed sea views. Between Fortizza and Surfside. €475,000 FH. Phone 9949 6889. 
+Sunday, April 19, 2015|SLIEMA (Tower Road). New 151sqm apartment, three bedrooms, two bathrooms, 18sqm terrace, Jacuzzi, finished. €640,000. Phone 9945 7028.
+Sunday, April 19, 2015|SLIEMA (Tower Road). New on the market. Large apartment, three bedrooms, two bathrooms, sea-facing and back balconies. €475,000 FH. Phone owner 9954 6418.
+Sunday, April 19, 2015|SLIEMA (Tower Road). New, seafront, three bedroom, highly finished apartment. €640,000. Phone 7970 1937.
+Sunday, April 19, 2015|SLIEMA (Tower Road). Three bedroom apartment. Fantastic sea views €500,000. Phone 7986 1165. 
+Sunday, April 19, 2015|SLIEMA, close to Zara. Large, three bedroom apartment with a sun terrace capturing Valletta views. €530,000. Phone 7931 0238.
+Sunday, April 19, 2015|SLIEMA, Dingli Street area.Beautiful square planned out apartment, optional garage. Phone 9982 6551.
+Sunday, April 19, 2015|SLIEMA, just off Ferries. Three double bedroom, front back balcony. €198,000. Phone 9945 1505.
+Sunday, April 19, 2015|SLIEMA, Milner Grove. Overseas owner regretfully selling four bedroom apartment, very large terrace. Viewing through power of attorney. €550,000, negotiable, garage included. Phone 9986 8012.
+Sunday, April 19, 2015|SLIEMA, Milner Grove. Two-car lock-up garage. €43,500. Phone 7949 6097.
+Sunday, April 19, 2015|SLIEMA, seafront. Direct from owner and first time on the market. A small block consisting of five x two bedroom, spacious apartments and one bedroom penthouse. To be sold highly finished. No agents please. Phone 9946 0974.
+Sunday, April 19, 2015|SLIEMA, seafront. Investment opportunity. Fourth floor apartment, three bedroom, 6x3m terrace, highly finished. On plan. €640,000. Phone 9945 1505.
+Sunday, April 19, 2015|SLIEMA, seafront. New on the market selection of two / three bedroom apartments highly finished, ideal for residential or for rental investment. Phone 7949 3537.
+Sunday, April 19, 2015|SLIEMA. 120sqm apartment 50m from promenade, side sea views. €330,000, garage optional. Phone 9942 6479.
+Sunday, April 19, 2015|SLIEMA. 175sqm three bedroom apartment, 80 meters away from the seafront. €220,000.00. Phone 2388 0028/7944 6072.
+Sunday, April 19, 2015|SLIEMA. 330sqm duplex penthouse with pool. €750,000. Phone 9901 1740.
+Sunday, April 19, 2015|SLIEMA. A brand new, finished, corner, three bedroom penthouse with garage. €och645,000. Phone 9949 3677.
+Sunday, April 19, 2015|SLIEMA. Bigger than usual three bedroom apartment. Can be split in two apartments for rental investment. Phone 7959 4840.
+Sunday, April 19, 2015|SLIEMA. Brand new, luxuriously finished, three bedroom, seafront apartment on Tower Road. €800,000. Phone 9953 6947.
+Sunday, April 19, 2015|SLIEMA. Bright and sunny, two bedroom fully furnished penthouse. Nothing like it on the market. En-suite, lovely terrace, views. €326,000, car space in same block included. Phone 9929 7999.
+Sunday, April 19, 2015|SLIEMA. Bright, 200sqm three bedroom apartment close to seafront, lift. €319,000, garage included. Phone 7900 5544.
+Sunday, April 19, 2015|SLIEMA. Direct from developer. Last remaining three bedroom penthouse just off seafront, still on plan. €400,000. No agents. Phone 7958 4801.
+Sunday, April 19, 2015|SLIEMA. Direct from developer. Last remaining two bedroom groundfloor maisonette just off seafront, still on plan, starting from €260,000. No agents. Phone 7958 4801.
+Sunday, April 19, 2015|SLIEMA. Double fronted townhouse, open plan, five bedrooms, (three with en-suite), spacious ' L' shaped garden, study, sitting / dining, (two-car garage). €450,000 FH. Phone 7742 7745.
+Sunday, April 19, 2015|SLIEMA. Double fronted townhouse, two-car garage, excellent location €495,000. Phone 9945 7028.
+Sunday, April 19, 2015|SLIEMA. Eight room, 20 bed hostel, ready to operate. Fully furnished and equipped. Perfect to start your own business. No agents. Phone 9984 8380.
+Sunday, April 19, 2015|SLIEMA. Excellent location. Side sea views, finished two bedrooms, front and back balconies. €244,400. Phone 9944 6925.
+Sunday, April 19, 2015|SLIEMA. Excellent location. Three bedroom apartment. €290,000. Phone 9949 0068.
+Sunday, April 19, 2015|SLIEMA. Excellent maisonette/ apartments in prime location. Starting €340,000. Phone 7932 4833.
+Sunday, April 19, 2015|SLIEMA. Fully furnished two bedroom apartment in Tigné Court. €220,000. Phone 9993 1403. 
+Sunday, April 19, 2015|SLIEMA. Fully furnished, two bedroom modern apartment near the seafront, lift. €220,000 FH. Phone 9980 1017.
+Sunday, April 19, 2015|SLIEMA. Large seafront three bedroom apartment with terrace, car space. Phone 9945 0385.
+Sunday, April 19, 2015|SLIEMA. Large three bedroom apartment enjoying stunning views and including one-car garage. €655,000. Phone 7996 3357. 
+Sunday, April 19, 2015|SLIEMA. Luxury, brand new apartment, magnificent sea views. Three bedrooms / three bathrooms, terrace. €650,000, garage optional. Phone 9986 8012.
+Sunday, April 19, 2015|SLIEMA. Minutes away from seafront, block of apartments and penthouses. Newly built, parking available. from €278,000/or entire block. Phone 7978 8888.
+Sunday, April 19, 2015|SLIEMA. Modern, well priced Tigné apartment, garage space. Please phone 9982 6551.
+Sunday, April 19, 2015|SLIEMA. New corner block, modern / elegant finishes. Starting €675,000, spaces / garages optional. Phone 7986 7766.
+Sunday, April 19, 2015|SLIEMA. New three bedroom, 190sqm apartment near promenade. Large terrace, block of four. Garages available. €278,000. Phone 7978 8888.
+Sunday, April 19, 2015|SLIEMA. Penthouse with sea views, outside area of 60sqm, total of 230sqm. Phone 7777 7427.
+Sunday, April 19, 2015|SLIEMA. Seafront, three bedroom furnishedapartment. Car space included. Phone 9981 1557.
+Sunday, April 19, 2015|SLIEMA. Selection seafront apartments with spacious terraces. Phone 7932 4833.
+Sunday, April 19, 2015|SLIEMA. Spacious two bedroom penthouse in the heart of Sliema. Priced to sell at €330,000. Nothing similar at this price in this area. Phone 7959 4840.
+Sunday, April 19, 2015|SLIEMA. This new development is located at Tower Road, Sliema, seafront and close to all amenities. To be sold completed to very high standard, it offers optional underlying communal garages. Phone direct owner on 9922 8085.
+Sunday, April 19, 2015|SLIEMA. Three bedroom apartment having town views and natural light. Great home or rental investment. €290,000. Phone agent 9952 4111.
+Sunday, April 19, 2015|SLIEMA. Three bedroom apartment two minutes away from promenade €198,000. Phone 9920 0968.
+Sunday, April 19, 2015|SLIEMA. Three bedroom townhouse just off Annunciation Square having a squarish layout, airy basement and a back yard. €385,000. Phone agent 9952 4111.
+Sunday, April 19, 2015|SLIEMA. Townhouse. Excellently priced, €290,000 FH. Phone 7932 4833. 
+Sunday, April 19, 2015|SLIEMA. Two bedroom apartment in central Sliema. €165,000. Phone 7985 8239.
+Sunday, April 19, 2015|SLIEMA. Two bedroom apartment. Buy to let. €240,000. Phone 7997 9960.
+Sunday, April 19, 2015|SLIEMA. Two bedroom penthouse, three bedroom maisonette. Excellent location. €294,000. Phone 7985 8239.
+Sunday, April 19, 2015|SLIEMA. Two bedroom, 125sqm penthouse. Front 33sqm terrace with sea views, side terrace serving main and guest bedrooms. €415,000. Phone 9942 9313.
+Sunday, April 19, 2015|SLIEMA. Two bedroom, finished apartment seconds away from Balluta Bay. €190,000, two-car garage included. Phone 7992 2265.
+Sunday, April 19, 2015|SLIEMA.One bedroom maisonette, possibility to build further floor €175,000. Phone 7786 2546.
+Sunday, April 19, 2015|ST JULIANS, Spinola Bay. Seafront furnished two bedroom apartment with garage. Phone 9926 4468.
+Sunday, April 19, 2015|ST JULIANS, The Village. Modern, three bedroom apartment with lock up garage. €205,000. Phone Mark Sapienza 9947 5179. 
+Sunday, April 19, 2015|ST JULIANS. 180sqm, seafront, three bedroom apartment. Front terrace / open sea views. Freehold. Car space. Phone 9982 2955.
+Sunday, April 19, 2015|ST JULIANS. A highly finished spacious 150sqm apartment with garage space. €233,000. Phone 7947 6218.
+Sunday, April 19, 2015|ST JULIANS. Bright, three bedroom apartment couple of minutes walk to Spinola Bay. €205,000 (Lm88,000). Phone 9986 1713.
+Sunday, April 19, 2015|ST JULIANS. Choice of two / three bedroom, finished apartment, served with lift. Ideal buy to rent. €155,000. Phone 9957 8736.
+Sunday, April 19, 2015|ST JULIANS. Designer finished, three bedroom, bathroom, 10-minute walk from Balluta in a quiet residential area, second floor (no lift), 5% rental return, part-ownership of roof. €219,000 including car space. Phone owner 9944 6028.
+Sunday, April 19, 2015|ST JULIANS. Designer finished/ furnished three bedroom apartment, car space. €239,000. Phone 9981 1557.
+Sunday, April 19, 2015|ST JULIANS. Fantastic, double-fronted apartment, highly finished and partly furnished. Very bright, three double bedrooms. €325,000, one / two-car spaces included. Phone 9947 3268.
+Sunday, April 19, 2015|ST JULIANS. Fully equipped restaurant having approximately 160 covers inside and out. Immaculately finished, fully air-conditioned, with a fantastic terrace enjoying picturesque views. Daily rent and premium. Only serious enquiries. Phone Frederick for immediate viewing 7942 9239.
+Sunday, April 19, 2015|ST JULIANS. Great opportunity. Excellent rental investment. First floor, duplex maisonette off Spinola Bay. Own airspace, allows extension of two further floors. €295,000. Phone 7992 2265.
+Sunday, April 19, 2015|ST JULIANS. Huge 280sqm apartment to be highly finished with double glazing, intelligent lighting and sound system. Penthouse and garages also available. €330,000. Phone 9983 9210.
+Sunday, April 19, 2015|ST JULIANS. Lockable basement, one-car garage in Lowndes Park, Birkirkara Hill, near Meridien. €28,000. Phone 7945 2827. 
+Sunday, April 19, 2015|ST JULIANS. Ongoing concern newly converted in style nine bedroom villa with pool and sun terraces with MTA permits to rent. Bargain, €850,000. Phone 7965 2339.
+Sunday, April 19, 2015|ST JULIANS. Seafront, duplex, two bedroom apartment on plan, sold finished. Sea views, terrace. €425,000. Phone 7949 7440.
+Sunday, April 19, 2015|ST JULIANS. Semi-detached bungalow with space for a pool €558,000. Phone 9920 0968.
+Sunday, April 19, 2015|ST JULIANS. Three bedroom apartment on plan, to be finished to the highest standards. €185,000. Phone 7996 3357.
+Sunday, April 19, 2015|ST JULIANS. Three bedroom apartment, light and modern design in quiet and convenient part of St Julians. €205,000. Phone 9983 9210. 
+Sunday, April 19, 2015|ST JULIANS. Three bedroom house of character having three bedrooms + pool. €460,000. Phone 7931 0238.
+Sunday, April 19, 2015|ST JULIANS. Two bedroom apartment, with terrace, lift, fully furnished. €158,000. Phone 9945 7133. 
+Sunday, April 19, 2015|ST PAUL' S BAY, close to Portobello. Furnished, two bedroom apartment having unobstructed sea / country views, large 48sqm open-plan, front balcony, bathroom / en-suite. €116,000. Phone 7987 1787.
+Sunday, April 19, 2015|ST PAUL' S BAY, Gillieru area. Furnished penthouse with sea / country views, open plan, spacious terrace, two double bedrooms, bathroom / en-suite. €285,000, including car space. Phone 9988 4893.
+Sunday, April 19, 2015|ST PAUL' S BAY, Portobello area. Seafront, highly finished, open plan apartment. Two bedrooms, front terrace with unobstructed views, bathroom / en-suite. €320,000. Phone 7987 1787.
+Sunday, April 19, 2015|ST PAUL' S BAY, Sirens area. First floor maisonette with own airspace, corner away from the seafront. Three bedrooms, side sea views. €165,000 Phone 9945 0827.
+Sunday, April 19, 2015|ST PAUL' S BAY, Xemxija. Spacious two bedroom apartment with large back yard. €109,000, garage optional. Phone 7944 0132.
+Sunday, April 19, 2015|ST PAUL' S BAY. Duplex three bedroom apartment with side sea view. €135,000. Phone 9939 5686. 
+Sunday, April 19, 2015|ST PAUL' S BAY. Duplex, three bedroom penthouse in Tal-Għażżenin area. Direct from owner €345,000. Phone 9939 5686.
+Sunday, April 19, 2015|ST PAUL' S BAY. Furnished, three bedroom penthouse, large terrace, own roof, garden. €179,000. Phone 9940 7275.
+Sunday, April 19, 2015|ST PAUL' S BAY. Groundfloor maisonette. Three bedrooms, spacious yard, interconnecting spacious street level garage. €162,000. Phone 7905 5248.
+Sunday, April 19, 2015|ST PAUL' S BAY. New apartments. Three bedrooms, open plan, balcony, terrace. €122,000. Phone 9945 0592.
+Sunday, April 19, 2015|ST PAUL' S BAY. One bedroom penthouse. Living / kitchen / dining. Furnished. Unobstructed views. Large terrace plus BBQ. €194,250, interconnected one-car space included. Phone 7942 9090/2388 0030.
+Sunday, April 19, 2015|ST PAUL' S BAY. Seafront plot with approved permits for three semi-detached units and lock up garages. €690,000. Phone 9942 7372.
+Sunday, April 19, 2015|ST PAUL' S BAY. Seafront three bedroom apartment €234,000. Phone 7786 8677.
+Sunday, April 19, 2015|ST PAUL' S BAY. Seafront, new finished three bedroom apartment enjoying spectacular sea views of St Paul' s Bay and Xemxija. €250,000. Phone owner 9922 0023. 
+Sunday, April 19, 2015|ST PAUL' S BAY. Three bedroom apartment close to Tal-Għażżenin area. €195,000. Phone 9939 5686.
+Sunday, April 19, 2015|ST PAUL' S BAY. Three bedroom apartment with country and sea views. Highly finished. Direct from owner. €235,000. Phone 2148 5000 or 7906 0338.
+Sunday, April 19, 2015|ST PAUL' S BAY. Three bedroom, open plan apartment. Lift, country views. €90,000. Phone 7937 3415.
+Sunday, April 19, 2015|ST PAUL' S BAY. Townhouse near HSBC, three floors, back entrance. €210,000 FH. Phone 7900 1236.
+Sunday, April 19, 2015|ST VENERA. 150sqm area behind LiDL small brand new block, apartment, three bedrooms in a nice area, large open plan. Finished. €105,000. Phone owner 7904 9464.
+Sunday, April 19, 2015|ST VENERA. Apartment three bedrooms, furnished, must see. Phone 7949 5776 or 2749 9656.
+Sunday, April 19, 2015|ST VENERA. Four bedroom terraced house with six-car garage street level. €190,000. Phone owner 7927 2465.
+Sunday, April 19, 2015|ST VENERA. Imposing four bedroom house over 213sqm, being on main road has much potential. Only €340,000. Phone 7986 7766.
+Sunday, April 19, 2015|ST VENERA. New on the market selection of three bedroom apartments with a large terraces ideal for rental investment, being sold finished €110,000. Phone 7949 3537.
+Sunday, April 19, 2015|ST VENERA. New, 240sqm solitary duplex maisonette, massive kitchen / living / dining, four double bedrooms, front and back roof terrace, wash-room, new building, own airspace. €128,000, optional three or six-car street level garage available. Phone owner 7927 2465.
+Sunday, April 19, 2015|ST VENERA. One bedroom, finished penthouse with a very large surrounding terrace. €94,000, including a free one-car garage. Phone owner 9922 0023.
+Sunday, April 19, 2015|ST VENERA. Renovated, spacious, solitary maisonette with large terrace, own airspace, three bedrooms. €183,000. Phone 7976 0506.
+Sunday, April 19, 2015|ST VENERA. Street level, garage measuring 11.10m (37ft) long. €39,600. Phone owner 7927 2465.
+Sunday, April 19, 2015|ST VENERA. Three bedroom apartment, in a block of four selling fully furnished with own washroom and part of roof. €90,000, negotiable. Phone 7925 3429.
+Sunday, April 19, 2015|ST VENERA. Two bedroom groundfloor marionette with back yard highly finished with a free one-car garage at €110,000. Phone owner 9922 0023.
+Sunday, April 19, 2015|SWATAR. Furnished, top floor, three bedroom apartment. Fitted kitchen, washroom and part of roof. €139,000. Rents €650 monthly. Phone 7948 5988.
+Sunday, April 19, 2015|SWIEQI, Bay Street area. Two-car garage. €38,000. Private enquiries phone 7942 1340.
+Sunday, April 19, 2015|SWIEQI, valley. Semi-detached villa offered on plan having three bedrooms, four-car garage and a swimming pool. Tranquil location and unobstructed valley views. €525,000 (shell form). Phone 7942 6774.
+Sunday, April 19, 2015|SWIEQI. 180sqm, three bedroom duplex maisonette with back yard, located in quiet street. €295,000. Phone 9923 3055.
+Sunday, April 19, 2015|SWIEQI. Brand new, highly finished, 125sqm three bedroom apartments including garage. Rents €1,200 monthly. €165,000. Phone 7948 5988.
+Sunday, April 19, 2015|SWIEQI. Brand new, third floor, 145sqm three bedroom apartment. Large living / dining, front terrace enjoying open views. €217,000. Phone 7948 5988.
+Sunday, April 19, 2015|SWIEQI. Bright apartment with lift, open plan kitchen / living / dining, two bedrooms, washroom and use of roof. €160,000. Phone 9940 4303.
+Sunday, April 19, 2015|SWIEQI. Corner three bedroom apartment, car space, ¼ roof ownership. Will sell fast €182,000. Phone 7981 8181.
+Sunday, April 19, 2015|SWIEQI. Excellent family home. Three bedroom terraced house. Full airspace for further floor, study, sitting / dining, yard, washroom, large roof terrace, lock-up garage. €350,000. Phone 9947 6949.
+Sunday, April 19, 2015|SWIEQI. First floor maisonette. Five bedrooms, own airspace. Two-car garages included. Phone 7777 7427.
+Sunday, April 19, 2015|SWIEQI. Large three bedroom apartment. €217,000. Phone 9901 1740.
+Sunday, April 19, 2015|SWIEQI. Large, corner, groundfloor 145sqm duplex maisonette. Kitchen / breakfast, large sitting dining, yard, three double bedrooms, front garden. €250,000, two optional garages. Phone 9947 1413.
+Sunday, April 19, 2015|SWIEQI. Large, three bedroom apartment with 12sqm terrace. New development of just four units. €217,000. Phone 9953 6947.
+Sunday, April 19, 2015|SWIEQI. New bright three bedroom apartment, including lock-up garage. A+ rental. €185,000. Phone 9945 1505.
+Sunday, April 19, 2015|SWIEQI. New on market semi-detached villa, excellent unobstructed views, three double bedrooms, three bathrooms, pool, two-three-car garage €525,000. Phone 9945 7028.
+Sunday, April 19, 2015|SWIEQI. Semi-detached house with yard and street level garage. Price on request. Phone 9926 4468.
+Sunday, April 19, 2015|SWIEQI. Three bedroom terraced house. Back yard, roof terrace, large four-car garage, interconnected (can be turned into flatlet). €420,000. Phone 9929 7999.
+Sunday, April 19, 2015|SWIEQI. Two villas located in a quiet residential area. Layout consisting of three bedrooms, open plan kitchen, dining, living, swimming pool, while enjoying open country views and a three-car garage. Shell form, €525,000. Phone owner direct 9948 9713.
+Sunday, April 19, 2015|SWIEQI. Two-car basement garage with window. Phone 9985 3600.
+Sunday, April 19, 2015|SWIEQI.Shell semi-detached villa with pool, sundeck. Three bedrooms, etc. Large underlying basement / garage. €605,000.Phone 7942 9711.
+Sunday, April 19, 2015|TA' GIORNI. Three bedroom apartment close to amenities. €170,000. Phone 7985 8239.
+Sunday, April 19, 2015|TA' XBIEX, Blue Harbour. Immaculate designer furnished four bedroom Apartment with car space. Phone 9926 4468.
+Sunday, April 19, 2015|TA' XBIEX. 270sqm seafront, three bedroom apartment, large terrace and two garages. €850,000. Phone 2388 0023/7944 6072.
+Sunday, April 19, 2015|TA' XBIEX. Seafront, 190sqm apartment. Large kitchen / dining, three double bedrooms, study, spacious back yard. €295,000. Phone 9947 2768.
+Sunday, April 19, 2015|TA' XBIEX. Spacious fully detached villa enjoying lovely views of Valletta across front terrace, garden, three bedrooms, two-car garage etc. €850,000. Phone 9925 2868.
+Sunday, April 19, 2015|TA' XBIEX / MSIDA, 200m from seafront. Luxuriously finished apartments, side sea views. Two bedrooms €135,000; three bedroom duplex €165,000; four bedroom €220,000. Can be split in two apartments. Completion March 2016. Phone 9967 0016.
+Sunday, April 19, 2015|TAL-IBRAĠ. Beautiful two double bedroom apartment, breathtaking views, deck, Jacuzzi, 131sqm, garage €295,000. Phone 9945 7028. 
+Sunday, April 19, 2015|TAL-IBRAĠ. Corner, solitary, 155sqm maisonette. Three bedroom layout, own roof, full airspace. One can build another apartment and penthouse. €315,000. Phone 9980 1017.
+Sunday, April 19, 2015|TAL-IBRAĠ. Direct from owner. Highly finished and furnished three bedrooms, two bathrooms, 120sqm apartment. Forms part of a very sought after block. €255,000, one-car garage included. No agents. Phone 9975 1167 or 7940 9126. 
+Sunday, April 19, 2015|TAL-IBRAĠ. Highly finished three bedroom apartment, kitchen / living / dining, bathroom, en-suite, Block of three €163,000. Phone 7923 1275 or 7988 2976.
+Sunday, April 19, 2015|TAL-IBRAĠ. New, luxury decorated three bedroom penthouse, lift. €358,000, garage optional. Phone 7944 0132.
+Sunday, April 19, 2015|TAL-IBRAĠ. Squarish layout with large terrace. Three double bedrooms, large open plan, bathroom, en-suite. Finished to high standards. €230,000. Finished. Phone owner 7904 9464.
+Sunday, April 19, 2015|TAL-IBRAĠ. Three bedroom apartment including part of roof. €98,000. Phone 7942 1340.
+Sunday, April 19, 2015|TARXIEN, Joanne Gardens area. Newly built, two bedroom, solitary maisonette with full roof and airspace. €113,000 semi-finished. Free notary fees. Phone owner 9944 7922.
+Sunday, April 19, 2015|TARXIEN. 18th century palazzo having a large 400sqm garden. €620,000 (Lm266,000). Phone 9986 1713.
+Sunday, April 19, 2015|TARXIEN. Bargain. One / two / three bedroom maisonettes, apartments and penthouses to be sold fully finished to your choice, from €75,000. Phone owner 9922 0023. 
+Sunday, April 19, 2015|TARXIEN. New second floor luxury decorated three bedroom flat, with large back balcony lift. €95,000. Phone 9910 0989.
+Sunday, April 19, 2015|TARXIEN. Set on two plots, four bedroom villa, connecting four-car garage, garden. Price on request. Phone 9917 0000.
+Sunday, April 19, 2015|TARXIEN. Solitary maisonette, newly finished, with full roof and airspace. Two bedrooms, bathroom, kitchen/ dining, sitting, internal yard and washroom. Priced to sell fast, €99,000. Phone 7965 9777.
+Sunday, April 19, 2015|TARXIEN. Terraced house 9 x 30m (30 x 100ft) having hall, fitted kitchen- dining- living, conservatory, four bedrooms, washroom, bathrooms, interconnecting garage and large back yard with garden. €245,000. Phone 9932 3741.
+Sunday, April 19, 2015|TARXIEN. Townhouse ready to move into with entrance open plan fitted kitchen / dining / living area, three bedrooms, en-suite, guest toilet and full roof. Bargain. €125,000. Phone 9980 5238.
+Sunday, April 19, 2015|TARXIEN. Two-car garage. €22,000. Phone 9980 8276.
+Sunday, April 19, 2015|TARXIEN. Very large townhouse/ sitewith MEPA permits in hand for development €370,000. Phone 9949 8660.
+Sunday, April 19, 2015|TARXIEN. Well kept townhouse, interconnecting garage, 24m (80ft) back garden. €139,000. Phone 9917 0000.
+Sunday, April 19, 2015|THE STRAND, Gżira. New on the market, highly finished apartments, forming part of a new block. Ideally located as a rental investment, property includes kitchen / dining/ living area, large terrace, two double bedrooms, main bathroom and en-suite. €270,000. Phone direct owner 9922 8085.
+Sunday, April 19, 2015|THE VILLAGE. Maisonette, three bedroom, front patio, large back yard, interconnected five-car garage. Phone 9926 4468.
+Sunday, April 19, 2015|THE VILLAGE. Plot approx. 300sqm. Permits in hand for semi-detached villa with pool. €400,000. Phone 9967 0016.
+Sunday, April 19, 2015|THE VILLAGE. Semi-detached villa with pool. €650,000, negotiable. Phone 9920 0968. 
+Sunday, April 19, 2015|THE VILLAGE. Three bedroom apartment with distant sea views, front / back balcony. One-car lockup garage. €205,000. Phone 9942 9313.
+Sunday, April 19, 2015|THE VILLAGE. Three / four bedroom, highly finished, semi-detached villa, big garage, garden, unobstructed valley views. €510,000. Phone owner 2138 5451 or 9947 3904.
+Sunday, April 19, 2015|VALLETTA. A small two bedroom townhouse in need of conversion set on four floors and potential of becoming a small office. €230,000. Phone Mark on 9983 0000.
+Sunday, April 19, 2015|VALLETTA. A spacious, top floor, three bedroom apartment in the heart of Valletta with lift. Ideal also for offices. €330,000. Phone 7959 4840.
+Sunday, April 19, 2015|VALLETTA. Basement level apartment. Half ownership of internal yard. Currently unconverted, perfect as an office. Priced to sell fast. €75,000. Phone 9926 3750.
+Sunday, April 19, 2015|VALLETTA. Catering, good passing trade, unconverted 125sqm. €25,000 premium + €180 daily. Phone 7949 7440.
+Sunday, April 19, 2015|VALLETTA. Converted top floor apartment with roof terrace. €295,000. Phone 2388 0010, 7900 8287.
+Sunday, April 19, 2015|VALLETTA. Duplex two bedroom penthouse. Panoramic views, open living quarters, terraces. €690,000. Phone 7949 7440.
+Sunday, April 19, 2015|VALLETTA. Eight room townhouse with permits to convert into apartments. €390,000. Phone 7979 8282, 2388 0026.
+Sunday, April 19, 2015|VALLETTA. Seven room townhouse with lots of traditional features. €710,000. Phone 7979 8282, 2388 0026.
+Sunday, April 19, 2015|VALLETTA. Shop in good position. Phone 9995 1115. 
+Sunday, April 19, 2015|VALLETTA. Top floor, finished apartment. Airspace, two bedrooms, two bathrooms. €295,000. Phone 7949 7440.
+Sunday, April 19, 2015|VICTORIA GARDENS. New on the market. Fully detached bungalow on .11ha (1 tumolo) having four bedrooms with en-suite bathrooms, large hall, sitting / dining, kitchen / breakfast, cinema / gym, three garages, surrounding garden with large pool and showers. €1,600,000 FH. Phone owner 9949 7924.
+Sunday, April 19, 2015|VITTORIOSA (Birgu), St Angelo Mansions. Fully furnished and air-conditioned apartment. Large open plan, three double bedrooms, two bathrooms, laundry room, yard. Great rental investment. €335,000, car space included. Phone 9937 3635.
+Sunday, April 19, 2015|XEMXIJA BAY. New large duplex three bedroom luxury finished penthouse. €280,000, garage optional. Phone 9910 0989.
+Sunday, April 19, 2015|XEMXIJA, seafront. Apartments/ penthouse with a nine meter front terrace, facing south, three bedrooms with lots of extras and garage. €350,000. Phone 9942 7372. 
+Sunday, April 19, 2015|XEMXIJA. Duplex apartment three / four bedrooms, open plan, terrace and back yard €129,500. Phone 7942 6227.
+Sunday, April 19, 2015|XEMXIJA. Luxury finished first floor apartment. Spacious open plan, front balcony with distant sea views, three bedrooms, bathroom / en-suite. €123,000. Phone 9945 1845.
+Sunday, April 19, 2015|XEMXIJA. Luxury finished semi-detached maisonette. Full ownership of roof, sea views, open-plan, front balcony, bathroom, two double bedrooms, washroom. €138,000. Phone 9945 1845.
+Sunday, April 19, 2015|XEMXIJA. Luxury finished, 160sqm apartment. Hall, large open plan leading to a spacious terrace with unobstructed sea views, three double bedrooms, bathroom / en-suite. €307,500, garage optional. Phone 9945 0827.
+Sunday, April 19, 2015|XEMXIJA. Semi-finished, 200sqm maisonette in a prestigious block. Spacious open plan, three double bedrooms, bathroom / en-suite, back yard. €190,000, including one-car garage. Phone 7987 1787.
+Sunday, April 19, 2015|XEMXIJA. Two bedroom, squarish layout, fully furnished apartment, nice country views, close to seafront. €98,000. Phone 7905 5248.
+Sunday, April 19, 2015|XGĦAJRA. Seafront summer residence with roof ideal for development. €130,000. Phone 9917 0000.
+Sunday, April 19, 2015|ŻABBAR, St Peter' s. Three bedroom maisonette, bathrooms, full roof, garage,€220,000. Phone 9904 9596.
+Sunday, April 19, 2015|ŻABBAR. Brand new, semi-furnished, first floor, three bedroom spacious maisonette. Own roof with washroom and airspace. €200,000 Phone 7909 2280.
+Sunday, April 19, 2015|ŻABBAR. Bright duplex maisonette, three bedrooms, fitted kitchen/ living, dining, bathroom, washroom, roof. €159,000. Phone 7980 2750 or 7923 1275.
+Sunday, April 19, 2015|ŻABBAR. House of character, three / four bedrooms, space for pool and barbecue area. €303,000. Phone 7906 0714.
+Sunday, April 19, 2015|ŻABBAR. Luxuriously fully furnished with quality design furniture three bedroom penthouse in a block of only three units. €190,000. Phone 9902 0929.
+Sunday, April 19, 2015|ŻABBAR. New apartment. Three double bedrooms, kitchen / living, two terraces, lift. Semi-finished, including lift. €87,000. Phone 7965 2339.
+Sunday, April 19, 2015|ŻABBAR. Penthouse, three double bedrooms, front and back terrace, fully furnished with views. €105,000. Phone 9943 7612.
+Sunday, April 19, 2015|ŻABBAR. Terraced house, three bedrooms, yard, terrace, roof, interconnected street-level garage. €285,000. Phone 7980 1965.
+Sunday, April 19, 2015|ŻABBAR. Three bedroom 110sqm apartment having large open plan en-suite bathroom, internal back yard, one-car garage to be sold finished with bathroom doors. €105,000. (Lm45,000). Phone 7992 5513.
+Sunday, April 19, 2015|ŻABBAR. Three bedroom terraced-house,four-car garage, garden. €185,950. Phone 9904 9596.
+Sunday, April 19, 2015|ŻABBAR. Very large duplex solitary maisonette situated on the outskirts facing a green area and enjoying distant sea views. Highly recommended. Priced to sell, €239,500. Phone 9949 8660.
+Sunday, April 19, 2015|ŻEBBIEGĦ. Corner bright three bedroom apartment large terrace €154,000 also three bedroom penthouse €265,000. Phone 9986 2850.
+Sunday, April 19, 2015|ŻEBBIEGĦ. Two bedroom apartment, balcony, great location, bathrooms. €134,000 FH. Phone 9942 4194.
+Sunday, April 19, 2015|ŻEBBUĠ. 180sqm penthouse on plan, two bedrooms, including garage. Amazing value. €155,000. Phone 9945 1505.
+Sunday, April 19, 2015|ŻEBBUĠ. Highly finished three bedroom apartment. Washroom, half roof. Block of two. €149,000, garage optional. Phone 7990 0738.
+Sunday, April 19, 2015|ŻEBBUĠ. Large plot (13m wide) having fantastic country views. Area zoned for 3+1+semibasement. €470,000, negotiable. Phone 7900 2400.
+Sunday, April 19, 2015|ŻEBBUĠ. Luxury finished fully furnished terraced house measuring 7.2 x 22.8m (24 x 76ft), including two-car garage. €350,000. Phone 7940 3309.
+Sunday, April 19, 2015|ŻEBBUĠ. Spacious terraced house. Three bedrooms, one-car garage. Must view. €315,000. Phone 9946 0241.
+Sunday, April 19, 2015|ŻEBBUĠ. Terraced house. Three double bedrooms, three bathrooms, large open plan, yard, washroom, two-car garage. €260,000. Phone 7945 6423.
+Sunday, April 19, 2015|ŻEBBUĠ. Three bedroom, fully finished apartment. €120,00. Phone owner 7927 2465.
+Sunday, April 19, 2015|ŻEBBUĠ. Two bedroom apartment 25sqm terrace, enjoying unobstructed valley views, interconnected one-car garage. €112,000. Phone 9993 1483. 
+Sunday, April 19, 2015|ŻEBBUĠ. Two bedroom apartment. One-car garage, bathrooms, doors. 140sqm, with 26sqm terrace. €112,000. Phone 7934 3333.
+Sunday, April 19, 2015|ŻEBBUĠ. Two bedroom, totally finished apartment. Bargain, only €96,000. Phone 7944 5991.
+Sunday, April 19, 2015|ŻEJTUN. Groundfloor maisonette. Open plan,twobedrooms large back yard. €123,000. Phone 9988 3480.
+Sunday, April 19, 2015|ŻEJTUN. Luxurious, modern, massive 180sqm, finished penthouse,. Three double bedrooms, en-suite, bathroom, front and back terrace with views. Block of only three units with lift. €175,000. Phone 9955 5508.
+Sunday, April 19, 2015|ŻEJTUN. New ground corner maisonette two bedrooms, kitchen / living €85,000. Phone 7965 2339.
+Sunday, April 19, 2015|ŻEJTUN. Rare new apartment block of only four with washroom and own roof,three bedrooms €96,000. Phone 7965 2339.
+Sunday, April 19, 2015|ŻEJTUN. Terraced house with hall, open plan with fitted kitchen/ dining / living area, bathroom, yard, three bedrooms, large laundry and roof. Interconnecting street level four-car garage. €208,500. Phone 9932 3741.
+Sunday, April 19, 2015|ŻEJTUN. Typical two bedroom Maltese townhouse situated in the vicinity of the parish church. €87,000. Phone 9983 2978 or 9947 1894.
+Sunday, April 19, 2015|ŻURRIEQ, Tal-Bebbux area. Newly built, three bedroom apartment, with views and a truly spacious layout. €118,000 finished. Phone owner 9913 7275.
+Sunday, April 19, 2015|ŻURRIEQ, Tal-Bebbux. Three bedroom finished flat. Open plan kitchen, living and dining, two bathrooms. Has country views, plus own roof space. Common parts ready with lift. €110,000. Phone 9942 0254.
+Sunday, April 19, 2015|ŻURRIEQ. Agricultural land overlooking Filfla. Unobstructed sea / country views 2.5 tumoli of land with one room, direct road access. €85,000. Phone 7934 3333.
+Sunday, April 19, 2015|ŻURRIEQ. Field .17ha (1½ tumoli) of agricultural land. Direct road access, electricity and water supply, open country and sea views, boundary walls and plenty of mature trees. €95,000 FH. Phone 7981 2051.
+Sunday, April 19, 2015|ŻURRIEQ. Finished spacious penthouse with open plan kitchen / dining / living area leading to a front verandah, two bedrooms, en-suite, back terrace, bathroom and lift. €130,500. Phone 9950 1830. 
+Sunday, April 19, 2015|ŻURRIEQ. Finished three bedroom apartment served with lift, kitchen / dining, en-suite. €90,000. Phone 9957 8736.
+Sunday, April 19, 2015|ŻURRIEQ. Finished three bedroom apartment. Kitchen / living / dining, bathroom, en-suite, lift. €100,000. Phone 7980 2750 or 7923 1275.
+Sunday, April 19, 2015|ŻURRIEQ. Highly finished, semi-furnished apartment. Three double bedrooms, large sitting, etc. Phone 7942 0276.
+Sunday, April 19, 2015|ŻURRIEQ. Large brand new apartment in a block of three with large open plan, two bedrooms, terraces, bathroom, en-suite, doors and lift. Bargain. €97,000. Phone 9980 5238.
+Sunday, April 19, 2015|ŻURRIEQ. Large, three bedroom furnished apartment. €181,000. Phone 7970 7879.
+Sunday, April 19, 2015|ŻURRIEQ. New penthouse. Unobstructed views, kitchen/ dining / sitting, two bedrooms, terrace, balconies. €160,000. Phone 7953 7926.
+Sunday, April 19, 2015|ŻURRIEQ. Newly built, second floor maisonette. Three bedrooms, with washroom and roof. Highly finished, including lift to roof top. €160,000. Phone owner 9994 6417.
+Sunday, April 19, 2015|ŻURRIEQ. Penthouse with large terrace great for entertaining, three double bedrooms, bathrooms. €170,000.Shell. Phone owner 7904 9464.
+Sunday, April 19, 2015|ŻURRIEQ. Townhouse comprising three bedrooms, kitchen, sitting, dining, bathroom, yard, roof. €170,000. Phone 7923 1275.
+Sunday, April 19, 2015|ŻURRIEQ / Mosta / Żejtun: three bedroom terraced house with garage. Phone 7946 3278.
+Saturday, April 18, 2015|18,033 PROPERTIES for sale on Malta' s best rated property website: {00d0c9ea79f9bace118c8200aa004ba90b0200000003000000e0c9ea79f9bace118c8200aa004ba90b5200000068007400740070003a002f002f007700770077002e00730069006d006f006e0065007300740061007400650073002e0063006f006d002f000000795881f43b1d7f48af2c825dc485276300000000a5ab000000ffff Phone 2388 0009, 7900 8287.
+Saturday, April 18, 2015|ATTARD. 130sqm, open plan maisonette. Three double bedrooms, bathroom, en-suite, front / back terrace. New block. €130,000. Shell. Phone owner 7904 9464. 
+Saturday, April 18, 2015|ATTARD. Luxurious, furnished penthouse on fourth level, with lift. 235sqm, three double bedrooms, two bathrooms, large kitchen / sitting / living, fireplace. 42sqm rear terrace. €330,000 FH. Phone owner 7744 1001.
+Saturday, April 18, 2015|BALZAN VALLEY. First floor two / three bedroom apartment including airspace. €140,000. Phone owner 7927 7963.
+Saturday, April 18, 2015|BALZAN. 150sqm apartment. Three double bedrooms, open plan leading onto terrace with open views. €150,000. Finished. Phone owner 7904 9464.
+Saturday, April 18, 2015|BIRKIRKARA. Three bedroom fully furnished flat, quiet area. Washroom, terrace, balcony, use of roof, etc. Phone owner 9974 2354.
+Saturday, April 18, 2015|FGURA. Apartment. Three bedrooms, large open plan, bathroom, en-suite. €90,000. Finished, including doors and bathrooms. Phone owner 7904 9464.
+Saturday, April 18, 2015|GĦARGĦUR. 155sqm apartment. Three double bedrooms, large open plan, bathroom, en-suite. €180,000. Finished. Phone owner 7904 9464.
+Saturday, April 18, 2015|GOZO, GĦARB. A three double bedroom apartment being sold fully finished. €85,000. Phone 9942 2146.
+Saturday, April 18, 2015|GOZO, KERĊEM. A three bedroom authentic farmhouse with Citadel views. €300,000. Phone 9942 2146. 
+Saturday, April 18, 2015|GOZO, ŻEBBUĠ. Land 1.35ha (4½ tumoli). Entrance from road overlooking coast. Phone owner 7959 4790, 7959 4784 or 2123 9506.
+Saturday, April 18, 2015|LIJA. Charming, fully detached three bedroom villa with pool, garden and carport. Lovely location. Phone 9925 2868.
+Saturday, April 18, 2015|MELLIEĦA. Penthouse double fronted. Large terraces 9.9 x 3.9m (33 x 13ft) front and back, with great views overlooking Santa Maria Estate, sea views, three bedrooms. €280,000. Finished. Phone owner 7904 9464.
+Saturday, April 18, 2015|MOSTA. New block. Apartment. Three bedrooms, large open plan, bathroom, en-suite. Front / back terraces. €140,000. Finished. Phone owner 7904 9464.
+Saturday, April 18, 2015|MSIDA. Apartment. Two bedrooms, open plan with large front terrace. Finished and including one-car lock-up garage. €100,000. Phone owner 7904 9464.
+Saturday, April 18, 2015|MSIDA. Large three bedroom apartment ideal for first time buyers, or buy-to-let. €135,000. Phone owner 9946 0974.
+Saturday, April 18, 2015|NAXXAR, central. Small house ideal for clinic or office. €120,000, negotiable. Phone 2143 1695 or 7921 1403. 
+Saturday, April 18, 2015|NAXXAR. Apartment. Three double bedrooms, open plan, bathroom, en-suite, large front terrace with open green area views. Finished, including doors and bathrooms of your choice. €150,000. Phone owner 7904 9464.
+Saturday, April 18, 2015|NAXXAR. House of character, real nice family home. Four bedrooms with en-suite and terraces. Pool, two-car garage. €875,000. Phone owner 9947 3065. 
+Saturday, April 18, 2015|PAOLA. Two bedroom house with own garden and roof. €110,000. Phone 7930 3168.
+Saturday, April 18, 2015|PEMBROKE. Corner, open plan maisonette. Three double bedrooms, two bathrooms, one en-suite, large kitchen area. No agents. Phone owner direct 7979 3355.
+Saturday, April 18, 2015|QAWRA. Bargain. Newly built, highly finished two bedroom apartment including one-car garage. €86,500. Phone 7957 9360.
+Saturday, April 18, 2015|QORMI (Valletta Road). Warehouse and offices. Own airspace, on two floors, 370sqm each floor including lift and 3-phase. Containers can be loaded / unloaded indoors. For viewing please phone 7927 7963.
+Saturday, April 18, 2015|RABAT. 190sqm apartment. 11.7m (39ft) open plan leading onto terrace with open green area views, three double bedrooms, bathroom, en-suite, washroom, box room. €170,000. Finished. Phone owner 7904 9464.
+Saturday, April 18, 2015|SAN ĠWANN. Last remaining, finished 135sqm, three bedroom apartment. €140,000, garage optional. Phone owner 9905 2077.
+Saturday, April 18, 2015|SAN PAWL TAT-TARĠA. Designer finished, semi-detached duplex maisonette consisting of kitchen / living / dining, three double bedrooms, own roof and airspace. €255,000. Phone 9993 9441. 
+Saturday, April 18, 2015|SLIEMA, seafront. Direct from owner and first time on the market. A small block consisting of five x two bedroom spacious apartments and one bedroom penthouse. To be sold highly finished. No agents please. Phone 9946 0974.
+Saturday, April 18, 2015|SLIEMA. Luxury, brand new spacious apartment. Magnificent sea views, three bedrooms / three bathrooms, terrace. €650,000 ,garage optional. Phone 9986 8012.
+Saturday, April 18, 2015|ST VENERA. 150sqm area behind LiDL. Small brand new block, apartment, three bedrooms in a nice area, large open plan. Finished. €105,000. Phone owner 7904 9464.
+Saturday, April 18, 2015|TAL-IBRAĠ. Squarish layout with large terrace. Three double bedrooms, large open plan, bathroom, en-suite. Finished to high standards. €230,000. Finished. Phone owner 7904 9464.
+Saturday, April 18, 2015|ŻEBBUĠ. Fully detached three bedroom farmhouse on 1,200sqm of landscaped land with pool. Drive access, three bedrooms. Needs refurbishment. €950,000. Phone 9947 5444. 
+Saturday, April 18, 2015|ŻURRIEQ, Nigret. Terraced house in Quite cul-de-sac. Bargain must see. €195,000, negotiable. Phone 9980 2499.
+Saturday, April 18, 2015|ŻURRIEQ. Penthouse with large terrace great for entertaining, three double bedrooms, bathrooms. €170,000. Shell. Phone owner 7904 9464.
+Friday, April 17, 2015|18,033 PROPERTIES for sale on Malta' s best rated property website: {00d0c9ea79f9bace118c8200aa004ba90b0200000003000000e0c9ea79f9bace118c8200aa004ba90b5200000068007400740070003a002f002f007700770077002e00730069006d006f006e0065007300740061007400650073002e0063006f006d002f000000795881f43b1d7f48af2c825dc485276300000000a5ab000000ff98000095ffffff. Phone 2388 0009 or 7900 8287.
+Friday, April 17, 2015|BALZAN. New, large, highly finished two bedroom apartment. €147,000. Phone 2163 2918.
+Friday, April 17, 2015|GOZO, QALA. A bargain not to be missed. Two bedroom apartment in this lovely village, within walking distance to the square. Open plan kitchen and dining area. Large terrace and washroom at top enjoying country views. €72,000. Phone 9996 1008.
+Friday, April 17, 2015|GOZO. Avery largebrand new apartment ready to move into, having three bedrooms and back yard. Priced to sell. €85,000. Phone 7920 5520.
+Friday, April 17, 2015|MARSASCALA. Large, highly finished apartment with fitted kitchen, consisting of good sized terrace, sitting, kitchen, dining, three double bedrooms, en-suite, bathroom and back terrace. €175,000. Phone 2163 2919.
+Friday, April 17, 2015|QAWRA. Bargain. One / two / three bedroom maisonettes, apartments and penthouses with open views, being offered fully finished from €75,500, on plan. Phone owner 9922 0023. 
+Friday, April 17, 2015|ST JULIANS. Townhouse finished to perfection. Priced for a quick sale, €375,000. Phone 9988 5979.
+Friday, April 17, 2015|ST PAUL' S BAY. Seafront, new finished three bedroom apartment enjoying spectacular sea views of St Paul' s Bay and Xemxija. €250,000. Phone owner 9922 0023. 
+Friday, April 17, 2015|ST VENERA. Finished maisonette behind Romeo Romano Gardens. €95,000. Phone 2163 2918.
+Friday, April 17, 2015|ST VENERA. One bedroom, finished penthouse with a very large surrounding terrace. €94,000, including a free one-car garage. Phone owner 9922 0023.
+Friday, April 17, 2015|ST VENERA. Two bedroom, highly finished groundfloor marionette with back yard. €110,000, with a free one-car garage. Phone owner 9922 0023.
+Friday, April 17, 2015|TARXIEN. Bargain. One / two / three bedroom maisonettes, apartments and penthouses to be sold fully finished to your choice, from €75,000. Phone owner 9922 0023. 
+Friday, April 17, 2015|ŻEBBUĠ. Country house, idyllic valley location, with large outdoor space, swimming pool, garden, guest annex, carport. Fantastic potential. €953,000. Phone 9986 8012.
+Thursday, April 16, 2015|18,033 PROPERTIES for sale on Malta' s best rated property website: {00d0c9ea79f9bace118c8200aa004ba90b0200000003000000e0c9ea79f9bace118c8200aa004ba90b5200000068007400740070003a002f002f007700770077002e00730069006d006f006e0065007300740061007400650073002e0063006f006d002f000000795881f43b1d7f48af2c825dc485276300000000a5ab00000000ffff00ffffff01. Phone 2388 0009 or 7900 8287.
+Thursday, April 16, 2015|BALZAN. Finished, large three bedroom apartment. Must view. €152,000. Phone 2163 2918.
+Thursday, April 16, 2015|GOZO, GĦARB. Plot measuring 7.2m (24ft) frontage x 27.6m (92ft) length. Freehold. Reasonable price. Phone 9984 7320.
+Thursday, April 16, 2015|GOZO, XAGĦRA. Shell form house of character. Three bedrooms, pool, three-car garage. €170,000. Phone 9942 2146. 
+Thursday, April 16, 2015|GOZO, XLENDI. A two-bedroom cliff-edge apartment overlooking Xlendi Bay. €80,000. Phone 9942 2146.
+Thursday, April 16, 2015|MARSASCALA. Finished two bedroom apartment close to St Thomas Bay. €85,000. Phone 2163 2919{_GoBackMSIDA. Luxuriously decorated two or three bedroom flats from €72,000. Garage optional. Phone 9991 9343.
+Thursday, April 16, 2015|MSIDA. Luxury two or three bedroom penthouses from €120,000. Phone 9950 9048. 
+Thursday, April 16, 2015|SIĠĠIEWI. Three bedroom groundfloor maisonette. No steps. €120,000, negotiable. Phone owner 9982 6148. 
+Thursday, April 16, 2015|ST JULIANS. Enormous, elevated, groundfloor 320sqm apartment. Three large bedrooms and 45sqm back yard. €330,000. Phone 9925 2868.
+Thursday, April 16, 2015|ST JULIANS. Townhouse finished to perfection. Priced for a quick sale, €375,000. Phone 9988 5979.
+Thursday, April 16, 2015|ŻEBBUĠ. Fully detached three bedroom farmhouse on 1,200sqm of landscaped land with pool. Drive access, three bedrooms. Needs refurbishing. €950,000. Phone 9947 5444. 
+> 
