@@ -23,7 +23,10 @@ extractPs <- function(f) {
 extractDataFromHtmlInDir <- function(sourceDir) {
   htmlFiles <- list.files(sourceDir,pattern="*.html*")
   fileToHtmlTextInfo <- list()
+  htmlFiles <- htmlFiles[1:1]
+  pastePrint("html files = ",htmlFiles)
   for (htmlFile in htmlFiles) {
+    pastePrint('working on file ',htmlFile)
     f <- paste(sourceDir,'/',htmlFile,sep="")
     htmlTextForF <- extractPs(f)
     fileToHtmlTextInfo[[htmlFile]] <- htmlTextForF
@@ -32,5 +35,6 @@ extractDataFromHtmlInDir <- function(sourceDir) {
   return(fileToHtmlTextInfo)
 }
 
-extractDataFromHtmlInDir('data')
+#print("starting...")
+text <- extractDataFromHtmlInDir('data')
 
