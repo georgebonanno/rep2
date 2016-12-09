@@ -3,6 +3,13 @@ library(stringi)
 library(stringr)
 source('propertyFeatureExtraction.R')
 
+extractDate <- function(dateStr) {
+  print(dateStr)
+  parsedDate <- gsub('.*?[^,]+, ([^ ]+) ([^,]+), ([0-9]+).*','\\2-\\1-\\3',dateStr)
+  extractedDate <- as.Date(c(parsedDate),'%d-%B-%Y')
+  return(extractedDate)
+}
+
 readForPropertyForSale <- function(f) {
   html <- read_html(f)
   as <- html %>% html_nodes('li > p,.classified_date') %>% html_text()
@@ -15,7 +22,7 @@ readForPropertyForSale <- function(f) {
       desc <- extractFeatures(propertyDesc)
       print(paste(classDate,desc,sep=","))
     } else {
-      classDate <- a;
+      classDate <- extractDate(a);
     }
   }
 }

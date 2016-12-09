@@ -4,16 +4,22 @@ source('propertyNameExtraction.R')
 
 pastePrint <- function(...,sepr=" ") {
   print(paste(...,sep=sepr))
-}
+} 
 
 validPropertyDescs <- function(line) {
-  valid <- !(
-              #grepl('.*Phone 2388 0009 or 7900 8287.*',line) ||
-              # grepl(".*PROPERTY FOR SALE.*",line,ignore.case = TRUE) ||
-              grepl(".*PROPERTIES for sale on Malta' *s best rated property website.*",line,ignore.case = TRUE) ||
-                grepl(".*SELLING YOUR HOUSE*",line,ignore.case = TRUE) ||
-                 grepl(".*PROPERTIES for sale on www.*",line,ignore.case=TRUE)
-              )
+  lineContainsStr <- function(x) {
+          return(grepl(paste(".*",x,".*",sep=""),line,ignore.case = TRUE))
+  }
+  
+  invalidProps <- c(
+    "A RESTAURANT situated in a prominen",
+    "PROPERTIES for sale on Malta' *s best rated property website",
+    "SELLING YOUR HOUSE",
+    "PRICE REDUCTIONS this week on properties",
+    "PROPERTIES for sale on www");
+   
+  
+  valid <- !(any(sapply(FUN = lineContainsStr,X = invalidProps)))
              
   return(valid)
     
@@ -49,6 +55,8 @@ extractArea <- function(propertyDesc) {
   return(area)
   
 }
+
+
 
 extractFeatures <- function(line) {
   if (validPropertyDescs(line)) {
