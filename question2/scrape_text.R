@@ -13,14 +13,16 @@ extractPs <- function(f) {
   
   tags <- c("p","h1","h2","h3","li","table","div")
   
-  extraction <- list()
+
+  htmlText = "";
   for (t in tags) {
-    htmlText <- scraping_times %>% html_nodes(t) %>% html_text()
-    extraction[[t]]$text <- htmlText
-    extraction[[t]]$tag <- t
+    textInTag <- scraping_times %>% html_nodes(t) %>% html_text()
+    textInTag <- paste(textInTag,collapse = "")
+    htmlText <- paste(htmlText,textInTag)
   }
+
   pastePrint("data loaded from ",f)
-  return(extraction)
+  return(htmlText)
 }
 
 extractDataFromHtmlInDir <- function(sourceDir) {
@@ -38,27 +40,17 @@ extractDataFromHtmlInDir <- function(sourceDir) {
   return(fileToHtmlTextInfo)
 }
 
-extractStatsForDocs <- function(docsTextsForTag) {
-  termMatrix <- list()
-  docIndex <- 0
-  for (doc in docsTextsForTag) {
-    docIndex <- docIndex+1
-    #doc <- docsTextsForTag[docIndex]
-    #pastePrint("index",doc)
-    termMatrix[[docIndex]] <- list()
-    for (textInTag in doc) {
-      concatText <- paste(textInTag$text,collapse="")
-      pastePrint()
-      tag <- textInTag$tag
-      termMatrix[[docIndex]][[tag]] <- extractDocTermMatrixForListOfStrings(c(concatText))
-    }
-    
-  }
-  return(termMatrix)
+plotFreqs <- function(freqMat,n) {
+  htm <- head(freqMat,n)
+  p <- ggplot(htm,aes(htm$word,htm$freq))
+  p <- p + theme(axis.text.x=element_text(angle=45, hjust=1))
+  p <- p + geom_bar(stat="identity")
+  p
 }
 
-#print("starting...")
-docTextsPerTag <- extractDataFromHtmlInDir('data')
-termMatrix <- extractStatsForDocs(docTextsPerTag)
+print("starting...")
+docTexts <- extractDataFromHtmlInDir('data')
+termMatrix <- extractDocTermMatrixForListOfStrings(docTexts)
 
+plotFreqs(freqMat = termMatrix$dtm,20)
 

@@ -10,6 +10,8 @@ applyTM <- function(docs) {
   docs <- tm_map(docs,removeNumbers)
   docs <- tm_map(docs,tolower)
   
+  numbers <- c("one","two","three","four","five","six","seven","eight","nine");
+  docs <- tm_map(docs, removeWords, numbers)
   docs <- tm_map(docs, removeWords, stopwords("english"))
   docs <- tm_map(docs, stemDocument) 
   docs <- tm_map(docs, stripWhitespace)
@@ -27,7 +29,10 @@ extractDocTermMatrix <- function(docs) {
 }
 
 extractDocTermMatrixForListOfStrings <- function(listOfString) {
-  return (extractDocTermMatrix(applyTM(listOfString)))
+  tm <- applyTM(listOfString);
+  dtm <- (extractDocTermMatrix(tm))
+  tdm <- TermDocumentMatrix(tm,control = list(weighting = weightTfIdf, stopwords = TRUE))
+  return(list(dtm=dtm,tdm=tdm))
 }
 
 test <- function() {
