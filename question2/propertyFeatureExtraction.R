@@ -12,8 +12,13 @@ validPropertyDescs <- function(line) {
   }
   
   invalidProps <- c(
+    "APARTMENTS, maisonettes, etc",
     "A RESTAURANT situated in a prominen",
+    "ANNE PULLICINO \\(sensara\\)",
     "PROPERTIES for sale on Malta' *s best rated property website",
+    "PROPERTIES for sale on",
+    "PRICE REDUCTIONS this week on properties for sale at ",
+    "A RESTAURANT situated in a prominent / central area, with good clientele. Phone ",
     "SELLING YOUR HOUSE",
     "PRICE REDUCTIONS this week on properties",
     "PROPERTIES for sale on www");
@@ -55,8 +60,6 @@ extractArea <- function(propertyDesc) {
   return(area)
   
 }
-
-
 
 extractFeatures <- function(line) {
   if (validPropertyDescs(line)) {

@@ -4,7 +4,6 @@ library(stringr)
 source('propertyFeatureExtraction.R')
 
 extractDate <- function(dateStr) {
-  print(dateStr)
   parsedDate <- gsub('.*?[^,]+, ([^ ]+) ([^,]+), ([0-9]+).*','\\2-\\1-\\3',dateStr)
   extractedDate <- as.Date(c(parsedDate),'%d-%B-%Y')
   return(extractedDate)
@@ -20,7 +19,9 @@ readForPropertyForSale <- function(f) {
     if (startsWith(a,'\nProperty For Sale\n') & str_length(a) > propSaleLen) {
       propertyDesc <- substr(a,propSaleLen+1,str_length(a))
       desc <- extractFeatures(propertyDesc)
-      print(paste(classDate,desc,sep=","))
+      if (str_length(desc) > 0) {
+        print(paste(classDate,desc,sep=","))
+      } 
     } else {
       classDate <- extractDate(a);
     }
