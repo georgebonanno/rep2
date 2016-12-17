@@ -3,8 +3,14 @@ library(tm)
 #applies stemming, whitespace removal and other nlp processing
 #techniques to a list of documents (each of them being a string)
 applyTM <- function(docs) {
+  return(applyTMOnSource(VectorSource(docs)))
+}
+
+#applies stemming, whitespace removal and other nlp processing
+#techniques to a source (e.g VectorSource or DocumentSource)
+applyTMOnSource <- function(source) {
   
-  docs <- Corpus(VectorSource(docs))   
+  docs <- Corpus(source)   
   
   docs <- tm_map(docs,removePunctuation)
   docs <- tm_map(docs,removeNumbers)
@@ -19,6 +25,10 @@ applyTM <- function(docs) {
   return (docs)
 }
 
+applyTmOnDoc <- function(directoryPath) {
+  return(applyTMOnSource(DirSource(directoryPath)))
+}
+
 extractDocTermMatrix <- function(docs) {
   dtm <- DocumentTermMatrix(docs)
   freq <- colSums(as.matrix(dtm)) 
@@ -28,11 +38,21 @@ extractDocTermMatrix <- function(docs) {
   return(wf)
 }
 
-extractDocTermMatrixForListOfStrings <- function(listOfString) {
-  tm <- applyTM(listOfString);
+extractDocTermMatrixForTmSource <- function(tm) {
+  
   dtm <- (extractDocTermMatrix(tm))
   tdm <- TermDocumentMatrix(tm,control = list(weighting = weightTfIdf, stopwords = TRUE))
   return(list(dtm=dtm,tdm=tdm))
+}
+
+extractDocTermMatrixForListOfStrings <- function(listOfString) {
+  tm <- applyTM(listOfString);
+  return(extractDocTermMatrixForTmSource(tm))
+}
+
+extractDocTermMatrixForDocs <- function(dirPath) {
+  tm <- applyTmOnDoc(dirPath);
+  return(extractDocTermMatrixForTmSource(tm))
 }
 
 test <- function() {
