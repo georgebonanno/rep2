@@ -1,0 +1,17 @@
+apartment                             apartment  263
+garage                                   garage  207
+sqm                                         sqm  120
+maisonette                           maisonette  106
+penthouse                             penthouse   92
+villa                                     villa   31
+townhouse                             townhouse   30
+penthouse                           penthouses   18
+garage                                 garages   16
+farmhouse                             farmhouse   12
+plot                                       plot   12
+flat                                       flat   11
+form                                       form   11
+basement                               basement   10
+bungalow                               bungalow   10
+with well
+offices                                 offices    7

@@ -1,55 +1,3 @@
-
-R version 3.3.2 (2016-10-31) -- "Sincere Pumpkin Patch"
-Copyright (C) 2016 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> library(rvest)
-> library(stringi)
-> library(stringr)
-> 
-> readForPropertyForSale <- function(f) {
-+   html <- read_html(f)
-+   as <- html %>% html_nodes('li > p,.classified_date') %>% html_text()
-+   classDate <- ""
-+   for (a in as) {
-+     propSaleLen <- str_length('\nProperty For Sale\n')
-+     
-+     if (startsWith(a,'\nProperty For Sale\n') & str_length(a) > propSaleLen) {
-+       len <- substr(a,propSaleLen+1,str_length(a))
-+       
-+       print(paste(classDate,len,sep="|"))
-+     } else {
-+       classDate <- a;
-+     }
-+   }
-+ }
-> 
-> extractDataFromDir <- function(sourceDir) {
-+   htmlFiles <- list.files(sourceDir,pattern="*.html*")
-+   fileToHtmlTextInfo <- list()
-+   
-+   htmlFiles <- htmlFiles[1:1]
-+   for (htmlFile in htmlFiles) {
-+     pathName <- paste('data','/',htmlFile,sep = "")
-+     readForPropertyForSale(pathName)
-+   }
-+ }
-> 
-> extractDataFromDir('data')
 Thursday, April 23, 2015|18,033 PROPERTIES for sale on Malta's best rated property website: {00d0c9ea79f9bace118c8200aa004ba90b0200000003000000e0c9ea79f9bace118c8200aa004ba90b5200000068007400740070003a002f002f007700770077002e00730069006d006f006e0065007300740061007400650073002e0063006f006d002f000000795881f43b1d7f48af2c825dc485276300000000a5ab0000000000000000 Phone 2388 0009, 7900 8287.
 Thursday, April 23, 2015|BALZAN. Finished large three bedroom apartment. Must view €152,000. Phone 2163 2918.
 Thursday, April 23, 2015|GOZO, GĦAJNSIELEM. An ideal residential plot of land for investment or for a good sized terraced house, situated in a three story-height zone. €185,000. Phone 9947 6959.
@@ -809,4 +757,3 @@ Thursday, April 16, 2015|SIĠĠIEWI. Three bedroom groundfloor maisonette. No st
 Thursday, April 16, 2015|ST JULIANS. Enormous, elevated, groundfloor 320sqm apartment. Three large bedrooms and 45sqm back yard. €330,000. Phone 9925 2868.
 Thursday, April 16, 2015|ST JULIANS. Townhouse finished to perfection. Priced for a quick sale, €375,000. Phone 9988 5979.
 Thursday, April 16, 2015|ŻEBBUĠ. Fully detached three bedroom farmhouse on 1,200sqm of landscaped land with pool. Drive access, three bedrooms. Needs refurbishing. €950,000. Phone 9947 5444. 
-> 
