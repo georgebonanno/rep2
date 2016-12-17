@@ -1,6 +1,7 @@
 library(rvest)
 library(stringi)
 library(stringr)
+source('propertyFeatureExtraction.R')
 
 readForPropertyForSale <- function(f) {
   html <- read_html(f)
@@ -11,8 +12,8 @@ readForPropertyForSale <- function(f) {
     
     if (startsWith(a,'\nProperty For Sale\n') & str_length(a) > propSaleLen) {
       propertyDesc <- substr(a,propSaleLen+1,str_length(a))
-      
-      print(paste(classDate,propertyDesc,sep="|"))
+      desc <- extractFeatures(propertyDesc)
+      print(paste(classDate,desc,sep="|"))
     } else {
       classDate <- a;
     }
