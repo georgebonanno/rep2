@@ -7,30 +7,63 @@ pastePrint <- function(...,sepr=" ") {
 }
 
 validPropertyDescs <- function(line) {
-  valid <- !(grepl('Phone 2388 0009 or 7900 8287',line) ||
-               grepl("PROPERTY FOR SALE",line) ||
-              grepl("PROPERTIES for sale on Malta's best rated property website:",line))
+  valid <- !(
+              #grepl('.*Phone 2388 0009 or 7900 8287.*',line) ||
+              # grepl(".*PROPERTY FOR SALE.*",line,ignore.case = TRUE) ||
+              grepl(".*PROPERTIES for sale on Malta' *s best rated property website.*",line,ignore.case = TRUE) ||
+                grepl(".*SELLING YOUR HOUSE*",line,ignore.case = TRUE) ||
+                 grepl(".*PROPERTIES for sale on www.*",line,ignore.case=TRUE)
+              )
              
   return(valid)
     
 }
 
 isNumericFormat <- function(s) {
-  return(grepl("^[0-9]+$",s));
+  return(grepl("^[0-9]*(\\.[0-9]+)?$",s));
 }
 
+extractArea <- function(propertyDesc) {
+  area <- gsub(".*([0-9]+)sqm.*","\\1",propertyDesc)
+  if (!isNumericFormat(area)) {
+    area <- gsub(".*([0-9]+)msq.*","\\1",propertyDesc)
+    if (!isNumericFormat(area)) {
+      
+      area <- gsub(".*?([0-9]*\\.[0-9]+)(ha).*","\\1",propertyDesc)
+      if (isNumericFormat(area)) {
+        area <- paste("0",area,sep="")
+        #conversion of hectares to sqm
+        area <- as.numeric(area)*1000
+      } else {
+        area <- gsub(".*?([0-9]+\\.[0-9]+) tumoli.*","\\1",propertyDesc)
+        if (isNumericFormat(area)) {
+          #conversion of tumoli to sqm
+          area <- as.numeric(area)*1024;
+        }
+      }
+    }
+  }
+  if (!(isNumericFormat(area) || is.numeric(area))) {
+    area = ""
+  }
+  return(area)
+  
+}
 
 extractFeatures <- function(line) {
   if (validPropertyDescs(line)) {
-    location <- gsub("([^\\.]+)\\..*","\\1",line,perl=TRUE)
-    location <- gsub(",","",location,perl=TRUE)
+    location <- gsub("([^\\.:]+)[\\.:].*","\\1",line,perl=TRUE)
+    if (location == line) {
+      location <- "";
+    } else {
+      location <- gsub(",","",location,perl=TRUE)
+    }
     phone <- gsub(".*([0-9]{4} *[0-9]{4}).*","\\1",line)
     phone <- gsub(" ","",phone)
-    pastePrint("phone = ",line)
     if (isNumericFormat(phone)) {
       phone <- as.numeric(phone)
     } else if (str_length(phone) > 0) {
-      raise(paste("phone number is not a number in",line))
+      phone <- "";
     }
     price <- gsub(".*€([0-9,]+).*","\\1",line,perl=TRUE)
     price <- gsub(",","",price,perl=TRUE)
@@ -39,8 +72,10 @@ extractFeatures <- function(line) {
     } else {
       price <- as.numeric(price)
     }
+    area <- extractArea(line)
+    
     description <- extractPropertyDescription(line)
-    entireDescription <- paste(location,phone,price,description,sepr=",");
+    entireDescription <- paste(location,phone,price,description,area,sep=",");
   } else {
     entireDescription <- ""
   }
