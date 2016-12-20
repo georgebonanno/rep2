@@ -18,10 +18,13 @@ readForPropertyForSale <- function(f) {
     
     if (startsWith(a,'\nProperty For Sale\n') & str_length(a) > propSaleLen) {
       propertyDesc <- substr(a,propSaleLen+1,str_length(a))
-      desc <- extractFeatures(propertyDesc)
-      if (str_length(desc) > 0) {
-        print(paste(classDate,desc,sep=","))
-      } 
+      descs <- extractFeatures(propertyDesc)
+      pastePrint("for input",propertyDesc)
+      for (desc in descs) {
+        if (str_length(desc) > 0) {
+          print(paste(classDate,desc,sep=","))
+        } 
+      }
     } else {
       classDate <- extractDate(a);
     }

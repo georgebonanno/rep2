@@ -1,5 +1,6 @@
 library(stringr)
 library(stringi)
+source('locationFiltering.R')
 source('propertyNameExtraction.R')
 
 pastePrint <- function(...,sepr=" ") {
@@ -65,9 +66,10 @@ extractFeatures <- function(line) {
   if (validPropertyDescs(line)) {
     location <- gsub("([^\\.:]+)[\\.:].*","\\1",line,perl=TRUE)
     if (location == line) {
-      location <- "";
+      locations <- list();
     } else {
       location <- gsub(",","",location,perl=TRUE)
+      locations <- resolveLocation(location)
     }
     phone <- gsub(".*([0-9]{4} *[0-9]{4}).*","\\1",line)
     phone <- gsub(" ","",phone)
@@ -86,11 +88,14 @@ extractFeatures <- function(line) {
     area <- extractArea(line)
     
     description <- extractPropertyDescription(line)
-    entireDescription <- paste(location,phone,price,description,area,sep=",");
+    makeDescriptions <- function(l) {
+      paste(l,phone,price,description,area,sep=",");
+    }
+    entireDescriptions <- lapply(FUN = makeDescriptions,X = locations)
   } else {
-    entireDescription <- ""
+    entireDescriptions <- list()
   }
-  return(entireDescription)
+  return(entireDescriptions)
 }
 
 extractFeatures('GOZO, GĦAJNSIELEM. An ideal residential plot of land for investment or for a good sized terraced house, situated in a three story-height zone. €185,000. Phone 9947 6959.')
