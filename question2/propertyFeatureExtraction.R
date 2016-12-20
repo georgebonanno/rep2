@@ -68,7 +68,7 @@ extractFeatures <- function(line) {
     if (location == line) {
       locations <- list();
     } else {
-      location <- gsub(",","",location,perl=TRUE)
+      #location <- gsub(",","",location,perl=TRUE)
       locations <- resolveLocation(location)
     }
     phone <- gsub(".*([0-9]{4} *[0-9]{4}).*","\\1",line)
@@ -89,6 +89,9 @@ extractFeatures <- function(line) {
     
     description <- extractPropertyDescription(line)
     makeDescriptions <- function(l) {
+      if (any(l==c('THE VILLAGE'))) {
+        pastePrint("found",line)
+      }
       paste(l,phone,price,description,area,sep=",");
     }
     entireDescriptions <- lapply(FUN = makeDescriptions,X = locations)
@@ -98,4 +101,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures('GOZO, GĦAJNSIELEM. An ideal residential plot of land for investment or for a good sized terraced house, situated in a three story-height zone. €185,000. Phone 9947 6959.')
+extractFeatures('THE VILLAGE. Ground floor maisonette, ready to move into, two bedrooms with modern fitted kitchen. €205,00. Phone 7943 1977.')
