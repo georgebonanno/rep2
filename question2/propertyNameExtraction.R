@@ -6,7 +6,8 @@ propertyDescriptions <- c("apartment",
                           "penthouse",
                           "townhouse",
                           "house",
-			  "palazzo",
+                          "shop",
+			                    "palazzo",
                           "maisonette",
                           "villa",
                           "garage",
@@ -18,12 +19,23 @@ propertyDescriptions <- c("apartment",
                           "bungalow",
                           "garage",
                           "with well",
-                          "office")
+                          "office",
+			                    "site",
+			                    "land",
+			                    "airspace",
+			                    "palazzino",
+			                    "field",
+			                    "premises",
+			                    "land"
+			                    )
 isPropertyWord <- function(word) {
   grepProperties <- function(prop) {
     matches <- (grepl(prop,word,ignore.case = TRUE))
-    return (matches && word == "villa" && 
-              !(grepl("village",word,ignore.case=TRUE)))
+    if (matches && grepl(prop,"^villa$",ignore.case = TRUE)) {
+      matches <- !(grepl("village",word,ignore.case=TRUE));
+    } 
+    return(matches)
+              
   }
   
   matches <- lapply(FUN = grepProperties,X = propertyDescriptions)

@@ -90,7 +90,6 @@ extractFeatures <- function(line) {
     description <- extractPropertyDescription(line)
     makeDescriptions <- function(l) {
       if (any(l==c('THE VILLAGE'))) {
-        pastePrint("found",line)
       }
       paste(l,phone,price,description,area,sep=",");
     }

@@ -25,7 +25,7 @@ locationMappings <- list(
   "THE STRAND Gżira"="Gżira",
   "THE VILLAGE"="THE VILLAGE",
   "VICTORIA GARDENS"="VICTORIA GARDENS",
-  "VITTORIOSA (Birgu) St Angelo Mansions"="Birgu",
+  "VITTORIOSA (BIRGU) St Angelo Mansions"="VITTORIOSA",
   "XEMXIJA"="XEMXIJA",
   "XGĦAJRA"="XGĦAJRA"
 )
@@ -67,22 +67,28 @@ resolveLocation <- function(extractedLocation) {
   locations<-locations[[1]]
   locations[1] <- gsub("^THE_","THE ",locations[1])
   extractedLocation <- gsub("^THE_","THE ",extractedLocation)
-  print("change locatoins")
-  print(locations[1])
+  #print("change locatoins")
+  #print(locations[1])
   
   multiplePlaces <- (length(locations) > 1) 
-  print(multiplePlaces)
+  #print(multiplePlaces)
   if (multiplePlaces) {
     
     location <- lapply(X = locations,FUN = resolveLocation)
   } else {
     exactLocation <- extractExactLocation(extractedLocation)
-    if (!is.na(exactLocation)) {
-      location <- exactLocation
+    if (is.na(exactLocation)) {
+      location=NA
     } else {
+      if (grepl(" \\(",exactLocation)) {
+        location <- NA
+        extractedLocation <- exactLocation
+      } else {
+        location <- exactLocation
+      }
+    } 
+    if (is.na(location)) {
         location <- locationMappings[[extractedLocation]];
-        print("mappings")
-        print(extractedLocation)
         if (is.null(location)) {
           location <- extractLocationWithPrefix(extractedLocation)
           if (is.na(location)) {
