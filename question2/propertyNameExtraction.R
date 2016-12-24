@@ -26,7 +26,11 @@ propertyDescriptions <- c("apartment",
 			                    "palazzino",
 			                    "field",
 			                    "premises",
-			                    "land"
+			                    "land",
+			                    "restaurant",
+			                    "hostel",
+			                    "catering",
+			                    "rent"
 			                    )
 isPropertyWord <- function(word) {
   grepProperties <- function(prop) {
@@ -60,6 +64,11 @@ extractPropertyDescription <- function(line) {
     propertyDesc <- words[[1]][firstMatchIndex]
   }
   
+  #  default to apartment is none of the words
+  #  were found
+  if (is.na(propertyDesc)) {
+    propertyDesc <- "apartment" 
+  }
   return(propertyDesc)
 }
 

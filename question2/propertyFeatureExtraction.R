@@ -78,8 +78,9 @@ extractFeatures <- function(line) {
     } else if (str_length(phone) > 0) {
       phone <- "";
     }
-    price <- gsub(".*€([0-9,]+).*","\\1",line,perl=TRUE)
+    price <- gsub(".*€([0-9 ,]+).*","\\1",line,perl=TRUE)
     price <- gsub(",","",price,perl=TRUE)
+    price <- gsub(" ","",price,perl=TRUE)
     if (!isNumericFormat(price)) {
       price<-""
     } else {
@@ -100,4 +101,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures('THE VILLAGE. Ground floor maisonette, ready to move into, two bedrooms with modern fitted kitchen. €205,00. Phone 7943 1977.')
+extractFeatures('VALLETTA. Duplex two bedroom penthouse. Panoramic views, open living quarters, terraces. €690,000. Phone 7949 7440')
