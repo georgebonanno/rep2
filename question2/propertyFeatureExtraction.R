@@ -62,6 +62,38 @@ extractArea <- function(propertyDesc) {
   
 }
 
+extractPrices <- function(line) {
+  matches <- gregexpr("€([0-9 ,]+)",line,perl = TRUE)
+  currencyValues <- regmatches(line,matches)
+  currencyValues <- gsub("[€, ]","",currencyValues[[1]])
+  currencyValues <- lapply(currencyValues,as.numeric)
+  return(currencyValues)
+}
+
+firstPriceFound <- function(extractedPrices) {
+  if (length(extractedPrices) > 0) {
+    firstPrice <- extractedPrices[[1]][1]
+  } else {
+    firstPrice <- ""
+  }
+  
+  return(firstPrice)
+}
+
+secondPriceFound <- function(extractedPrices) {
+  extractedPrices <- unlist(extractedPrices,recursive = TRUE)
+  if (length(extractedPrices) > 1) {
+    secondPrices <- paste(extractedPrices[2:length(extractedPrices)],
+                          sep="|",
+                          collapse = "|")
+  } else {
+    secondPrices <- ""
+  }
+  
+  return(secondPrices)
+}
+
+
 extractFeatures <- function(line) {
   if (validPropertyDescs(line)) {
     location <- gsub("([^\\.:]+)[\\.:].*","\\1",line,perl=TRUE)
@@ -78,21 +110,15 @@ extractFeatures <- function(line) {
     } else if (str_length(phone) > 0) {
       phone <- "";
     }
-    price <- gsub(".*€([0-9 ,]+).*","\\1",line,perl=TRUE)
-    price <- gsub(",","",price,perl=TRUE)
-    price <- gsub(" ","",price,perl=TRUE)
-    if (!isNumericFormat(price)) {
-      price<-""
-    } else {
-      price <- as.numeric(price)
-    }
+    prices <- extractPrices(line)
     area <- extractArea(line)
     
     description <- extractPropertyDescription(line)
     makeDescriptions <- function(l) {
-      if (any(l==c('THE VILLAGE'))) {
-      }
-      paste(l,phone,price,description,area,sep=",");
+      price <- firstPriceFound(prices)
+      secondPrices <- secondPriceFound(prices)
+      paste(l,phone,price,description,area,secondPrices,sep=",");
+      
     }
     entireDescriptions <- lapply(FUN = makeDescriptions,X = locations)
   } else {
@@ -101,4 +127,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures('VALLETTA. Duplex two bedroom penthouse. Panoramic views, open living quarters, terraces. €690,000. Phone 7949 7440')
+#extractFeatures('Sunday, April 19, 2015|VALLETTA. Top floor, finished apartment. Airspace, two bedrooms, two bathrooms. €295,000. Phone 7949 7440.')
