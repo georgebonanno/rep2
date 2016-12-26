@@ -127,4 +127,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-#extractFeatures('Sunday, April 19, 2015|VALLETTA. Top floor, finished apartment. Airspace, two bedrooms, two bathrooms. €295,000. Phone 7949 7440.')
+extractFeatures("Sunday, April 19, 2015|BIRKIRKARA, Swatar / Ta' Paris. New on the market. Elevated maisonette, three bedrooms with two yards €163,000. Apartment, three bedrooms with large open plan €150,000. Penthouse, three bedrooms €163,000. All highly finished. Phone owner 7711 4545.")

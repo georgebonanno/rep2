@@ -1,0 +1,1 @@
+perl -i -pe '$_ =~ s/(BIRKIRKARA, old church area.)( Finished three bedroom apartment &euro;150,000);( two bedroom penthouse.*)(Phone owner.*)/\1\2 \4<\/p><\/li><li><p>\nProperty For Sale\n\1\3. \4/; $_ =~ s/(GOZO, FONTANA.*)(GOZO, NADUR.*)/\1\3<\/p><\/li><li><p>\nProperty For Sale\n\2\3/' data2/*

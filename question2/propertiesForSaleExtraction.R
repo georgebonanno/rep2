@@ -36,9 +36,9 @@ extractDataFromDir <- function(sourceDir) {
   
   htmlFiles <- htmlFiles[1:1]
   for (htmlFile in htmlFiles) {
-    pathName <- paste('data','/',htmlFile,sep = "")
+    pathName <- paste('data2','/',htmlFile,sep = "")
     readForPropertyForSale(pathName)
   }
 }
 
-extractDataFromDir('data')
+extractDataFromDir('data2')
