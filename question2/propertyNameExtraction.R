@@ -3,6 +3,8 @@ library(stringr)
 
 
 propertyDescriptions <- c("apartment",
+                          "townhouse",
+                          "farmhouse",
                           "penthouse",
                           "townhouse",
                           "house",
@@ -11,30 +13,24 @@ propertyDescriptions <- c("apartment",
                           "maisonette",
                           "villa",
                           "garage",
-                          "farmhouse",
                           "plot",
                           "flat",
-                          "form",
-                          "basement",
                           "bungalow",
-                          "garage",
-                          "with well",
                           "office",
 			                    "site",
-			                    "land",
+			                    "\\sland",
 			                    "airspace",
 			                    "palazzino",
 			                    "field",
-			                    "premises",
-			                    "land",
 			                    "restaurant",
 			                    "hostel",
+			                    "garage",
 			                    "catering",
 			                    "rent"
 			                    )
 isPropertyWord <- function(word) {
   grepProperties <- function(prop) {
-    matches <- (grepl(prop,word,ignore.case = TRUE))
+    matches <- (grepl(prop,word,ignore.case = TRUE,perl=TRUE))
     if (matches && grepl(prop,"^villa$",ignore.case = TRUE)) {
       matches <- !(grepl("village",word,ignore.case=TRUE));
     } 
@@ -69,7 +65,7 @@ extractPropertyDescription <- function(line) {
   if (is.na(propertyDesc)) {
     propertyDesc <- "apartment" 
   }
-  return(propertyDesc)
+  return(str_to_upper(propertyDesc))
 }
 
 #isPropertyWord('penthouse')

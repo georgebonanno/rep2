@@ -93,6 +93,9 @@ secondPriceFound <- function(extractedPrices) {
   return(secondPrices)
 }
 
+validLocation <- function(loc) {
+  return (!grepl("rent",loc,ignore.case = TRUE));
+}
 
 extractFeatures <- function(line) {
   if (validPropertyDescs(line)) {
@@ -114,11 +117,16 @@ extractFeatures <- function(line) {
     area <- extractArea(line)
     
     description <- extractPropertyDescription(line)
-    makeDescriptions <- function(l) {
+    makeDescriptions <- function(loc) {
+      loc <- str_to_upper(loc)
       price <- firstPriceFound(prices)
       secondPrices <- secondPriceFound(prices)
-      paste(l,phone,price,description,area,secondPrices,sep=",");
-      
+      if (secondPrices == "" && validLocation(loc)) {
+        extractedFeatures <- paste(loc,phone,price,description,area,secondPrices,sep=",");
+      } else {
+        extractedFeatures <- ""
+      }
+      return(extractedFeatures)
     }
     entireDescriptions <- lapply(FUN = makeDescriptions,X = locations)
   } else {
@@ -127,4 +135,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("Sunday, April 19, 2015|BIRKIRKARA, Swatar / Ta' Paris. New on the market. Elevated maisonette, three bedrooms with two yards €163,000. Apartment, three bedrooms with large open plan €150,000. Penthouse, three bedrooms €163,000. All highly finished. Phone owner 7711 4545.")
+extractFeatures("GOZO, MARSALFORN. Bargain, owner leaving the island. Two bedroom apartment, fully furnished. Front and back terrace enjoying country views. €70,000. Phone 9942 3775.")
