@@ -34,7 +34,7 @@ extractDataFromDir <- function(sourceDir) {
   htmlFiles <- list.files(sourceDir,pattern="*.html*")
   fileToHtmlTextInfo <- list()
   
-  htmlFiles <- htmlFiles[1:1]
+  #htmlFiles <- htmlFiles[1:1]
   for (htmlFile in htmlFiles) {
     pathName <- paste('data','/',htmlFile,sep = "")
     readForPropertyForSale(pathName)

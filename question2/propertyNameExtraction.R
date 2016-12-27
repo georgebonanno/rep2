@@ -28,36 +28,39 @@ propertyDescriptions <- c("apartment",
 			                    "catering",
 			                    "rent"
 			                    )
-isPropertyWord <- function(word) {
-  grepProperties <- function(prop) {
-    matches <- (grepl(prop,word,ignore.case = TRUE,perl=TRUE))
-    if (matches && grepl(prop,"^villa$",ignore.case = TRUE)) {
-      matches <- !(grepl("village",word,ignore.case=TRUE));
-    } 
-    return(matches)
-              
-  }
-  
-  matches <- lapply(FUN = grepProperties,X = propertyDescriptions)
-  propIndex <- match(TRUE,matches == TRUE)
-  
-  propertyDesc <- NA
-  if (!is.na(propIndex)) {
-    propertyDesc <- propertyDescriptions[[propIndex]]
-  }
-  
-  return(propertyDesc);
-}
+
 
 extractPropertyDescription <- function(line) {
   words <- strsplit(line,"[\\s,\\.]",perl=TRUE)
-  matchOutcome <- sapply(FUN=isPropertyWord,X=words[[1]])
+  
+  isPropertyWord <- function(locDesc) {
+    grepProperties <- function(prop) {
+      matches <- (grepl(locDesc,prop,ignore.case = TRUE,perl=TRUE))
+      if (matches && grepl(locDesc,"^villa$",ignore.case = TRUE)) {
+        matches <- !(grepl("village",prop,ignore.case=TRUE));
+      } 
+      return(matches)
+      
+    }
+    
+    matches <- lapply(FUN = grepProperties,X = words[[1]])
+    propIndex <- match(TRUE,matches == TRUE)
+    
+    propertyDesc <- NA
+    if (!is.na(propIndex)) {
+      propertyDesc <- propertyDescriptions[propIndex]
+    }
+    
+    return(propertyDesc);
+  }
+  
+  matchOutcome <- sapply(FUN=isPropertyWord,X=propertyDescriptions)
   
   firstMatchIndex <-match(FALSE,is.na(matchOutcome))
   if (is.na(firstMatchIndex)) {
     propertyDesc <- NA
   } else {
-    propertyDesc <- words[[1]][firstMatchIndex]
+    propertyDesc <- propertyDescriptions[firstMatchIndex]
   }
   
   #  default to apartment is none of the words
@@ -68,4 +71,4 @@ extractPropertyDescription <- function(line) {
   return(str_to_upper(propertyDesc))
 }
 
-#isPropertyWord('penthouse')
+extractPropertyDescription("VICTORIA GARDENS. New on the market. Fully detached bungalow on .11ha (1 tumolo) having four bedrooms with en-suite bathrooms, large hall, sitting / dining, kitchen / breakfast, cinema / gym, three garages, surrounding garden with large pool and showers. Freehold. €1,600,000. Phone owner 9949 7924.")
