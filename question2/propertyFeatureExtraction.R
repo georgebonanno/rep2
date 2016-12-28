@@ -104,7 +104,7 @@ validLocation <- function(loc) {
 
 extractFeatures <- function(line) {
   if (validPropertyDescs(line)) {
-    location <- gsub("([^\\.:]+)[\\.:].*","\\1",line,perl=TRUE)
+    location <- gsub("([^\\.:]+)[\\.:].*","\\1",line)
     if (location == line) {
       locations <- list();
     } else {
@@ -126,18 +126,24 @@ extractFeatures <- function(line) {
       loc <- str_to_upper(loc)
       price <- firstPriceFound(prices)
       secondPrices <- secondPriceFound(prices)
-      if (secondPrices == "" && validLocation(loc)) {
+      if (secondPrices == "" && (length(loc) > 0) && validLocation(loc)) {
         extractedFeatures <- paste(loc,phone,price,description,area,secondPrices,sep=",");
       } else {
         extractedFeatures <- ""
       }
       return(extractedFeatures)
     }
-    entireDescriptions <- lapply(FUN = makeDescriptions,X = locations)
+    tryCatch({
+      entireDescriptions <- lapply(FUN = makeDescriptions,X = locations)  
+    },error=function(e) {
+      pastePrint("error while processing text",line)
+      stop(e)
+    })
+    
   } else {
     entireDescriptions <- list()
   }
   return(entireDescriptions)
 }
 
-extractFeatures("&euro;170,000 (Lm73,000). Phone 9986 1713.")
+extractFeatures("APARTMENTS / VILLAS. Looking for a new home or rental investment? Phone 7921 1469")
