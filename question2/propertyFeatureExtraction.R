@@ -15,6 +15,7 @@ validPropertyDescs <- function(line) {
   invalidProps <- c(
     "APARTMENTS, maisonettes, etc",
     "A RESTAURANT situated in a prominen",
+    "100% FOCUSED on quality properties",
     "ANNE PULLICINO \\(sensara\\)",
     "PROPERTIES for sale on Malta' *s best rated property website",
     "PROPERTIES for sale on",
@@ -22,6 +23,10 @@ validPropertyDescs <- function(line) {
     "A RESTAURANT situated in a prominent / central area, with good clientele. Phone ",
     "SELLING YOUR HOUSE",
     "PRICE REDUCTIONS this week on properties",
+    "CLAYTON CAMILLERI APARTMENTS",
+    "COMMISSION ONLY APARTMENTS",
+    "A BRAND NEW block with three apartments",
+    
     "PROPERTIES for sale on www");
    
   
@@ -135,4 +140,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("GOZO, MARSALFORN. Bargain, owner leaving the island. Two bedroom apartment, fully furnished. Front and back terrace enjoying country views. €70,000. Phone 9942 3775.")
+extractFeatures("&euro;170,000 (Lm73,000). Phone 9986 1713.")

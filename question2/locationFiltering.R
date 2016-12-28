@@ -98,5 +98,12 @@ resolveLocation <- function(extractedLocation) {
     } 
     location <- list(location)
   }
+  location <- location[grepl("^[A-Za-z]",location) 
+                       & locs!= 'APARTMENTS'
+                       & locs != 'AMAZING'
+                       & locs != 'ADJACENT'
+                       & locs != 'AFFORDABLE']
+  
+  location[location == "ALLETTA"] <- "VALLETTA"
   return(location)
 }
