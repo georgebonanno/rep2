@@ -41,7 +41,7 @@ isNumericFormat <- function(s) {
 }
 
 extractArea <- function(propertyDesc) {
-  area <- gsub(".*([0-9]+)sqm.*","\\1",propertyDesc)
+  area <- gsub(".*?([0-9]+) *sqm.*","\\1",propertyDesc,ignore.case = TRUE)
   if (!isNumericFormat(area)) {
     area <- gsub(".*([0-9]+)msq.*","\\1",propertyDesc)
     if (!isNumericFormat(area)) {
@@ -108,7 +108,6 @@ extractFeatures <- function(line) {
     if (location == line) {
       locations <- list();
     } else {
-      #location <- gsub(",","",location,perl=TRUE)
       locations <- resolveLocation(location)
     }
     phone <- gsub(".*([0-9]{4} *[0-9]{4}).*","\\1",line)
@@ -146,4 +145,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("APARTMENTS / VILLAS. Looking for a new home or rental investment? Phone 7921 1469")
+extractFeatures("BUĠIBBA. Fully furnished two bedroom apartment and 24sqm back yard. &euro;125,000. Phone 9949 1688.<")
