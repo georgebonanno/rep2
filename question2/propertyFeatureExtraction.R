@@ -41,12 +41,14 @@ isNumericFormat <- function(s) {
 }
 
 extractArea <- function(propertyDesc) {
-  area <- gsub(".*?([0-9]+) *sqm.*","\\1",propertyDesc,ignore.case = TRUE)
+  area <- gsub(".*?([,0-9]+) *sqm.*","\\1",propertyDesc,ignore.case = TRUE)
+  area <- str_replace_all(area,",","")
   if (!isNumericFormat(area)) {
-    area <- gsub(".*([0-9]+)msq.*","\\1",propertyDesc)
+    area <- gsub(".*?([,0-9]+)msq.*","\\1",propertyDesc,ignore.case = TRUE)
+    area <- str_replace_all(area,",","")
     if (!isNumericFormat(area)) {
       
-      area <- gsub(".*?([0-9]*\\.[0-9]+)(ha).*","\\1",propertyDesc)
+      area <- gsub(".*?([,0-9]*\\.[0-9]+)(ha).*","\\1",propertyDesc)
       if (isNumericFormat(area)) {
         area <- paste("0",area,sep="")
         #conversion of hectares to sqm
@@ -145,4 +147,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("BUĠIBBA. Fully furnished two bedroom apartment and 24sqm back yard. &euro;125,000. Phone 9949 1688.<")
+extractFeatures("ŻEJTUN. Farm (unused) circa 8,000sqm. With circa 1,000sqm stores (with permit). Phone owner 7980 4495.")
