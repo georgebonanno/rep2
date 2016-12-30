@@ -73,4 +73,4 @@ extractPropertyDescription <- function(line) {
   return(str_to_upper(propertyDesc))
 }
 
-extractPropertyDescription("FRANCE. Fantastic villa set on 7,000sqm, with magnificent views. Partially complete. &euro;120,000. Phone 9981 4788.")
+extractPropertyDescription("KENNEDY GROVE AREA. Garage space. Remote controlled gate on main road. Direct from owner. &euro;8,900, negotiable. Phone 2134 5529.")
