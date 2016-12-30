@@ -19,11 +19,13 @@ validPropertyDescs <- function(line) {
     "ANNE PULLICINO \\(sensara\\)",
     "PROPERTIES for sale on Malta' *s best rated property website",
     "BEAUTIFULLY CONVERTED house of character with a gorgeous layout and lots of outdoor space",
+    "ARE YOU BUYING A PROPERTY? CHOICE OF APARTMENTS",
     "PROPERTIES for sale on",
     "PRICE REDUCTIONS this week on properties for sale at ",
     "A RESTAURANT situated in a prominent / central area, with good clientele. Phone ",
     "SELLING YOUR HOUSE",
     "PRICE REDUCTIONS this week on properties",
+    "A SMALL NEWTERRACED HOUSE WITH THREE BEDROOMS AND A TWO-CAR",
     "CLAYTON CAMILLERI APARTMENTS",
     "COMMISSION ONLY APARTMENTS",
     "A BRAND NEW block with three apartments",
@@ -149,4 +151,5 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("UNDIVIDED property shares of heirs in various parts of Malta. Phone 7900 2400.")
+#extractFeatures("BLATA L-BAJDA. Semi-detached, corner, double fronted villa with garden, hall, separate dining room, three large double bedrooms and two interconnecting three-car garages. Ideal for residential, commercial or educational purposes. &euro;390,000. Phone owner 9985 4999.")
+extractFeatures("WINE BAR fully functional, seating capacity 60. €325,000. Phone 7949 2605.</p>")

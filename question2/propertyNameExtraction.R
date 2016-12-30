@@ -27,6 +27,7 @@ propertyDescriptions <- c("apartment",
 			                    "hostel",
 			                    "garage",
 			                    "catering",
+			                    "bar",
 			                    "rent"
 			                    )
 

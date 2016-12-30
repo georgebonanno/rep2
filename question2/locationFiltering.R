@@ -3,6 +3,9 @@ library(stringr)
 locationMappings <- list(
   "ŻEBBUĠ"="ĦAŻ-ŻEBBUĠ",
   "BAHAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
+  "BAĦAR IĊ-ĊAGHAQ"="BAHAR IĊ-ĊAGĦAQ",
+  "BAHAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
+  "BAĦAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
   "COSPICUA (Bormla)"="Bormla",
   "BAĦAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
   "FORT CAMBRIDGE"="FORT CAMBRIDGE",
@@ -36,12 +39,41 @@ locationMappings <- list(
   "VICTORIA GARDENS"="VICTORIA GARDENS",
   "VITTORIOSA (BIRGU) St Angelo Mansions"="VITTORIOSA",
   "XEMXIJA"="XEMXIJA",
-  "XGĦAJRA"="XGĦAJRA"
+  "XGĦAJRA"="XGĦAJRA",
+  "ŻEBBUG"="ŻEBBUĠ",
+  "XGOCHĦAJRA"="XGĦAJRA",
+  "BIROCHŻEBBUĠA"="BIRŻEBBUĠA",
+  "ŻEBBIEGOCHĦ"="ŻEBBIEGĦ"
 )
+
+incorrectLocs <- c(
+  'APARTMENT',
+  'AMAZING',
+  'ADJACENT',
+  'AFFORDABLE',
+  "UNCONVERTED",
+  "UNDER",
+  "TERRACED HOUSE",
+  "TWO",
+  "BOUTIQUE",
+  "A",
+  "WWW",
+  "AN",
+  "WINE"
+)
+
+correctLocation <- function(location) {
+  correctedLoc <- locationMappings[[location]];
+  if (!is.null(correctedLoc)) {
+    location <- correctedLoc;
+  }
+  return(location)
+}
 
 extractExactLocation <- function(locationWithComma) {
   if (grepl(',',locationWithComma)) {
     exactLocation <- (gsub("([^,]+)[ ,]*.*","\\1",locationWithComma))
+    exactLocation<-correctLocation(exactLocation)   
   } else {
     exactLocation=NA;
   }
@@ -58,11 +90,28 @@ extractLocationWithPrefix <- function(loc) {
   
   if (any(sapply(FUN = startsWithF,X = maltesePrefixes))) {
     locationWithPrefix <- gsub("([^ ]+)  *([^ ]+) *.*","\\1 \\2",loc)
+    
+    locationWithPrefix<-correctLocation(locationWithPrefix)  
   } else {
     locationWithPrefix = NA
   }
   
   return(locationWithPrefix)
+}
+
+nameWithArticle <- function(extractLocation) {
+  if (grepl("^([^ ]+ +..*-[^ ]+)$",extractLocation)) {
+    location=extractLocation;
+  } else {
+    location <- gsub("([^ ]+ +..*-[^ ]+).*","\\1",extractLocation)
+    if (location == extractLocation ){
+      location <- gsub("([^ ]+) *.*","\\1",perl=TRUE,extractLocation)
+    }
+    
+    pastePrint("nae",location)
+    location <- correctLocation(location)
+    return(location)
+  }
 }
 
 #removes words starting with numbers. Example:
@@ -73,7 +122,15 @@ filterWordsStartingWithNumbers <- function(loc) {
   return (paste(words,collapse = " "))
 }
 
+isIncorrectLocation <- function(l) {
+  return(any(sapply(X = incorrectLocs,
+             FUN = function(pat) {
+               grepl(l,pattern=paste("^",pat,sep=""))
+             })))
+}
+
 resolveLocation <- function(extractedLocation) {
+  
   extractedLocation <- toupper(extractedLocation)
   extractedLocation <- gsub("^THE ","THE_",extractedLocation)
   locations <- strsplit(extractedLocation,' */ *',perl=TRUE)
@@ -93,6 +150,7 @@ resolveLocation <- function(extractedLocation) {
     extractedLocation <- locations[1]
   }  
   exactLocation <- extractExactLocation(extractedLocation)
+  
   if (is.na(exactLocation)) {
     location=NA
   } else {
@@ -103,30 +161,20 @@ resolveLocation <- function(extractedLocation) {
       location <- exactLocation
     }
   } 
+  
   if (is.na(location)) {
+      
       location <- locationMappings[[extractedLocation]];
       if (is.null(location)) {
         location <- extractLocationWithPrefix(extractedLocation)
         if (is.na(location)) {
-          location <- gsub("([^ ]+) *.*","\\1",perl=TRUE,extractedLocation)
+          location <- nameWithArticle(extractedLocation)
       }  
     }
   } 
   
-  if (!(grepl("^[A-Za-zŻĦ]",location) && location!= 'APARTMENTS'
-                       && location != 'AMAZING'
-                       && location != 'ADJACENT'
-                       && location != 'AFFORDABLE'
-                       && location != "UNCONVERTED"
-                       && location != "UNDER"
-                       && location != "TERRACED HOUSE"
-                       && location != "TWO"
-                       && !startsWith(location,"BOUTIQUE")
-                       && !startsWith(location,"")
-                       && location != "A" 
-                       && length(strsplit(location," +")) > 1 
-                       && location != "WWW"
-                       && location != "AN")) {
+  if (!grepl("^[A-Za-zŻĦ]",location) ||
+        isIncorrectLocation(location)) {
     location <- ""
   }
   
