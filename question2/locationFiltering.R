@@ -83,7 +83,9 @@ locationMappings <- list(
   "MARSASCALA BELLA VISTA MAISONETTE APARTMENTS"="MARSASCALA",
   "MATER"="TAL-QROQQ",
   "MĠARR AND NORTH"="MĠARR",
-  "MGRR"="MĠARR"
+  "MGRR"="MĠARR",
+  "ŻIRA"="GŻIRA",
+  "ŻEJTUN OR FGURA"="ŻEJTUN"
 )
 
 incorrectLocs <- c(
@@ -253,7 +255,6 @@ resolveLocation <- function(extractedLocation) {
     }
   } 
   
-  pastePrint("loc=",location)
   if (is.na(location)) {
       
       location <- locationMappings[[extractedLocation]];
