@@ -41,20 +41,22 @@ isNumericFormat <- function(s) {
 }
 
 extractArea <- function(propertyDesc) {
-  area <- gsub(".*?([,0-9]+) *sqm.*","\\1",propertyDesc,ignore.case = TRUE)
-  area <- str_replace_all(area,",","")
+  area <- gsub(".*?([,0-9\\.]+) *sqm.*","\\1",propertyDesc,ignore.case = TRUE)
+  area <- gsub("[,]",replacement = "",area)
   if (!isNumericFormat(area)) {
     area <- gsub(".*?([,0-9]+)msq.*","\\1",propertyDesc,ignore.case = TRUE)
     area <- str_replace_all(area,",","")
     if (!isNumericFormat(area)) {
       
-      area <- gsub(".*?([,0-9]*\\.[0-9]+)(ha).*","\\1",propertyDesc)
+      area <- gsub(".*?([,0-9\\.]+)(ha).*","\\1",propertyDesc)
+      area <- gsub("[,]",replacement = "",area)
       if (isNumericFormat(area)) {
         area <- paste("0",area,sep="")
         #conversion of hectares to sqm
-        area <- as.numeric(area)*1000
+        area <- as.numeric(area)*10000
       } else {
-        area <- gsub(".*?([0-9]+\\.[0-9]+) tumoli.*","\\1",propertyDesc)
+        area <- gsub(".*?([0-9,\\.]+) *tumoli.*","\\1",propertyDesc)
+        area <- gsub("[,]",replacement = "",area)
         if (isNumericFormat(area)) {
           #conversion of tumoli to sqm
           area <- as.numeric(area)*1024;

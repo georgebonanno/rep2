@@ -5,6 +5,7 @@ library(stringr)
 propertyDescriptions <- c("apartment",
                           "townhouse",
                           "farmhouse",
+                          "Farm",
                           "penthouse",
                           "townhouse",
                           "house",
@@ -71,4 +72,4 @@ extractPropertyDescription <- function(line) {
   return(str_to_upper(propertyDesc))
 }
 
-extractPropertyDescription("VICTORIA GARDENS. New on the market. Fully detached bungalow on .11ha (1 tumolo) having four bedrooms with en-suite bathrooms, large hall, sitting / dining, kitchen / breakfast, cinema / gym, three garages, surrounding garden with large pool and showers. Freehold. €1,600,000. Phone owner 9949 7924.")
+extractPropertyDescription("FRANCE. Fantastic villa set on 7,000sqm, with magnificent views. Partially complete. &euro;120,000. Phone 9981 4788.")
