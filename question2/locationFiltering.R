@@ -7,6 +7,7 @@ locationMappings <- list(
   "BAĦAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
   "FORT CAMBRIDGE"="FORT CAMBRIDGE",
   "GĦOCHARGĦOCHUR"="GĦARGUR",
+  "BIROCHŻEBBUĠA"="BIRŻEBBUĠA",
   "TA' GIORNI"="SAN GILJAN",
   "TA' PARIS"="TA' PARIS",
   "THE STRAND"="GŻIRA",
@@ -21,6 +22,9 @@ locationMappings <- list(
   "SAN ĠWANN"="SAN ĠWANN",
   "ST VENERA"="ST VENERA",
   "ST JULIANS"="ST JULIANS",
+  "BAOCHĦAR IĊ-ĊAGOCHĦAQ"="BAĦAR IĊ-ĊAGĦAQ",
+  "BAOCHĦAR"="BAĦAR IĊ-ĊAGĦAQ",
+  "BAOCHĦRIJA"="BAĦRIJA",
   "TA' XBIEX"="TA' XBIEX",
   "THE STRAND Gżira"="Gżira",
   "THE VILLAGE"="THE VILLAGE",
@@ -56,7 +60,6 @@ extractLocationWithPrefix <- function(loc) {
   return(locationWithPrefix)
 }
 
-
 resolveLocation <- function(extractedLocation) {
   extractedLocation <- toupper(extractedLocation)
   extractedLocation <- gsub("^THE ","THE_",extractedLocation)
@@ -70,40 +73,44 @@ resolveLocation <- function(extractedLocation) {
   #print("change locatoins")
   #print(locations[1])
   
-  multiplePlaces <- (length(locations) > 1) 
+  locationFound <- (length(locations) > 0) 
   #print(multiplePlaces)
-  if (multiplePlaces) {
-    
-    location <- lapply(X = locations,FUN = resolveLocation)
+  if (locationFound) {
+    extractedLocation <- locations[1]
+  }  
+  exactLocation <- extractExactLocation(extractedLocation)
+  if (is.na(exactLocation)) {
+    location=NA
   } else {
-    exactLocation <- extractExactLocation(extractedLocation)
-    if (is.na(exactLocation)) {
-      location=NA
+    if (grepl(" \\(",exactLocation)) {
+      location <- NA
+      extractedLocation <- exactLocation
     } else {
-      if (grepl(" \\(",exactLocation)) {
-        location <- NA
-        extractedLocation <- exactLocation
-      } else {
-        location <- exactLocation
-      }
-    } 
-    if (is.na(location)) {
-        location <- locationMappings[[extractedLocation]];
-        if (is.null(location)) {
-          location <- extractLocationWithPrefix(extractedLocation)
-          if (is.na(location)) {
-            location <- gsub("([^ ]+) *.*","\\1",perl=TRUE,extractedLocation)
-        }  
-      }
-    } 
-    location <- list(location)
+      location <- exactLocation
+    }
+  } 
+  if (is.na(location)) {
+      location <- locationMappings[[extractedLocation]];
+      if (is.null(location)) {
+        location <- extractLocationWithPrefix(extractedLocation)
+        if (is.na(location)) {
+          location <- gsub("([^ ]+) *.*","\\1",perl=TRUE,extractedLocation)
+      }  
+    }
+  } 
+  
+  
+  if (!(grepl("^[A-Za-zŻĦ]",location) && location!= 'APARTMENTS'
+                       && location != 'AMAZING'
+                       && location != 'ADJACENT'
+                       && location != 'AFFORDABLE'
+                       && !startsWith(location,"BOUTIQUE")
+                       && location != "A" 
+                       && location != "AN")) {
+    location <- "";
   }
-  location <- location[grepl("^[A-Za-zŻ]",location) 
-                       & location!= 'APARTMENTS'
-                       & location != 'AMAZING'
-                       & location != 'ADJACENT'
-                       & location != 'AFFORDABLE']
   
   location[location == "ALLETTA"] <- "VALLETTA"
+  #locations startings with "A" or "AN" invalid
   return(location)
 }

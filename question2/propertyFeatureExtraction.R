@@ -18,6 +18,7 @@ validPropertyDescs <- function(line) {
     "100% FOCUSED on quality properties",
     "ANNE PULLICINO \\(sensara\\)",
     "PROPERTIES for sale on Malta' *s best rated property website",
+    "BEAUTIFULLY CONVERTED house of character with a gorgeous layout and lots of outdoor space",
     "PROPERTIES for sale on",
     "PRICE REDUCTIONS this week on properties for sale at ",
     "A RESTAURANT situated in a prominent / central area, with good clientele. Phone ",
@@ -26,7 +27,6 @@ validPropertyDescs <- function(line) {
     "CLAYTON CAMILLERI APARTMENTS",
     "COMMISSION ONLY APARTMENTS",
     "A BRAND NEW block with three apartments",
-    
     "PROPERTIES for sale on www");
    
   
@@ -37,7 +37,7 @@ validPropertyDescs <- function(line) {
 }
 
 isNumericFormat <- function(s) {
-  return(grepl("^[0-9]*(\\.[0-9]+)?$",s));
+  return(grepl("^[0-9]+(\\.[0-9]+)?$",s));
 }
 
 extractArea <- function(propertyDesc) {
@@ -72,9 +72,9 @@ extractArea <- function(propertyDesc) {
 }
 
 extractPrices <- function(line) {
-  matches <- gregexpr("€([0-9 ,]+)",line,perl = TRUE)
+  matches <- gregexpr("€(och)?([0-9 ,]+)",line,perl = TRUE)
   currencyValues <- regmatches(line,matches)
-  currencyValues <- gsub("[€, ]","",currencyValues[[1]])
+  currencyValues <- gsub("[€,och ]","",currencyValues[[1]])
   currencyValues <- lapply(currencyValues,as.numeric)
   return(currencyValues)
 }
@@ -149,4 +149,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("ŻEJTUN. Farm (unused) circa 8,000sqm. With circa 1,000sqm stores (with permit). Phone owner 7980 4495.")
+extractFeatures("BOUTIQUE HOTEL. 36 bedrooms, restaurant, courtyard, roof terrace. Price on request. No agents. Phone 9949 8243.</p>")
