@@ -17,9 +17,14 @@ locationMappings <- list(
   "VITTORIOSA (BIRGU)"="VITTORIOSA",
   "SAN PAWL TAT-TARĠA"="SAN PAWL TAT-TARĠA",
   "SANTA LUĊIJA"="SANTA LUĊIJA",
+  "TIGNÉ POINT"="TIGNÉ",
+  "TOWER ROAD"="SLIEMA",
+  "TIGNÉOCH"="TIGNÉ",
+  "TIGNÈ"="TIGNÉ",
   "SANTA MARIA ESTATE"="MELLIEHA",
   "ST PAUL' S BAY"="SAN PAWL",
   "SAN ĠWANN"="SAN ĠWANN",
+  "URMARRAD"="BURMARRAD",
   "ST VENERA"="ST VENERA",
   "ST JULIANS"="ST JULIANS",
   "BAOCHĦAR IĊ-ĊAGOCHĦAQ"="BAĦAR IĊ-ĊAGĦAQ",
@@ -60,6 +65,14 @@ extractLocationWithPrefix <- function(loc) {
   return(locationWithPrefix)
 }
 
+#removes words starting with numbers. Example:
+#"BUNGALOW 1100SQM" becomes "BUNGALOW"
+filterWordsStartingWithNumbers <- function(loc) {
+  words <- strsplit(loc," +")[[1]]
+  words <- words[!grepl("^[0-9]",words)]
+  return (paste(words,collapse = " "))
+}
+
 resolveLocation <- function(extractedLocation) {
   extractedLocation <- toupper(extractedLocation)
   extractedLocation <- gsub("^THE ","THE_",extractedLocation)
@@ -68,6 +81,7 @@ resolveLocation <- function(extractedLocation) {
   #  only one string given to strsplit. We can assign
   #  the split of the first (and only entry) to split
   locations<-locations[[1]]
+  locations <- filterWordsStartingWithNumbers(locations)
   locations[1] <- gsub("^THE_","THE ",locations[1])
   extractedLocation <- gsub("^THE_","THE ",extractedLocation)
   #print("change locatoins")
@@ -99,15 +113,21 @@ resolveLocation <- function(extractedLocation) {
     }
   } 
   
-  
   if (!(grepl("^[A-Za-zŻĦ]",location) && location!= 'APARTMENTS'
                        && location != 'AMAZING'
                        && location != 'ADJACENT'
                        && location != 'AFFORDABLE'
+                       && location != "UNCONVERTED"
+                       && location != "UNDER"
+                       && location != "TERRACED HOUSE"
+                       && location != "TWO"
                        && !startsWith(location,"BOUTIQUE")
+                       && !startsWith(location,"")
                        && location != "A" 
+                       && length(strsplit(location," +")) > 1 
+                       && location != "WWW"
                        && location != "AN")) {
-    location <- "";
+    location <- ""
   }
   
   location[location == "ALLETTA"] <- "VALLETTA"

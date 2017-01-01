@@ -149,4 +149,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("BOUTIQUE HOTEL. 36 bedrooms, restaurant, courtyard, roof terrace. Price on request. No agents. Phone 9949 8243.</p>")
+extractFeatures("UNDIVIDED property shares of heirs in various parts of Malta. Phone 7900 2400.")
