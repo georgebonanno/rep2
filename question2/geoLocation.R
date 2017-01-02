@@ -1,5 +1,7 @@
 library(ggmap)
 
+source("visualizations.R")
+
 updateGeoLocWithNAs <- function(geoLocs,meanPriceLoc) {
   uniques <- unique(meanPricePerLocation$location)
   
@@ -28,7 +30,7 @@ updateGeoLocWithNAs <- function(geoLocs,meanPriceLoc) {
   meanPriceMap <- 
     ggmap(maltaMap) +
     geom_point(data = meanPricePerLocation, 
-               aes(x = long, y = lat,
+               aes(x = long, y = lat,geom_point,
                size=price_euro,alpha = .5))
   
   return(meanPriceMap)

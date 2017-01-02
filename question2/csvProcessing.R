@@ -8,11 +8,11 @@ propertyDetails <- read.csv("unique_features.csv",
                             na.strings = c(""),
                             colClasses = c("character","character","numeric",
                                            "character","numeric"),
-                            row.names = NULL)
-
-propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
+                            row.names=NULL)
 
 propertyDetails <- propertyDetails[!is.na(propertyDetails$location),]
+
+propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
 
 propDetails <- 
    propertyDetails[!is.na(propertyDetails$location) &
@@ -22,7 +22,7 @@ propDetails <-
                   <= 1),]
 
 prices <- propDetails[!is.na(propDetails$price_euro),]
-head(prices[order(-prices$price_euro),],20)
+#head(prices[order(-prices$price_euro),],20)
 
 numberOfProperties <- dim(propDetails)[1]
 
@@ -74,7 +74,9 @@ imputeArea <- function(propDetails) {
     if (is.na(prop["area_sqm"])) {
       propType <- prop["property_type"]
       medianArea <- medianAreaForPropertyType$area[medianAreaForPropertyType$propType==propType]
-      prop["area_sqm"] <- medianArea
+      if (!is.na(medianArea)) {
+        prop["area_sqm"] <- medianArea
+      }
     }
     return(prop["area_sqm"])
   }
@@ -111,7 +113,7 @@ correctErrors <- function(propDetails) {
 }
 
 propDetails <- removeWithMissingValues(propDetails)
-propDetails <- correctErrors(propDetails)
+#propDetails <- correctErrors(propDetails)
 
 head(propDetails[order(-propDetails$area_sqm),],50)
 
