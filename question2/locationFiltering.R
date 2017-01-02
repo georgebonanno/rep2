@@ -6,9 +6,14 @@ locationMappings <- list(
   "BAĦAR IĊ-ĊAGHAQ"="BAHAR IĊ-ĊAGĦAQ",
   "BAHAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
   "BAĦAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
-  "COSPICUA (Bormla)"="Bormla",
+  "BAĦAR IĊĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
+  "BAHAR IĊ-ĊAGĦAQ"="BAĦAR IĊ-ĊAGĦAQ",
+  "COSPICUA (Bormla)"="BORMLA",
   "BAĦAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
   "FORT CAMBRIDGE"="FORT CAMBRIDGE",
+  "FORTCAMBRIDGE"="FORT CAMBRIDGE",
+  "GHADIRA"="GĦADIRA",
+  "FORT"="FORT CAMBRIDGE",
   "GĦOCHARGĦOCHUR"="GĦARGUR",
   "BIROCHŻEBBUĠA"="BIRŻEBBUĠA",
   "TA' GIORNI"="SAN GILJAN",
@@ -43,7 +48,38 @@ locationMappings <- list(
   "ŻEBBUG"="ŻEBBUĠ",
   "XGOCHĦAJRA"="XGĦAJRA",
   "BIROCHŻEBBUĠA"="BIRŻEBBUĠA",
-  "ŻEBBIEGOCHĦ"="ŻEBBIEGĦ"
+  "ŻEBBIEGOCHĦ"="ŻEBBIEGĦ",
+  "FAWWARA"="SIGGIEWI",
+  "FLEUR DE-LYS"="FLEUR-DE-LYS",
+  "GHARGHUR"="GĦARGUR",
+  "GĦARGHUR"="GĦARGUR",
+  "GHARGĦUR"="GĦARGUR",
+  "GHAXAQ"="GĦAXAQ",
+  "GIANPULA"="RABAT",
+  "GOLDEN"="GOLDEN SANDS",
+  "GĦAJN"="GĦAJN TUFFIEĦA",
+  "GZIRA"="GŻIRA",
+  "HAMRUN"="ĦAMRUN",
+  "ĦARGOCHĦUR"="GĦARGUR",
+  "ĦADIRA"="GĦADIRA",
+  "ĦAXAQ"="GĦAXAQ",
+  "ĦAŻ-ŻEBBUĠ"="ŻEBBUĠ",
+  "IRKIRKARA"="BIRKIRKARA",
+  "LANDRIJET"="LANDRIJIET",
+  "LIEMA"="SLIEMA",
+  "MARSACALA"="MARSASCALA",
+  "MELLIEOCHĦA"="MELLIEĦĦA",
+  "MĠARR AND NORTH"="MĠARR",
+  "MIŻIEB"="MELLIEĦĦA",
+  "MONTEROSA"="SAN GWANN",
+  "MONTE ROSA GARDENS"="SAN GWANN",
+  "MONTEROSA GARDENS"="SAN GWANN",
+  "MONTEROSA GARDENS AND SAN PAWL TAT-TARĠA"="SAN GWANN",
+  "MRIEHEL"="MRIEĦEL",
+  "MĠRR"="MĠARR",
+  "MĠARR AND NORTH"="MĠARR",
+  "MUNXAR"="MARSASCALA",
+  "MENSIJA"="SAN GWANN"
 )
 
 incorrectLocs <- c(
@@ -100,15 +136,18 @@ extractLocationWithPrefix <- function(loc) {
 }
 
 nameWithArticle <- function(extractLocation) {
-  if (grepl("^([^ ]+ +..*-[^ ]+)$",extractLocation)) {
+  if (grepl("^([^ ]+ +[A-ZĠŻĦ][A-ZĠŻĦ]*-[^ ]+)$",extractLocation)) {
     location=extractLocation;
   } else {
-    location <- gsub("([^ ]+ +..*-[^ ]+).*","\\1",extractLocation)
+    location <- gsub("([^ ]+ +[A-ZĠŻĦ][A-ZĠŻĦ]*-[^ ]+).*","\\1",extractLocation)
     if (location == extractLocation ){
-      location <- gsub("([^ ]+) *.*","\\1",perl=TRUE,extractLocation)
+      if (grepl("\\(",extractLocation)) {
+        location <- gsub("([^ ]+) *.*","\\1",perl=TRUE,extractLocation)
+      } else {
+        location <- extractLocation
+      }
     }
     
-    pastePrint("nae",location)
     location <- correctLocation(location)
     return(location)
   }
@@ -162,6 +201,7 @@ resolveLocation <- function(extractedLocation) {
     }
   } 
   
+  pastePrint("loc=",location)
   if (is.na(location)) {
       
       location <- locationMappings[[extractedLocation]];

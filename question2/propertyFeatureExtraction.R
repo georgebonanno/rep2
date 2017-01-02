@@ -152,4 +152,4 @@ extractFeatures <- function(line) {
 }
 
 #extractFeatures("BLATA L-BAJDA. Semi-detached, corner, double fronted villa with garden, hall, separate dining room, three large double bedrooms and two interconnecting three-car garages. Ideal for residential, commercial or educational purposes. &euro;390,000. Phone owner 9985 4999.")
-extractFeatures("WINE BAR fully functional, seating capacity 60. €325,000. Phone 7949 2605.</p>")
+extractFeatures("MADLIENA (Triq il-Pedidalwett). Two garages with three-car spaces each garage. Finished. 3.30 x 15m (11 x 50ft) each. &euro;50,000 each garage. Phone / SMS owner 9982 2369.")
