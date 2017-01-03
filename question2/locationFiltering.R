@@ -22,7 +22,7 @@ locationMappings <- list(
   "THE VILLAGE"="ST JULIANS",
   "SANTA MARIA ESTATE"="SANTA MARIA ESTATE",
   "GĦARGĦUR"="GĦARGUR",
-  "VITTORIOSA (BIRGU)"="VITTORIOSA",
+  "VITTORIOSA \\(BIRGU\\)"="VITTORIOSA",
   "SAN PAWL TAT-TARĠA"="SAN PAWL TAT-TARĠA",
   "SANTA LUĊIJA"="SANTA LUĊIJA",
   "TIGNÉ POINT"="TIGNÉ",
@@ -42,7 +42,7 @@ locationMappings <- list(
   "THE STRAND Gżira"="Gżira",
   "THE VILLAGE"="THE VILLAGE",
   "VICTORIA GARDENS"="VICTORIA GARDENS",
-  "VITTORIOSA (BIRGU) St Angelo Mansions"="VITTORIOSA",
+  "VITTORIOSA \\(BIRGU\\) St Angelo Mansions"="VITTORIOSA",
   "XEMXIJA"="XEMXIJA",
   "XGĦAJRA"="XGĦAJRA",
   "ŻEBBUG"="ŻEBBUĠ",
@@ -68,7 +68,7 @@ locationMappings <- list(
   "LANDRIJET"="LANDRIJIET",
   "LIEMA"="SLIEMA",
   "MARSACALA"="MARSASCALA",
-  "MELLIEOCHĦA"="MELLIEĦĦA",
+  "MELLIEOCHĦA"="MELLIEĦA",
   "MĠARR AND NORTH"="MĠARR",
   "MIŻIEB"="MELLIEĦĦA",
   "MONTEROSA"="SAN GWANN",
@@ -85,7 +85,41 @@ locationMappings <- list(
   "MĠARR AND NORTH"="MĠARR",
   "MGRR"="MĠARR",
   "ŻIRA"="GŻIRA",
-  "ŻEJTUN OR FGURA"="ŻEJTUN"
+  "ŻEJTUN OR FGURA"="ŻEJTUN",
+  "BAĦAR IĊ- ĊAGĦAQ"="BAĦAR IĊ-ĊAGĦAQ",
+  "BAHAR IĊ-ĊAGĦAQ"="BAĦAR IĊ-ĊAGĦAQ",
+  "BIDNI"="BIDNIJA",
+  "GĦADIRA"="MELLIEĦA",
+  "MELLIEHA"="MELLIEĦA",
+  "MISTRA VILLAGE"="MELLIEĦA",
+  "NEAR STRAND"="SLIEMA",
+  "NEAR TIGNÉ POINT"="SLIEMA",
+  "OSPICUA"="COTTONERA",
+  "OSTA"="MOSTA",
+  "OSPICUA"="COTTONERA",
+  "OSTA"="MOSTA",
+  "PENDERGARDENS"="PACEVILLE",
+  "PENDER GARDENS"="PACEVILLE",
+  "PIETÁ"="PIETÀ",
+  "PIETÀOCH"="PIETÀ",
+  "THREE CITIES"="COTTONERA",
+  "QUI-SI-SANA"="SLIEMA",
+  "SALIB TAL-GĦOLJA"="SIGGIEWI",
+  "SAN GWANN"="SAN ĠWANN",
+  "SAVOY GARDENS"="GŻIRA",
+  "SEAFRONT"="SLIEMA",
+  "SENGLEA\\(L-ISLA\\)"="COTTONERA",
+  "SIGGIEWI"="SIĠĠIEWI",
+  "ST PAUL’ S"="ST PAUL’S BAY",
+  "ST PAUL’S"="ST PAUL’S BAY",
+  "ST PAUL`S BAY"="ST PAUL’S BAY",
+  "ST PAULS BAY"="ST PAUL’S BAY",
+  "ST PETER' S"="ZABBAR",
+  "ST AUL' S BAY"="ST PAUL' S BAY",
+  "STA MARIA ESTATE"="STA MARIJA ESTATE",
+  "TAL̴8-IBRAĠ"="TAL-IBRAĠ",
+  "TAL-IBRAG"="TAL-IBRAĠ",
+  "ST ANGELO MANSIONS"="COTTONERA"
 )
 
 incorrectLocs <- c(
@@ -149,7 +183,55 @@ incorrectLocs <- c(
   "LUXURY",
   "MAISONETTE",
   "MAISONETTE NO STEPS",
-  "MINUTES"
+  "GREEN AREAS FOR RECREATIONAL PURPOSES",
+  "MINUTES",
+  "NEW AREA",
+  "NEW SHELL FORM BLOCK OF THREE BEDROOM APARTMENTS",
+  "NICELY CONVERTED THREE BEDROOM",
+  "OLDER TYPE GROUNDFLOOR MAISONETTE",
+  "ONE OF THE FEW FULLY DETACHED BUNGALOWS BUILT IN THE AND RENOVATED RECENTLY",
+  "ON PLAN",
+  "ON PLAN SPACIOUS FARMHOUSES WITH SWIMMING POOL",
+  "PARTLY FURNISHED THREE BEDROOM APARTMENT UNOBSTRUCTED SEA-VIEWS",
+  "PLOT WITH PERMITS FOR ELEVATED SEMI-DETACHED",
+  "SELECT AREAS",
+  "SENSARA",
+  "SOUTH AREA",
+  "SOUTH",
+  "PMARKET PROPERTIES",
+  "GREEN AREAS FOR RECREATIONAL PURPOSES",
+  "GUDJA OR GĦAXAQ",
+  "GUDJA OR ŻEJTUN",
+  "GŻIRA AND SLIEMA",
+  "KENNEDY GROVE AREA",
+  "MATER DEI AREA",
+  "MELLIEĦA \\(TRIQ L-IŻBARK",
+  "PRICED TO SELL THREE BEDROOM APARTMENT",
+  "REDUCED FOR QUICK SALE",
+  "RESTAURANT WITH ALL PERMITS REQUIRED",
+  "RUE D' ARGENS",
+  "SANTA MARIA ESTATE",
+  "SECOND FLOOR TWO BEDROOM APARTMENT WITH LARGE TERRACE",
+  "SELLING YOUR PROPERTY? PHONE",
+  "SELL YOUR PROPERTY WITH US FOR JUST COMMISSION",
+  "SEMI-DETACHED HAVING THREE BEDROOMS AND SPACIOUS BBQ AREA",
+  "SEMI-DETACHED VILLA FOR THE PRICE OF A TERRACED HOUSE",
+  "SEMI-DETACHED VILLA PLOT",
+  "SEMI-DETACHED VILLA WITH CLEAR UNOBSTRUCTED SEA VIEWS",
+  "SEMI-DETACHED VILLA WITH GARDEN AND BASEMENT",
+  "SEMI-DETACHED VILLA WITH NICE OUTDOORS AND PARTIALLY RENOVATED",
+  "SENSARA ON FARMHOUSE",
+  "SENSARA ON FARMHOUSES ONLY",
+  "SENSARA ON FIELDS AND FARMHOUSES",
+  "SPACIOUS TOWNHOUSE WITH DECENT BACK GARDEN",
+  "ST ANGELO MANSIONS",
+  "THREE BEDROOM APARTMENT WITH GOOD SIZED BALCONY OVERLOOKING A BEAUTIFUL ODZ AREA",
+  "THREE BEDROOM APARTMENT WITH VALLETTA AND MANOEL ISLAND VIEWS",
+  "THREE BEDROOM APARTMENT WITH YARD",
+  "THREE BEDROOM GROUNDFLOOR MAISONETTE",
+  "TYPICAL MALTESE TOWNHOUSE WITH ALL FEATURES",
+  "UNDIVIDED PROPERTY SHARES OF HEIRS IN VARIOUS PARTS OF MALTA",
+  "VALLETTA CONVERTED TOWNHOUSE USED AS OFFICES €680"
 )
 
 correctLocation <- function(location) {
@@ -172,7 +254,7 @@ extractExactLocation <- function(locationWithComma) {
 }
 
 extractLocationWithPrefix <- function(loc) {
-  maltesePrefixes <- c("TA'","SAN","THE")
+  maltesePrefixes <- c("TA'","SAN","THE","ST")
   
   startsWithF <- function(prefix) {
     return(startsWith(loc,prefix))
@@ -218,7 +300,12 @@ filterWordsStartingWithNumbers <- function(loc) {
 isIncorrectLocation <- function(l) {
   return(any(sapply(X = incorrectLocs,
              FUN = function(pat) {
-               grepl(l,pattern=paste("^",pat,sep=""))
+               s<- grepl(l,pattern=paste("^",pat,sep=""))
+               if (s) {
+                 print("found")
+                 print(l)
+               }
+               return(s)
              })))
 }
 
@@ -257,7 +344,9 @@ resolveLocation <- function(extractedLocation) {
   
   if (is.na(location)) {
       
+      pastePrint("loc",extractedLocation)
       location <- locationMappings[[extractedLocation]];
+      pastePrint("locations",location)
       if (is.null(location)) {
         location <- extractLocationWithPrefix(extractedLocation)
         if (is.na(location)) {
