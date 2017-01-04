@@ -31,6 +31,10 @@ propertyDescriptions <- c("apartment",
 			                    "rent"
 			                    )
 
+landUnitsMentioned <- function(propertyText) {
+  return (grepl("[0-9][\\s]*ha",propertyText,ignore.case = TRUE,perl = TRUE) ||
+      grepl("tumoli",propertyText,ignore.case = TRUE,perl=TRUE)) 
+}
 
 extractPropertyDescription <- function(line) {
   words <- strsplit(line,"[\\s,\\.]",perl=TRUE)
@@ -68,9 +72,13 @@ extractPropertyDescription <- function(line) {
   #  default to apartment is none of the words
   #  were found
   if (is.na(propertyDesc)) {
-    propertyDesc <- "apartment" 
+    if (landUnitsMentioned(line)) {
+      propertyDesc <- "land"
+    } else {
+      propertyDesc <- "apartment" 
+    }
   }
   return(str_to_upper(propertyDesc))
 }
 
-extractPropertyDescription("KENNEDY GROVE AREA. Garage space. Remote controlled gate on main road. Direct from owner. &euro;8,900, negotiable. Phone 2134 5529.")
+extractPropertyDescription("FILFLA VIEWS. .33hja (three tumojli) plus rooms. &euro;315,000. Phone 7949 2605.")

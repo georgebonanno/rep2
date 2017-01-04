@@ -1,5 +1,7 @@
 library(stringr)
 
+source('stringDistance.R')
+
 locationMappings <- list(
   "ŻEBBUĠ"="ĦAŻ-ŻEBBUĠ",
   "BAHAR IĊ-ĊAGĦAQ"="BAHAR IĊ-ĊAGĦAQ",
@@ -107,6 +109,7 @@ locationMappings <- list(
   "SALIB TAL-GĦOLJA"="SIGGIEWI",
   "SAN GWANN"="SAN ĠWANN",
   "SAVOY GARDENS"="GŻIRA",
+  "FILFLA VIEWS"="DINGLI",
   "SEAFRONT"="SLIEMA",
   "SENGLEA\\(L-ISLA\\)"="COTTONERA",
   "SIGGIEWI"="SIĠĠIEWI",
@@ -119,7 +122,10 @@ locationMappings <- list(
   "STA MARIA ESTATE"="STA MARIJA ESTATE",
   "TAL̴8-IBRAĠ"="TAL-IBRAĠ",
   "TAL-IBRAG"="TAL-IBRAĠ",
-  "ST ANGELO MANSIONS"="COTTONERA"
+  "ST ANGELO MANSIONS"="COTTONERA",
+  "SENSARA MALTA"="",
+  "SERIOUS BUYER"="",
+  "SHELL FORM"=""
 )
 
 incorrectLocs <- c(
@@ -232,6 +238,7 @@ incorrectLocs <- c(
   "TYPICAL MALTESE TOWNHOUSE WITH ALL FEATURES",
   "UNDIVIDED PROPERTY SHARES OF HEIRS IN VARIOUS PARTS OF MALTA",
   "VALLETTA CONVERTED TOWNHOUSE USED AS OFFICES €680"
+
 )
 
 correctLocation <- function(location) {
@@ -301,10 +308,7 @@ isIncorrectLocation <- function(l) {
   return(any(sapply(X = incorrectLocs,
              FUN = function(pat) {
                s<- grepl(l,pattern=paste("^",pat,sep=""))
-               if (s) {
-                 print("found")
-                 print(l)
-               }
+              
                return(s)
              })))
 }
@@ -344,9 +348,7 @@ resolveLocation <- function(extractedLocation) {
   
   if (is.na(location)) {
       
-      pastePrint("loc",extractedLocation)
       location <- locationMappings[[extractedLocation]];
-      pastePrint("locations",location)
       if (is.null(location)) {
         location <- extractLocationWithPrefix(extractedLocation)
         if (is.na(location)) {
@@ -359,8 +361,7 @@ resolveLocation <- function(extractedLocation) {
         isIncorrectLocation(location)) {
     location <- ""
   }
-  
-  location[location == "ALLETTA"] <- "VALLETTA"
-  #locations startings with "A" or "AN" invalid
+
+  location <- findCorrectPlace(location)
   return(location)
 }
