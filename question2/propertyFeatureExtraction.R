@@ -50,7 +50,7 @@ foreignCountries <- c(
 )
 
 isForeignCountry <- function(location) {
-  return (location == foreignCountries)
+  return (any(location == foreignCountries))
 }
 
 isNumericFormat <- function(s) {
@@ -166,4 +166,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("BLATA L-BAJDA. Semi-detached, corner, double fronted villa with garden, hall, separate dining room, three large double bedrooms and two interconnecting three-car garages. Ideal for residential, commercial or educational purposes. &euro;390,000. Phone owner 9985 4999.")
+extractFeatures("RAGUSA, SICILY. House, outbuildings and land for sale. Mains electricity and water, panoramic views. &euro;50,000. Ideal restoration project. Phone +39 0932 751 798.</p>")

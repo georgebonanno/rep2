@@ -39,7 +39,28 @@ propDetails <-
                   ifelse(is.na(propertyDetails$area_sqm),1,0)
                   <= 1),]
 
+numberOfProperties <- dim(propDetails)[1]
 
-pastePrint("missing area: ",length(propDetails$area_sqm[is.na(propDetails$area_sqm)]))
-pastePrint("missing price: ",length(propDetails$area_sqm[is.na(propDetails$price_euro)]))
+pastePrint("size of dataset:",numberOfProperties)
+
+missingAreas <- length(propDetails$area_sqm[is.na(propDetails$area_sqm)])
+pastePrint("missing area: ",missingAreas)
+
+missingPrices <- length(propDetails$price_euro[is.na(propDetails$price_euro)])
+pastePrint("missing price: ",missingPrices)
+
 pastePrint("missing property type",length(propDetails$property_type[is.na(propDetails$property_type)]))
+
+uniqueLocation <- unique(propDetails$location)
+uniqueLocationWithDefinedPrice <- unique(propDetaidf -ls[is.na(propDetails$price_euro),"location"])
+
+#find which locations do not have a defined price
+ff<-function(l) {any(l==uniqueLocationWithDefinedPrice)}
+locationMentioned <- lapply(FUN=ff,uniqueLocation)
+(uniqueLocation[locationsWithUndefinedPrices == FALSE])
+
+imputePrices <- function() {
+  aggregate(list(price=propDetails$price_euro),
+            by=list(location=propDetails$location),
+            na.rm=TRUE,FUN=median)
+}
