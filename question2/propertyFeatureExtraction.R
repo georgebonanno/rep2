@@ -8,10 +8,13 @@ pastePrint <- function(...,sepr=" ") {
 } 
 
 validPropertyDescs <- function(line) {
+
+  
   lineContainsStr <- function(x) {
-          return(grepl(paste(".*",x,".*",sep=""),line,ignore.case = TRUE))
+    return(grepl(paste(".*",x,".*",sep=""),line,ignore.case = TRUE))
   }
   
+    
   invalidProps <- c(
     "APARTMENTS, maisonettes, etc",
     "A RESTAURANT situated in a prominen",
@@ -36,6 +39,18 @@ validPropertyDescs <- function(line) {
              
   return(valid)
     
+}
+
+foreignCountries <- c(
+  "BAHAMAS",
+  "FRANCE",
+  "RAGUSA",
+  "SICILY",
+  "TUSCANY"
+)
+
+isForeignCountry <- function(location) {
+  return (location == foreignCountries)
 }
 
 isNumericFormat <- function(s) {
@@ -105,7 +120,7 @@ secondPriceFound <- function(extractedPrices) {
 }
 
 validLocation <- function(loc) {
-  return (!grepl("rent",loc,ignore.case = TRUE));
+  return (!isForeignCountry(loc) && !grepl("rent",loc,ignore.case = TRUE));
 }
 
 extractFeatures <- function(line) {
@@ -132,7 +147,7 @@ extractFeatures <- function(line) {
       price <- firstPriceFound(prices)
       secondPrices <- secondPriceFound(prices)
       if (secondPrices == "" && (length(loc) > 0) && validLocation(loc)) {
-        extractedFeatures <- paste(loc,phone,price,description,area,secondPrices,sep=",");
+        extractedFeatures <- paste(loc,phone,price,description,area,sep=",");
       } else {
         extractedFeatures <- ""
       }
@@ -151,4 +166,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-#extractFeatures("BLATA L-BAJDA. Semi-detached, corner, double fronted villa with garden, hall, separate dining room, three large double bedrooms and two interconnecting three-car garages. Ideal for residential, commercial or educational purposes. &euro;390,000. Phone owner 9985 4999.")
+extractFeatures("BLATA L-BAJDA. Semi-detached, corner, double fronted villa with garden, hall, separate dining room, three large double bedrooms and two interconnecting three-car garages. Ideal for residential, commercial or educational purposes. &euro;390,000. Phone owner 9985 4999.")

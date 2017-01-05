@@ -328,11 +328,8 @@ resolveLocation <- function(extractedLocation) {
   locations <- filterWordsStartingWithNumbers(locations)
   locations[1] <- gsub("^THE_","THE ",locations[1])
   extractedLocation <- gsub("^THE_","THE ",extractedLocation)
-  #print("change locatoins")
-  #print(locations[1])
   
   locationFound <- (length(locations) > 0) 
-  #print(multiplePlaces)
   if (locationFound) {
     extractedLocation <- locations[1]
   }  
