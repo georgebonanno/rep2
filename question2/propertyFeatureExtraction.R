@@ -152,4 +152,3 @@ extractFeatures <- function(line) {
 }
 
 #extractFeatures("BLATA L-BAJDA. Semi-detached, corner, double fronted villa with garden, hall, separate dining room, three large double bedrooms and two interconnecting three-car garages. Ideal for residential, commercial or educational purposes. &euro;390,000. Phone owner 9985 4999.")
-extractFeatures("ATTENTION DEVELOPERS: sites for development. Phone 7921 1469.</p>")
