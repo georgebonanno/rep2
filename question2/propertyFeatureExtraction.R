@@ -166,4 +166,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("RAGUSA, SICILY. House, outbuildings and land for sale. Mains electricity and water, panoramic views. &euro;50,000. Ideal restoration project. Phone +39 0932 751 798.</p>")
+extractFeatures("LANDRIJIET. Newly built bungalow, open views, on 2.75 tumoli of garden with pool, large living/ kitchen / dining, three bedrooms, gym. &euro;1,760,000. Phone 9987 0009.</p>")

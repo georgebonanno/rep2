@@ -128,7 +128,10 @@ locationMappings <- list(
   "MENSIJA"="SAN ĠWANN",
   "SHELL FORM"="",
   "TAL-FJURI"="ST PAUL'S BAY",
-  "IL-QORTIN"="MELLIEĦA"
+  "IL-QORTIN"="MELLIEĦA",
+  "VERDALA MANSIONS"="RABAT",
+  "SELMUN"="MELLIEĦA",
+  "LANDRIJIET"="RABAT"
 )
 
 incorrectLocs <- c(

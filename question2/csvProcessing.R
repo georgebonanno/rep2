@@ -9,28 +9,9 @@ propertyDetails <- read.csv("unique_features.csv",
                             na.strings = c(""),
                             row.names = NULL)
 
+propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
 
 head(propertyDetails[is.na(propertyDetails$location),],30)
-
-#propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
-
-naCount <- function(...) {
-  params <- list(...)
-  markNas <- function(prev,x) {
-    if (length(x) > 1) {
-      print(paste("warning: ",x))
-    }
-    
-    if (is.na(x)) {
-      n=1
-    } else {
-      n=0
-    }
-    
-    return(n+prev)
-  }
-  Reduce(markNas,params,init=0)
-}
 
 propDetails <- 
    propertyDetails[!is.na(propertyDetails$location) &
@@ -52,15 +33,32 @@ pastePrint("missing price: ",missingPrices)
 pastePrint("missing property type",length(propDetails$property_type[is.na(propDetails$property_type)]))
 
 uniqueLocation <- unique(propDetails$location)
-uniqueLocationWithDefinedPrice <- unique(propDetaidf -ls[is.na(propDetails$price_euro),"location"])
+uniqueLocationWithDefinedPrice <- unique(propDetails[is.na(propDetails$price_euro),"location"])
 
 #find which locations do not have a defined price
 ff<-function(l) {any(l==uniqueLocationWithDefinedPrice)}
 locationMentioned <- lapply(FUN=ff,uniqueLocation)
 (uniqueLocation[locationsWithUndefinedPrices == FALSE])
 
-imputePrices <- function() {
-  aggregate(list(price=propDetails$price_euro),
-            by=list(location=propDetails$location),
-            na.rm=TRUE,FUN=median)
+imputePrices <- function(propDetails) {
+  medianPricePerLocation <-aggregate(list(price=propDetails$price_euro),
+                                     by=list(location=propDetails$location),
+                                     na.rm=TRUE,FUN=median)
+  
+  imputedPrices <- apply(X=propDetails,1,FUN=function(propRow){
+    loc <- propRow["location"]
+    price <- propRow["price_euro"]
+    medPriceForLoc = medianPricePerLocation$price[medianPricePerLocation$location==loc]    
+    if (!is.na(medPriceForLoc) && is.na(price)) {
+      
+      propRow["price_euro"] <- medPriceForLoc
+    }
+    return (propRow["price_euro"])
+  })
+  
+  propDetails$price_euro <-imputedPrices;
+  
+  return(propDetails)
 }
+
+propDetails <- imputePrices(propDetails)
