@@ -88,46 +88,39 @@ extractArea <- function(propertyDesc) {
   
 }
 
-extractPricesForMillionAndKilo <- function(line) {
-  matches <- gregexpr("€(och)?([0-9\\.,]+[mk])",ignore.case = TRUE,line,perl = TRUE)
-  currencyValues <- regmatches(line,matches)
-  if (length(currencyValues) > 0 && length(currencyValues[[1]]) > 0) {
-    currencyValues <- gsub("[\\.,]$","",currencyValues)
-    units <- ""
-    currencyValues <- str_to_upper(currencyValues)
-    if (endsWith(currencyValues,"M")) {
-      units <- "M"
-    } else if (endsWith(currencyValues,"K")) {
-      units <- "K"
-    }
-    currencyValues <- gsub("[€,ochmkMK ]","",currencyValues[[1]])
-    
-    if (units == "M") {
-      multiplier = 1e6
-    } else if (units == "K") {
-      multiplier = 1000
-    } else {
-      multiplier = 1
-    }
-    
-    currencyValues <- lapply(currencyValues,function(v){
-      return(as.numeric(v)*multiplier)
-    })
-  
+multiplierForUnits <- function(currencyValues) {
+  if (endsWith(currencyValues,"M")) {
+    units <- "M"
+  } else if (endsWith(currencyValues,"K")) {
+    units <- "K"
   } else {
-    currencyValues <- list()
+    units <- "";
   }
-  return(currencyValues)
+  if (units == "M") {
+    multiplier = 1e6
+  } else if (units == "K") {
+    multiplier = 1000
+  } else {
+    multiplier = 1
+  }
+  return(multiplier)
 }
 
 extractPrices <- function(line) {
-  currencyValues <- extractPricesForMillionAndKilo(line)
-  if (is.na(currencyValues) || length(currencyValues) == 0) {
-    matches <- gregexpr("€(och)?([0-9 ,]+)",line,perl = TRUE)
-    currencyValues <- regmatches(line,matches)
-    currencyValues <- gsub("[€,och ]","",currencyValues[[1]])
-    currencyValues <- lapply(currencyValues,as.numeric)
-  }
+
+  matches <- gregexpr("€(och)?([0-9 ,]+[mk]?)",line,ignore.case = TRUE,perl = TRUE)
+  currencyValues <- regmatches(line,matches)
+  
+  currencyValues <- str_to_upper(currencyValues)
+  
+  
+  multiplier <- multiplierForUnits(currencyValues[[1]])
+  currencyValues <- gsub("[€,ochmK ]","",ignore.case = TRUE,currencyValues[[1]])
+  
+  currencyValues <- lapply(currencyValues,function(v){
+    return(as.numeric(v)*multiplier)
+  })
+
   return(currencyValues)
 }
 
@@ -201,4 +194,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("SALINA. Detached, converted farmhouse. Four bedrooms, terrace, garden, sea and country views. €750,000")
+extractFeatures("SALINA. Detached, converted farmhouse. Four bedrooms, terrace, garden, sea and country views. €750,3")
