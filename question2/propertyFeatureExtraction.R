@@ -88,11 +88,46 @@ extractArea <- function(propertyDesc) {
   
 }
 
-extractPrices <- function(line) {
-  matches <- gregexpr("€(och)?([0-9 ,]+)",line,perl = TRUE)
+extractPricesForMillionAndKilo <- function(line) {
+  matches <- gregexpr("€(och)?([0-9\\.,]+[mk])",ignore.case = TRUE,line,perl = TRUE)
   currencyValues <- regmatches(line,matches)
-  currencyValues <- gsub("[€,och ]","",currencyValues[[1]])
-  currencyValues <- lapply(currencyValues,as.numeric)
+  if (length(currencyValues) > 0 && length(currencyValues[[1]]) > 0) {
+    currencyValues <- gsub("[\\.,]$","",currencyValues)
+    units <- ""
+    currencyValues <- str_to_upper(currencyValues)
+    if (endsWith(currencyValues,"M")) {
+      units <- "M"
+    } else if (endsWith(currencyValues,"K")) {
+      units <- "K"
+    }
+    currencyValues <- gsub("[€,ochmkMK ]","",currencyValues[[1]])
+    
+    if (units == "M") {
+      multiplier = 1e6
+    } else if (units == "K") {
+      multiplier = 1000
+    } else {
+      multiplier = 1
+    }
+    
+    currencyValues <- lapply(currencyValues,function(v){
+      return(as.numeric(v)*multiplier)
+    })
+  
+  } else {
+    currencyValues <- list()
+  }
+  return(currencyValues)
+}
+
+extractPrices <- function(line) {
+  currencyValues <- extractPricesForMillionAndKilo(line)
+  if (is.na(currencyValues) || length(currencyValues) == 0) {
+    matches <- gregexpr("€(och)?([0-9 ,]+)",line,perl = TRUE)
+    currencyValues <- regmatches(line,matches)
+    currencyValues <- gsub("[€,och ]","",currencyValues[[1]])
+    currencyValues <- lapply(currencyValues,as.numeric)
+  }
   return(currencyValues)
 }
 
@@ -166,4 +201,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("SELMUN. Nothing like it on the market. 350sqm plot on two streets, with outstanding unobstructed views. Zone 3 + 1. No agents. Phone 7949 0063.")
+extractFeatures("SALINA. Detached, converted farmhouse. Four bedrooms, terrace, garden, sea and country views. €750,000")

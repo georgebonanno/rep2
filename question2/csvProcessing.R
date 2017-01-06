@@ -87,3 +87,4 @@ propDetails <- imputePrices(propDetails)
 propDetails <- imputeArea(propDetails)
 
 propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
+
