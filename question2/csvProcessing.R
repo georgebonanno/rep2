@@ -5,11 +5,15 @@ pastePrint <- function(...,sepr=" ") {
 
 propertyDetails <- read.csv("unique_features.csv",
                             header = TRUE,sep = ",",
-                            fileEncoding = "UTF-8",
                             na.strings = c(""),
+                            colClasses = c("character","character","numeric",
+                                           "character","numeric"),
                             row.names = NULL)
 
 propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
+
+prices <- propertyDetails[!is.na(propertyDetails$price_euro),]
+head(prices[order(-prices$price_euro),],20)
 
 propDetails <- 
    propertyDetails[!is.na(propertyDetails$location) &
@@ -72,7 +76,8 @@ imputeArea <- function(propDetails) {
   imputeAreaF <- function(prop) {
     if (is.na(prop["area_sqm"])) {
       propType <- prop["property_type"]
-      medianArea <- medianAreaForPropertyType$area[medianAreaForPropertyType$propType==propType]
+      medianArea <- medianAre
+      aForPropertyType$area[medianAreaForPropertyType$propType==propType]
       prop["area_sqm"] <- medianArea
     }
     return(prop["area_sqm"])
@@ -83,8 +88,9 @@ imputeArea <- function(propDetails) {
   return(propDetails)
 }
 
-propDetails <- imputePrices(propDetails)
-propDetails <- imputeArea(propDetails)
+#propDetails <- imputePrices(propDetails)
+#propDetails <- imputeArea(propDetails)
 
-propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
+#propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
 
+head(prices[order(prices$price_euro),],50)

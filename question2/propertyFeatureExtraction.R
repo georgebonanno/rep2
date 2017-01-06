@@ -108,19 +108,40 @@ multiplierForUnits <- function(currencyValues) {
 
 extractPrices <- function(line) {
 
-  matches <- gregexpr("€(och)?([0-9 ,]+[mk]?)",line,ignore.case = TRUE,perl = TRUE)
+  matches <- gregexpr("€(och)?([0-9 ,\\.]+[mk]?)",line,ignore.case = TRUE,perl = TRUE)
   currencyValues <- regmatches(line,matches)
+  if (length(currencyValues[[1]]) > 0) {
   
-  currencyValues <- str_to_upper(currencyValues)
-  
-  
-  multiplier <- multiplierForUnits(currencyValues[[1]])
-  currencyValues <- gsub("[€,ochmK ]","",ignore.case = TRUE,currencyValues[[1]])
-  
-  currencyValues <- lapply(currencyValues,function(v){
-    return(as.numeric(v)*multiplier)
-  })
+    currencyValues <- str_to_upper(currencyValues)
+    
+    multiplier <- multiplierForUnits(currencyValues[[1]])
+    currencyValues <- gsub("[€,ochmK ]","",ignore.case = TRUE,currencyValues[[1]])
+    currencyValues <- gsub("\\.$","",ignore.case = TRUE,currencyValues)
+    
+    currencyValues <- lapply(currencyValues,function(v){
+      return(as.numeric(v)*multiplier)
+    })
 
+  } else {
+    currencyValues <- c();
+  }
+  return(currencyValues)
+}
+
+extractPricePossiblyWithArea <- function(line,area) {
+  matches <- gregexpr("€(och)?([0-9 ,\\.]+) *[\\/]sqm",
+                      line,ignore.case = TRUE,perl = TRUE)
+  currencyValues <- regmatches(line,matches)
+  if (length(currencyValues[[1]]) > 0) {
+    currencyValues <- gsub("€|( *[\\/]sqm)","",currencyValues[[1]],ignore.case = TRUE)
+    currencyValues <- as.numeric(currencyValues)
+    if (!is.na(area) && isNumericFormat(area)) {
+      currencyValues <- currencyValues*as.numeric(area)
+    }
+  } else {
+    currencyValues <- extractPrices(line)
+  }
+  
   return(currencyValues)
 }
 
@@ -166,8 +187,8 @@ extractFeatures <- function(line) {
     } else if (str_length(phone) > 0) {
       phone <- "";
     }
-    prices <- extractPrices(line)
     area <- extractArea(line)
+    prices <- extractPricePossiblyWithArea(line,area)
     
     description <- extractPropertyDescription(line)
     makeDescriptions <- function(loc) {
@@ -194,4 +215,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("SALINA. Detached, converted farmhouse. Four bedrooms, terrace, garden, sea and country views. €750,3")
+extractFeatures("ŻEBBUĠ. Set on Mdina Road, an opportunity to acquire second floor office with superb potential for 101 different businesses with a total of 730sqm of open space, with two separate entrances / lifts. Can be also divided. €70/sqm. Phone 9922 0023.")
