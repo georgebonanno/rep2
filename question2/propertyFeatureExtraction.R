@@ -166,4 +166,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("LANDRIJIET. Newly built bungalow, open views, on 2.75 tumoli of garden with pool, large living/ kitchen / dining, three bedrooms, gym. &euro;1,760,000. Phone 9987 0009.</p>")
+extractFeatures("SELMUN. Nothing like it on the market. 350sqm plot on two streets, with outstanding unobstructed views. Zone 3 + 1. No agents. Phone 7949 0063.")

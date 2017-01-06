@@ -11,8 +11,6 @@ propertyDetails <- read.csv("unique_features.csv",
 
 propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
 
-head(propertyDetails[is.na(propertyDetails$location),],30)
-
 propDetails <- 
    propertyDetails[!is.na(propertyDetails$location) &
                   (ifelse(is.na(propertyDetails$price_euro),1,0)+
@@ -40,6 +38,8 @@ ff<-function(l) {any(l==uniqueLocationWithDefinedPrice)}
 locationMentioned <- lapply(FUN=ff,uniqueLocation)
 (uniqueLocation[locationsWithUndefinedPrices == FALSE])
 
+#  assumption: area of a given property type (e.g. apartment) does not
+#  is almost constant in a given location
 imputePrices <- function(propDetails) {
   medianPricePerLocation <-aggregate(list(price=propDetails$price_euro),
                                      by=list(location=propDetails$location),
@@ -48,10 +48,13 @@ imputePrices <- function(propDetails) {
   imputedPrices <- apply(X=propDetails,1,FUN=function(propRow){
     loc <- propRow["location"]
     price <- propRow["price_euro"]
-    medPriceForLoc = medianPricePerLocation$price[medianPricePerLocation$location==loc]    
-    if (!is.na(medPriceForLoc) && is.na(price)) {
-      
-      propRow["price_euro"] <- medPriceForLoc
+    propType <- propRow["property_type"]
+    if (is.na(price)) {
+      medPriceForLoc = medianPricePerLocation$price[medianPricePerLocation$location==loc]    
+      if (!is.na(medPriceForLoc)) {
+        
+        propRow["price_euro"] <- medPriceForLoc
+      }
     }
     return (propRow["price_euro"])
   })
@@ -61,4 +64,26 @@ imputePrices <- function(propDetails) {
   return(propDetails)
 }
 
+imputeArea <- function(propDetails) {
+  medianAreaForPropertyType <- aggregate(x=list(area=propDetails$area_sqm),
+                                         by=list(propType=propDetails$property_type),
+                                         FUN=median,na.rm=TRUE)
+  
+  imputeAreaF <- function(prop) {
+    if (is.na(prop["area_sqm"])) {
+      propType <- prop["property_type"]
+      medianArea <- medianAreaForPropertyType$area[medianAreaForPropertyType$propType==propType]
+      prop["area_sqm"] <- medianArea
+    }
+    return(prop["area_sqm"])
+  }
+  
+  propDetails$area_sqm<-apply(X = propDetails,1,FUN=imputeAreaF)
+  
+  return(propDetails)
+}
+
 propDetails <- imputePrices(propDetails)
+propDetails <- imputeArea(propDetails)
+
+propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
