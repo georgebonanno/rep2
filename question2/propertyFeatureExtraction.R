@@ -114,7 +114,11 @@ extractPrices <- function(line) {
 
   matches <- gregexpr("€(och)?([0-9 ,\\.]+ *[mk]?)",line,ignore.case = TRUE,perl = TRUE)
   currencyValues <- regmatches(line,matches)
-  if (length(currencyValues[[1]]) > 0) {
+  # any line with more than one currency values is ignored
+  # since it may lead to misinterpretations (e.g initial price) 
+  # and rent or a further offer (e.g ground floor costs EUR X 1st.
+  # 1st floor with airspace further EUR Y)
+  if (length(currencyValues[[1]]) == 1) {
   
     currencyValues <- str_to_upper(currencyValues)
     
@@ -219,4 +223,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("GOZO, GĦAJNSIELEM. Unique maisonette, 82.5m (275ft) long, with pool and village views. 205,000. Must be seen. Phone 9945 9426.")
+extractFeatures("TA' XBIEX AREA. Groundfloor, two bedroom, with large yard €170,000. First floor residence with airspace to build further. €295,000. Phone 7978 8888.")
