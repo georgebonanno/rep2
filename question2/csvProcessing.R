@@ -12,8 +12,7 @@ propertyDetails <- read.csv("unique_features.csv",
 
 propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
 
-prices <- propertyDetails[!is.na(propertyDetails$price_euro),]
-head(prices[order(-prices$price_euro),],20)
+
 
 propDetails <- 
    propertyDetails[!is.na(propertyDetails$location) &
@@ -21,6 +20,9 @@ propDetails <-
                   ifelse(is.na(propertyDetails$property_type),1,0)+
                   ifelse(is.na(propertyDetails$area_sqm),1,0)
                   <= 1),]
+
+prices <- propDetails[!is.na(propDetails$price_euro),]
+head(prices[order(-prices$price_euro),],20)
 
 numberOfProperties <- dim(propDetails)[1]
 
@@ -57,14 +59,13 @@ imputePrices <- function(propDetails) {
       medPriceForLoc = medianPricePerLocation$price[medianPricePerLocation$location==loc]    
       if (!is.na(medPriceForLoc)) {
         
-        propRow["price_euro"] <- medPriceForLoc
+        propRow["price_euro"] <- as.numeric(medPriceForLoc)
       }
     }
     return (propRow["price_euro"])
   })
   
-  propDetails$price_euro <-imputedPrices;
-  
+  propDetails$price_euro <-as.numeric(imputedPrices);
   return(propDetails)
 }
 
@@ -76,21 +77,23 @@ imputeArea <- function(propDetails) {
   imputeAreaF <- function(prop) {
     if (is.na(prop["area_sqm"])) {
       propType <- prop["property_type"]
-      medianArea <- medianAre
-      aForPropertyType$area[medianAreaForPropertyType$propType==propType]
+      medianArea <- medianAreaForPropertyType$area[medianAreaForPropertyType$propType==propType]
       prop["area_sqm"] <- medianArea
     }
     return(prop["area_sqm"])
   }
   
-  propDetails$area_sqm<-apply(X = propDetails,1,FUN=imputeAreaF)
+  propDetails$area_sqm<-as.numeric(apply(X = propDetails,1,FUN=imputeAreaF))
   
   return(propDetails)
 }
 
-#propDetails <- imputePrices(propDetails)
-#propDetails <- imputeArea(propDetails)
+propDetails <- imputePrices(propDetails)
+propDetails <- imputeArea(propDetails)
 
-#propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
+propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
 
-head(prices[order(prices$price_euro),],50)
+propDetails <- propDetails[propDetails$price_euro >= 10000,]
+
+head(propDetails[order(-propDetails$price_euro),],50)
+

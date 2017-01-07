@@ -89,12 +89,16 @@ extractArea <- function(propertyDesc) {
 }
 
 multiplierForUnits <- function(currencyValues) {
-  if (endsWith(currencyValues,"M")) {
-    units <- "M"
-  } else if (endsWith(currencyValues,"K")) {
-    units <- "K"
+  if (grepl("[0-9]+ *[ML]$",currencyValues,ignore.case = TRUE)) {
+    if (endsWith(currencyValues,"M")) {
+      units <- "M"
+    } else if (endsWith(currencyValues,"K")) {
+      units <- "K"
+    } else {
+      units <- "";
+    }
   } else {
-    units <- "";
+    units <- ""
   }
   if (units == "M") {
     multiplier = 1e6
@@ -108,7 +112,7 @@ multiplierForUnits <- function(currencyValues) {
 
 extractPrices <- function(line) {
 
-  matches <- gregexpr("€(och)?([0-9 ,\\.]+[mk]?)",line,ignore.case = TRUE,perl = TRUE)
+  matches <- gregexpr("€(och)?([0-9 ,\\.]+ *[mk]?)",line,ignore.case = TRUE,perl = TRUE)
   currencyValues <- regmatches(line,matches)
   if (length(currencyValues[[1]]) > 0) {
   
@@ -215,4 +219,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("ŻEBBUĠ. Set on Mdina Road, an opportunity to acquire second floor office with superb potential for 101 different businesses with a total of 730sqm of open space, with two separate entrances / lifts. Can be also divided. €70/sqm. Phone 9922 0023.")
+extractFeatures("GOZO, GĦAJNSIELEM. Unique maisonette, 82.5m (275ft) long, with pool and village views. 205,000. Must be seen. Phone 9945 9426.")
