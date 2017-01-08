@@ -104,6 +104,9 @@ correctErrors <- function(propDetails) {
                 propDetails$contact_no=='79537626' & 
                 propDetails$price_euro==2.5e8,]$price_euro <- 250e3
   
+  propDetails <- propDetails[propDetails$price_euro < 1e8,]
+  propDetails <- propDetails[propDetails$area_sqm < 1e6,]
+  propDetails <- propDetails[!is.na(propDetails$location),]
   return(propDetails)
 }
 

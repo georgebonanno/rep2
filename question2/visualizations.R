@@ -23,12 +23,13 @@ propertyTypeCount <- function() {
             ggtitle("property type count") +
             labs(x="property type",y="count")
   
-  return(propertyTypeCounts)
+  return(p)
 }
 
-propertyTypeCounts <- propertyTypeCount()
+p <- propertyTypeCount()
+#ggplot(p)
 
-propertyPrices <- melt(propDetails,id="property_type")
+#propertyPrices <- melt(propDetails,id="property_type")
 
 #ggplot(data=propertyPrices,
 #       aes(x=))

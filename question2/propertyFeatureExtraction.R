@@ -92,7 +92,6 @@ extractArea <- function(propertyDesc) {
 }
 
 multiplierForUnits <- function(currencyValues) {
-  print(currencyValues)
   if (grepl("[0-9]+[MK]$",currencyValues,ignore.case = TRUE)) {
     if (endsWith(currencyValues,"M")) {
       units <- "M"
