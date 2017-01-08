@@ -34,8 +34,11 @@ validPropertyDescs <- function(line) {
     "A BRAND NEW block with three apartments",
     "PROPERTIES for sale on www");
    
-  
-  valid <- !(any(sapply(FUN = lineContainsStr,X = invalidProps)))
+  if (grepl("[^a-z]rent",line,ignore.case = TRUE)) {
+    valid <- FALSE
+  } else {
+    valid <- !(any(sapply(FUN = lineContainsStr,X = invalidProps)))
+  }
              
   return(valid)
     
@@ -89,7 +92,8 @@ extractArea <- function(propertyDesc) {
 }
 
 multiplierForUnits <- function(currencyValues) {
-  if (grepl("[0-9]+ *[ML]$",currencyValues,ignore.case = TRUE)) {
+  print(currencyValues)
+  if (grepl("[0-9]+[MK]$",currencyValues,ignore.case = TRUE)) {
     if (endsWith(currencyValues,"M")) {
       units <- "M"
     } else if (endsWith(currencyValues,"K")) {
@@ -112,7 +116,9 @@ multiplierForUnits <- function(currencyValues) {
 
 extractPrices <- function(line) {
 
-  matches <- gregexpr("€(och)?([0-9 ,\\.]+ *[mk]?)",line,ignore.case = TRUE,perl = TRUE)
+  matches <- gregexpr("€(och)?([0-9 ,\\.]+ *[0-9,\\.]+[mk]?)",
+                      line,
+                      ignore.case = TRUE,perl = TRUE)
   currencyValues <- regmatches(line,matches)
   # any line with more than one currency values is ignored
   # since it may lead to misinterpretations (e.g initial price) 
@@ -121,9 +127,8 @@ extractPrices <- function(line) {
   if (length(currencyValues[[1]]) == 1) {
   
     currencyValues <- str_to_upper(currencyValues)
-    
-    multiplier <- multiplierForUnits(currencyValues[[1]])
-    currencyValues <- gsub("[€,ochmK ]","",ignore.case = TRUE,currencyValues[[1]])
+    multiplier <- multiplierForUnits(currencyValues[[1]][1])
+    currencyValues <- gsub("[€,ochmK ]","",ignore.case = TRUE,currencyValues)
     currencyValues <- gsub("\\.$","",ignore.case = TRUE,currencyValues)
     
     currencyValues <- lapply(currencyValues,function(v){
@@ -223,4 +228,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("TA' XBIEX AREA. Groundfloor, two bedroom, with large yard €170,000. First floor residence with airspace to build further. €295,000. Phone 7978 8888.")
+extractFeatures("ST PAUL'S BAY. 4-star hotel accommodating 110 twin bedrooms, fully equipped, 48 self-catering apartments, pub / coffee shop / souvenir shop, wedding hall and indoor pool. €31,000,000. Phone 7713 4186.</p>")

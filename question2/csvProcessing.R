@@ -3,7 +3,7 @@ pastePrint <- function(...,sepr=" ") {
 } 
 
 
-propertyDetails <- read.csv("unique_features.csv",
+propertyDetails <- read.csv("unique_features_new.csv",
                             header = TRUE,sep = ",",
                             na.strings = c(""),
                             colClasses = c("character","character","numeric",
@@ -12,7 +12,7 @@ propertyDetails <- read.csv("unique_features.csv",
 
 propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
 
-
+propertyDetails <- propertyDetails[!is.na(propertyDetails$location),]
 
 propDetails <- 
    propertyDetails[!is.na(propertyDetails$location) &
@@ -39,10 +39,6 @@ pastePrint("missing property type",length(propDetails$property_type[is.na(propDe
 uniqueLocation <- unique(propDetails$location)
 uniqueLocationWithDefinedPrice <- unique(propDetails[is.na(propDetails$price_euro),"location"])
 
-#find which locations do not have a defined price
-ff<-function(l) {any(l==uniqueLocationWithDefinedPrice)}
-locationMentioned <- lapply(FUN=ff,uniqueLocation)
-(uniqueLocation[locationsWithUndefinedPrices == FALSE])
 
 #  assumption: area of a given property type (e.g. apartment) does not
 #  is almost constant in a given location
@@ -91,9 +87,28 @@ imputeArea <- function(propDetails) {
 propDetails <- imputePrices(propDetails)
 propDetails <- imputeArea(propDetails)
 
-propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
+removeWithMissingValues <- function(propDetails) {
+  propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
+  
+  propDetails <- propDetails[propDetails$price_euro >= 10000,]
+  
+  return (propDetails)
+}
 
-propDetails <- propDetails[propDetails$price_euro >= 10000,]
 
-head(propDetails[order(-propDetails$price_euro),],50)
+correctErrors <- function(propDetails) {
+  #  correction of price since '250m000' was interpreted
+  #  as 250m rather than 250,000 EUR for townhouse in 
+  #  fleur-de-lys
+  propDetails[!is.na(propDetails$contact_no) &
+                propDetails$contact_no=='79537626' & 
+                propDetails$price_euro==2.5e8,]$price_euro <- 250e3
+  
+  return(propDetails)
+}
+
+propDetails <- removeWithMissingValues(propDetails)
+propDetails <- correctErrors(propDetails)
+
+head(propDetails[order(-propDetails$area_sqm),],50)
 

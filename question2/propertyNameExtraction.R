@@ -2,7 +2,8 @@ library(stringi)
 library(stringr)
 
 
-propertyDescriptions <- c("apartment",
+propertyDescriptions <- c("hotel",
+                          "apartment",
                           "townhouse",
                           "farmhouse",
                           "Farm",
