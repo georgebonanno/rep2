@@ -32,8 +32,26 @@ ggplot(subset(propDetails, property_type %in% mostPopularLand),
        aes(x=price_euro,color=property_type))+
        geom_histogram(binwidth = 10000) + xlim(0,2e6)
 
+ggplot(subset(propDetails, property_type %in% mostPopularLand),
+       aes(x=area_sqm,color=property_type)) + xlim(0,500) +
+       geom_histogram(binwidth = 50) 
+
 propertyTypeCount()
 #ggplot(p)
+
+mostCommonPropDetails <- propDetails[propDetails$property_type %in% mostPopularLand,]
+
+ggplot(mostCommonPropDetails,
+       aes(x=price_euro,color=property_type))+
+       geom_histogram(binwidth = 10000) + xlim(0,2e6) +
+       theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+       facet_grid(~property_type)
+
+ggplot(mostCommonPropDetails,
+       aes(x=area_sqm,color=property_type))+
+       geom_histogram(binwidth = 50)  + xlim(0,500) +
+       theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+       facet_grid(~property_type)
 
 #propertyPrices <- melt(propDetails,id="property_type")
 

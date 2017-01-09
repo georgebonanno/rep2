@@ -113,5 +113,5 @@ correctErrors <- function(propDetails) {
 propDetails <- removeWithMissingValues(propDetails)
 propDetails <- correctErrors(propDetails)
 
-head(propDetails[order(-propDetails$price_euro),],50)
+head(propDetails[order(-propDetails$area_sqm),],50)
 

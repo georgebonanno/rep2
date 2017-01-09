@@ -27,8 +27,7 @@ propertyDescriptions <- c("hotel",
 			                    "hostel",
 			                    "garage",
 			                    "catering",
-			                    "bar",
-			                    "rent"
+			                    "bar"
 			                    )
 
 landUnitsMentioned <- function(propertyText) {
