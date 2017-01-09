@@ -3,7 +3,7 @@ pastePrint <- function(...,sepr=" ") {
 } 
 
 
-propertyDetails <- read.csv("unique_features_new.csv",
+propertyDetails <- read.csv("unique_features.csv",
                             header = TRUE,sep = ",",
                             na.strings = c(""),
                             colClasses = c("character","character","numeric",
@@ -104,7 +104,7 @@ correctErrors <- function(propDetails) {
                 propDetails$contact_no=='79537626' & 
                 propDetails$price_euro==2.5e8,]$price_euro <- 250e3
   
-  propDetails <- propDetails[propDetails$price_euro < 1e8,]
+  propDetails <- propDetails[propDetails$price_euro < 1e7,]
   propDetails <- propDetails[propDetails$area_sqm < 1e6,]
   propDetails <- propDetails[!is.na(propDetails$location),]
   return(propDetails)
@@ -113,5 +113,5 @@ correctErrors <- function(propDetails) {
 propDetails <- removeWithMissingValues(propDetails)
 propDetails <- correctErrors(propDetails)
 
-head(propDetails[order(-propDetails$area_sqm),],50)
+head(propDetails[order(-propDetails$price_euro),],50)
 

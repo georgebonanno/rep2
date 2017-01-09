@@ -23,10 +23,16 @@ propertyTypeCount <- function() {
             ggtitle("property type count") +
             labs(x="property type",y="count")
   
-  return(p)
+  return(propertyTypeCounts)
 }
 
-p <- propertyTypeCount()
+mostPopularLand <- as.character(propertyTypeCounts$property_type[1:5])
+
+ggplot(subset(propDetails, property_type %in% mostPopularLand),
+       aes(x=price_euro,color=property_type))+
+       geom_histogram(binwidth = 10000) + xlim(0,2e6)
+
+propertyTypeCount()
 #ggplot(p)
 
 #propertyPrices <- melt(propDetails,id="property_type")
