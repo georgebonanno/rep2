@@ -53,6 +53,33 @@ ggplot(mostCommonPropDetails,
        theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
        facet_grid(~property_type)
 
+showMeanPricePerLocation <- function(propDetails) {
+  meanPricePerLocation <-
+      aggregate(x = list(price_euro = propDetails$price_euro),
+            by=list(location=factor(propDetails$location)),
+            FUN=mean)
+  
+  meanPricePerLocation <-
+    head(meanPricePerLocation[order(-meanPricePerLocation$price_euro),],20)
+  
+  p <- ggplot(data=meanPricePerLocation, 
+         aes(x=reorder(meanPricePerLocation$location,
+                       meanPricePerLocation$location,
+                       function(x) {
+                         -meanPricePerLocation[meanPricePerLocation$location==x,]$price_euro
+                       }),
+             y=meanPricePerLocation$price_euro)) +
+    geom_bar(stat="identity") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    ggtitle("mean price (euro) per location") +
+    labs(x="location",y="mean price (euro)")
+  
+  return(p)
+  
+}
+
+showMeanPricePerLocation(propDetails)
+
 #propertyPrices <- melt(propDetails,id="property_type")
 
 #ggplot(data=propertyPrices,

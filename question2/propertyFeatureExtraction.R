@@ -227,4 +227,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("ST PAUL'S BAY. 4-star hotel accommodating 110 twin bedrooms, fully equipped, 48 self-catering apartments, pub / coffee shop / souvenir shop, wedding hall and indoor pool. €31,000,000. Phone 7713 4186.</p>")
+extractFeatures("TAL-VIRTÙ. Corner fully detached villa that is bright and airy. &euro;1,200,000. Phone 9910 8071.")
