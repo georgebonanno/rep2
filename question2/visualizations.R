@@ -78,7 +78,7 @@ showMeanPricePerLocation <- function(propDetails) {
   
 }
 
-showMeanPricePerLocation(propDetails)
+meanPriceLocation <- showMeanPricePerLocation(propDetails)
 
 #propertyPrices <- melt(propDetails,id="property_type")
 
