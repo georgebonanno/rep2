@@ -23,20 +23,22 @@ updateGeoLocWithNAs <- function(geoLocs,meanPriceLoc) {
   meanPricePerLocation <- merge(meanPricePerLocation,geoLocs,by="location")
   meanPricePerLocation <- meanPricePerLocation[!is.na(meanPricePerLocation$lat),]
   
-  maltaMap <- get_map(location = "malta", maptype = "satellite", zoom = 11)
+  maltaMap <- get_map(location = "malta", maptype = "roadmap", zoom = 11)
   
   print(meanPricePerLocation)
   
   meanPriceMap <- 
     ggmap(maltaMap) +
     geom_point(data = meanPricePerLocation, 
-               aes(x = long, y = lat,geom_point,
+               aes(x = long, y = lat,colour="blue",
                size=price_euro,alpha = .5))
   
   return(meanPriceMap)
   
  }
  
+ meanPricePerLocation <- 
+   calculateMeanPricePerLocation(propDetails)
  showMapWithMeanPriceLocation(meanPricePerLocation)
 
 

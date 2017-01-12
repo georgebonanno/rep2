@@ -63,11 +63,13 @@ calculateMeanPricePerLocation <-  function(propDetails) {
   meanPricePerLocation <-
     head(meanPricePerLocation[order(-meanPricePerLocation$price_euro),],20)
   
-  return(meanPriceLocation)
+  return(meanPricePerLocation)
 }
 
 showMeanPricePerLocation <- function(propDetails) {
-  meanPricePerLocation <- showMeanPricePerLocation(propDetails)
+  meanPricePerLocation <- calculateMeanPricePerLocation(propDetails)
+  print("mean price")
+  print(meanPricePerLocation)
   
   p <- ggplot(data=meanPricePerLocation, 
          aes(x=reorder(meanPricePerLocation$location,
@@ -85,7 +87,7 @@ showMeanPricePerLocation <- function(propDetails) {
   
 }
 
-meanPriceLocation <- showMeanPricePerLocation(propDetails)
+meanPricePerLocation <- showMeanPricePerLocation(propDetails)
 
 #propertyPrices <- melt(propDetails,id="property_type")
 

@@ -227,4 +227,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("TAL-VIRTÙ. Corner fully detached villa that is bright and airy. &euro;1,200,000. Phone 9910 8071.")
+extractFeatures("SENGLEA (L-Isla). Unconverted, 235sqm, three bedroom townhouse, 35sqm external area. &euro;345,000. Phone 7930 2133.")

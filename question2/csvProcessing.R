@@ -2,6 +2,19 @@ pastePrint <- function(...,sepr=" ") {
   print(paste(...,sep=sepr))
 } 
 
+correctErrors <- function(propDetails) {
+  #  correction of price since '250m000' was interpreted
+  #  as 250m rather than 250,000 EUR for townhouse in 
+  #  fleur-de-lys
+  propDetails[!is.na(propDetails$contact_no) &
+                propDetails$contact_no=='79537626' & 
+                propDetails$price_euro==2.5e8,]$price_euro <- 250e3
+  
+  propDetails <- propDetails[propDetails$price_euro < 1e7,]
+  propDetails <- propDetails[propDetails$area_sqm < 1e6,]
+  propDetails <- propDetails[!is.na(propDetails$location),]
+  return(propDetails)
+}
 
 propertyDetails <- read.csv("unique_features.csv",
                             header = TRUE,sep = ",",
@@ -9,6 +22,8 @@ propertyDetails <- read.csv("unique_features.csv",
                             colClasses = c("character","character","numeric",
                                            "character","numeric"),
                             row.names=NULL)
+
+
 
 propertyDetails <- propertyDetails[!is.na(propertyDetails$location),]
 
@@ -20,6 +35,8 @@ propDetails <-
                   ifelse(is.na(propertyDetails$property_type),1,0)+
                   ifelse(is.na(propertyDetails$area_sqm),1,0)
                   <= 1),]
+
+propDetails <- correctErrors(propDetails)
 
 prices <- propDetails[!is.na(propDetails$price_euro),]
 #head(prices[order(-prices$price_euro),],20)
@@ -98,22 +115,7 @@ removeWithMissingValues <- function(propDetails) {
 }
 
 
-correctErrors <- function(propDetails) {
-  #  correction of price since '250m000' was interpreted
-  #  as 250m rather than 250,000 EUR for townhouse in 
-  #  fleur-de-lys
-  propDetails[!is.na(propDetails$contact_no) &
-                propDetails$contact_no=='79537626' & 
-                propDetails$price_euro==2.5e8,]$price_euro <- 250e3
-  
-  propDetails <- propDetails[propDetails$price_euro < 1e7,]
-  propDetails <- propDetails[propDetails$area_sqm < 1e6,]
-  propDetails <- propDetails[!is.na(propDetails$location),]
-  return(propDetails)
-}
-
 propDetails <- removeWithMissingValues(propDetails)
-#propDetails <- correctErrors(propDetails)
 
 head(propDetails[order(-propDetails$area_sqm),],50)
 
