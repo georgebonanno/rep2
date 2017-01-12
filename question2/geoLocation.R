@@ -30,8 +30,8 @@ updateGeoLocWithNAs <- function(geoLocs,meanPriceLoc) {
   meanPriceMap <- 
     ggmap(maltaMap) +
     geom_point(data = meanPricePerLocation, 
-               aes(x = long, y = lat,colour="blue",
-               size=price_euro,alpha = .5))
+               aes(x = long, y = lat,
+               size=price_euro),colour="blue",alpha = (0.5))
   
   return(meanPriceMap)
   
