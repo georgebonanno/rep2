@@ -84,6 +84,25 @@ moveNumberFound <- function(i,moves,lastIndex) {
   return(numFound)
 }
 
+isCastleMove <- function(move) {
+  cMove <- "O-O"==move
+  return(cMove)
+}
+
+updateCastlingMoves <- function(whiteMove,
+                                blackMove,
+                                castlingMoves) {
+
+  if (isCastleMove(whiteMove)) {
+    castlingMoves[1] <- castlingMoves[1]+1
+  }
+  if (isCastleMove(blackMove)) {
+    castlingMoves[2] <- castlingMoves[2]+1
+  } 
+
+  return(castlingMoves)
+}
+
 parseMoves <- function(moves,endResult) {
   #move pattern consists of a number, space followed
   #by the steps of each players separated by steps
@@ -92,6 +111,7 @@ parseMoves <- function(moves,endResult) {
   i <- 1;
   lastIndex <- lastMoveIndex(moves,endResult)
   parsedMoves <- list()
+  castlingMoves <- c(0,0)
   while (i < lastIndex) {
     if (indexOf(moves,i) == '{') {
       comment <- TRUE
@@ -122,11 +142,17 @@ parseMoves <- function(moves,endResult) {
         i <- blackMove$lookahead  
       }
       
+      castlingMoves<-updateCastlingMoves(whiteMove$moveRead,
+                                         blackMove$moveRead,
+                                         castlingMoves)
       parsedMoves[[moveNumber$number]] <- c(whiteMove$moveRead,
                                             blackMove$moveRead)
+      
+      parsedMoves[["castlingMoves"]]<-castlingMoves
+                                          
     }
   }
   return(parsedMoves)
 }
 
-parseMoves("1.Nf3 d5 2.c4 c6 3.e3 g6 4.Nc3 Bg7 5.d4 Nf6 6.h3 O-O 7.Bd3 Nbd7 8.O-O dxc4 9.Bxc4 c5 10.a4 cxd4 11.exd4 Nb6 12.Bb3 Nbd5 13.Re1 e6 14.Bg5 h6 15.Bh4 g5 16.Bg3 b6 17.h4 g4 18.Ne5 h5 19.Nc6 Qd7 20.Nxd5 Nxd5 21.Bxd5 exd5 22.Ne7+ Kh8 23.Rc1 Ba6 24.Rc7 Qd8 25.Qd2 f6 26.Nc6 Qxc7 27.Bxc7 Rac8 28.Qf4 Rf7 29.Re7 1-0*","*")
+p<-parseMoves("1.Nf3 Nf6 2.g3 b6 3.Bg2 Bb7 4.O-O e6 5.d3 d5 6.Nbd2 Be7 7.e4 c5 8.e5 Nfd7 9.Re1 Nc6 10.h4 Qc7 11.Qe2 h6 12.h5 Nb4 13.Nf1 c4 14.d4 c3 15.Ne3 Ba6 16.Qd1 cxb2 17.Bxb2 Rc8 18.Qd2 b5 19.a4 Nb6 20.Ba3 Qc3 21.Qxc3 Rxc3 22.Bxb4 Bxb4 23.Reb1 Rxe3 24.fxe3 Bc3 25.axb5 Bxa1 26.Rxa1 Bxb5 27.Rxa7 Nc8 28.Rb7Ba6 29.Rb8 Kd7 30.Bf1 Kc7 31.Rb3 Bxf1 32.Kxf1 Nb6 33.Nd2 Ra8 34.Ke2 Ra1 35.Rb1 Ra2 36.Kd3 Ra3+ 37.Rb3 Ra1 38.Rb1 Ra3+ 39.Nb3 Nd7 40.Rf1 f6 41.exf6Nxf6 42.g4 Kd6 43.Rg1 Ne4 44.Ra1 Rxa1 45.Nxa1 Nf2+ 46.Ke2 Nxg4 47.Nb3 Nf6 48.Kf3 Nxh5 49.e4 dxe4+ 50.Kxe4 Nf6+ 51.Kd3 h5 52.c4 h4 53.Ke3 g5 54.Nd2 g4 55.Kf4 g3 56.Nf3 g2 57.Kg5 h3 58.Kxf6 h2 59.c5+ Kd5 0-1","0-1")

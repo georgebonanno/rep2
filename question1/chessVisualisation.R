@@ -53,7 +53,6 @@ moveInGameBoxPlot <- function() {
   return(box)
 }
 
-formatWinnerMoveCount(chessStats$firstWinnerMoveCount)
 
 winningMovesHeatMap <- function() {
   ggplot(data=firstWinnerCnt,aes(x=col,y=rw))+geom_tile(aes(fill=move_count))

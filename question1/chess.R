@@ -150,20 +150,27 @@ findFirstMoveOfWinning <- function(game) {
 storeGame <- function(conn,index,game) {
   firstMove <- findFirstMoveOfWinning(game)
   moveCount <- length(game$Moves)
+  whiteCastlingMove <- game$Moves[["castlingMoves"]][1]
+  blackCastlingMove <- game$Moves[["castlingMoves"]][2]
   if(is.na(game$TagPairs$Date)) {
     gameDate <- ""
   } else {
     gameDate <- str_replace_all(game$TagPairs$Date,"\\.","_")  
   }
   
-  insertQuery = paste("INSERT INTO games (game_id,date_of_game,event,site,result,first_move,move_count) VALUES (",
+  insertQuery = paste("INSERT INTO games (game_id,date_of_game,event,site,",
+                      "result,first_move,move_count,white_castling_num,",
+                      "black_castling_num) VALUES (",
                       index,",'",
                       gameDate,"','",
                       game$TagPairs$Event,"',\"",
                       game$TagPairs$Site,"\",'",
                       game$TagPairs$Result,"','",
                       firstMove,"',",
-                      moveCount,")",
+                      moveCount,",",
+                      whiteCastlingMove,",",
+                      blackCastlingMove,
+                      ")",
                       sep = "");
   
   
