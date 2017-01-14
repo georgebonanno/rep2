@@ -149,24 +149,26 @@ findFirstMoveOfWinning <- function(game) {
 
 storeGame <- function(conn,index,game) {
   firstMove <- findFirstMoveOfWinning(game)
+  moveCount <- length(game$Moves)
   if(is.na(game$TagPairs$Date)) {
     gameDate <- ""
   } else {
     gameDate <- str_replace_all(game$TagPairs$Date,"\\.","_")  
   }
   
-  insertQuery = paste("INSERT INTO games (game_id,date_of_game,event,site,result,first_move) VALUES (",
+  insertQuery = paste("INSERT INTO games (game_id,date_of_game,event,site,result,first_move,move_count) VALUES (",
                       index,",'",
                       gameDate,"','",
                       game$TagPairs$Event,"',\"",
                       game$TagPairs$Site,"\",'",
                       game$TagPairs$Result,"','",
-                      firstMove,"')",
+                      firstMove,"',",
+                      moveCount,")",
                       sep = "");
   
   
   #print(paste("first move:",game$Moves[[1]][1],game$Moves[[1]][2]))
-  #print(paste("insertquery: ",insertQuery))
+  print(paste("insertquery: ",insertQuery))
   tryCatch({
     q <- dbSendQuery(conn,insertQuery)
     fetch(q,n=-1)  

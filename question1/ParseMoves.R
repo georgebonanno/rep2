@@ -123,10 +123,10 @@ parseMoves <- function(moves,endResult) {
       }
       
       parsedMoves[[moveNumber$number]] <- c(whiteMove$moveRead,
-                                      blackMove$moveRead)
+                                            blackMove$moveRead)
     }
   }
   return(parsedMoves)
 }
 
-parseMoves("1.Nf3 Nf6 2.g3 g6 3.Bg2 Bg7 4.O-O O-O 5.d3 d5 6.Nbd2 Nc6 7.c4 d4 8.a3 a5  9.b3 Nd7 10.Rb1 Nc5 11.Ne1 e5 12.Nc2 f5 13.b4 axb4 14.axb4 Na4 15.Bb2 e4  16.Nb3 Nxb2 17.Rxb2 Kh8 18.Rb1 exd3 19.exd3 f4 20.Nc5 Ra7 21.Ra1 Rxa1 22. Qxa1 f3 23.Bh1 Nxb4 24.Nxb4 Qe7 25.Qa7 b6 26.Nca6 Bh3 27.Rb1 Re8 28.Nc2  Qe2 29.Nab4 h5 30.Qa1 Qxf2+ 31.Kxf2 Re2+ 32.Kxf3 Bg4+ 33.Kf4 Bh6# *","*")
+parseMoves("1.Nf3 d5 2.c4 c6 3.e3 g6 4.Nc3 Bg7 5.d4 Nf6 6.h3 O-O 7.Bd3 Nbd7 8.O-O dxc4 9.Bxc4 c5 10.a4 cxd4 11.exd4 Nb6 12.Bb3 Nbd5 13.Re1 e6 14.Bg5 h6 15.Bh4 g5 16.Bg3 b6 17.h4 g4 18.Ne5 h5 19.Nc6 Qd7 20.Nxd5 Nxd5 21.Bxd5 exd5 22.Ne7+ Kh8 23.Rc1 Ba6 24.Rc7 Qd8 25.Qd2 f6 26.Nc6 Qxc7 27.Bxc7 Rac8 28.Qf4 Rf7 29.Re7 1-0*","*")

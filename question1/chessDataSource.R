@@ -10,6 +10,8 @@ executeAndGetAllRows <- function(conn,query) {
     q <- dbSendQuery(conn,query)
     rows <- fetch(q)
     rows;
+  },error=function(e){
+    print(paste("error while executing",query))
   },finally= {
     dbClearResult(q)  
   })
