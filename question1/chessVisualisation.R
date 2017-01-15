@@ -18,7 +18,7 @@ resultCount <- '
   group by result
 ';
 
-numberOfMovesCount <- 'select move_count from games'
+numberOfMovesCount <- 'select substr(date_of_game,1,4) game_yr,move_count from games'
 
 yearlyGamesQuery <- 'select substr(g.date_of_game,1,4) game_yr,count(*) number_of_games from games g 
   	                 group by substr(g.date_of_game,1,4)'
@@ -40,26 +40,52 @@ retrievefirstWinnerMoveCount <- function() {
                  moveCount=moveCount,
                  yearlyGames=yearlyGames))
   },finally = {
-    if (!is.na(con)) {
+    tryCatch({
       dbDisconnect(con)
-    }
+    },error=function(errorMessage){
+       print("failed to close connection with error: "+errorMessage)
+    })
+      
   })  
 }
 
 chessStats <- retrievefirstWinnerMoveCount();
 barplot(chessStats$resultCount$cnt,names.arg = chessStats$resultCount$result_type)
 
+generateBuckets <- function(minYr,maxYr,yr) {
+  rangeMin<- minYr+((floor((yr-minYr)/5))*5)
+  rangeMax <- rangeMin+5
+  return(paste(rangeMin,"-",rangeMax))
+}
+
+placeInBuckets <- function(movesInGame) {
+  movesInGame$game_yr <- as.numeric(movesInGame$game_yr)
+  minYear <- floor(min(movesInGame$game_yr)/5)*5
+  maxYear <- floor(max(movesInGame$game_yr)/5)*5
+  if (max(movesInGame$game_yr) %% 5 > 0) {
+    maxYear <- maxYear+1
+  }
+  f <- function(yr) {
+    return(generateBuckets(minYear,maxYear,yr))
+  }
+
+  movesInGame$yearRange <- sapply(X=movesInGame$game_yr,FUN = f)
+  
+  return(movesInGame)
+}
+
 moveInGameBoxPlot <- function() {
   movesInGame <- chessStats$moveCount
+  movesInGame <- placeInBuckets(movesInGame)
   box <- ggplot(data=movesInGame, aes(x="move_count", y=move_count))
-  box <- box + geom_boxplot() + ylab("number of moves") +
+  box <- box + geom_boxplot(aes(fill=yearRange)) + ylab("number of moves") +
     ggtitle("Number of Moves Boxplot") +
      theme_classic()
   return(box)
 }
 
-
 winningMovesHeatMap <- function() {
+  firstWinnerCnt <- chessStats$firstWinnerMoveCount
   ggplot(data=firstWinnerCnt,aes(x=col,y=rw))+geom_tile(aes(fill=move_count))
 }
 
