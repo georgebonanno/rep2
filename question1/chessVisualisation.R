@@ -49,8 +49,17 @@ retrievefirstWinnerMoveCount <- function() {
   })  
 }
 
-chessStats <- retrievefirstWinnerMoveCount();
-barplot(chessStats$resultCount$cnt,names.arg = chessStats$resultCount$result_type)
+resultCountBarPlot <- function() {
+  chessStats <- retrievefirstWinnerMoveCount();
+  resultCountPlot <- 
+    ggplot(data=chessStats$resultCount,aes(x=result_type,y=cnt))+
+    geom_bar(stat="identity") +
+    ylab("number of occurences") +
+    ggtitle("Number of occurences per result type") +
+    theme_classic();
+  
+  return(resultCountPlot);
+}
 
 generateBuckets <- function(minYr,maxYr,yr) {
   rangeMin<- minYr+((floor((yr-minYr)/5))*5)
