@@ -68,6 +68,6 @@ plotYearlyGames <- function() {
   yGames$yearDate <- as.Date(yGames$game_yr,"%Y")
   ggplot(yGames, aes(x=yearDate, y=number_of_games)) + geom_line() + theme_classic() +
      xlab("year") + ylab("Games Per Year") + 
-    ggtitle("A Time series of yearly game count") +
+    ggtitle("A Time series of yearly game count") 
     
 }
