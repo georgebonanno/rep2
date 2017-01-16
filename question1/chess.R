@@ -104,10 +104,10 @@ storeGames <- function(con,gameDetails=list()) {
       
       if (length(gameDetails) == 0) {
         print(paste("counter",gameCounter))
+      } else {
+        #print(paste("inserting",index))
+        storeGame(con,gameCounter,gamesToStore[[i]]) 
       }
-      
-      #print(paste("inserting",index))
-      storeGame(con,gameCounter,gamesToStore[[i]])
     }
     gamesToStore <<- list()
   } 
@@ -131,13 +131,17 @@ gProcessor <- function(gameDetails,con) {
 }
 
 findFirstMoveOfWinning <- function(game) {
-  res <- game$TagPairs$Result
-  if (length(game$Moves) > 0) {
-    firstMove <- game$Moves[[1]]
-    if (res == "1-0") {
-      winningMove <- firstMove[1]
-    } else if (res == "0-1") {
-      winningMove <- firstMove[2]
+  if (!is.na(game[["TagPairs"]]) && !is.na(game$TagPairs[["Result"]])) {
+    res <- game$TagPairs$Result
+    if (length(game$Moves) > 0) {
+      firstMove <- game$Moves[[1]]
+      if (res == "1-0") {
+        winningMove <- firstMove[1]
+      } else if (res == "0-1") {
+        winningMove <- firstMove[2]
+      } else {
+        winningMove <- ""
+      }
     } else {
       winningMove <- ""
     }
@@ -175,7 +179,7 @@ storeGame <- function(conn,index,game) {
   
   
   #print(paste("first move:",game$Moves[[1]][1],game$Moves[[1]][2]))
-  print(paste("insertquery: ",insertQuery))
+  #print(paste("insertquery: ",insertQuery))
   tryCatch({
     q <- dbSendQuery(conn,insertQuery)
     fetch(q,n=-1)  

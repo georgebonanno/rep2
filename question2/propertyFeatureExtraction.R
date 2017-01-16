@@ -227,4 +227,4 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("SENGLEA (L-Isla). Unconverted, 235sqm, three bedroom townhouse, 35sqm external area. &euro;345,000. Phone 7930 2133.")
+extractFeatures("VALLETTA. Converted palazzino, permit for extension. Ideal as a guesthouse / residence. &euro;890,000 FH. Phone 9926 3750.</p>")

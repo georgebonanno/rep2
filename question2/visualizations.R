@@ -31,11 +31,15 @@ mostPopularLand <- as.character(propertyTypeCounts$property_type[1:5])
 
 ggplot(subset(propDetails, property_type %in% mostPopularLand),
        aes(x=price_euro,color=property_type))+
-       geom_histogram(binwidth = 10000) + xlim(0,2e6)
+       geom_histogram(binwidth = 10000) + 
+       xlim(0,2e6) + facet_grid(. ~ property_type) +
+       theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+       ylab("number of properties for sale") + 
+       ggtitle("property type for sale") 
 
 ggplot(subset(propDetails, property_type %in% mostPopularLand),
        aes(x=area_sqm,color=property_type)) + xlim(0,500) +
-       geom_histogram(binwidth = 50) 
+       geom_histogram(binwidth = 50)  + facet_grid(. ~ property_type)
 
 propertyTypeCount()
 #ggplot(p)
@@ -88,6 +92,28 @@ showMeanPricePerLocation <- function(propDetails) {
 }
 
 meanPricePerLocation <- showMeanPricePerLocation(propDetails)
+
+box <- ggplot(data=propDetails, aes(x=property_type, y=price_euro))
+box + geom_boxplot(aes(fill=property_type)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("Price of Property") + 
+  ggtitle("Price per Property Boxplot")
+
+box <- ggplot(data=propDetails, aes(x=property_type, y=area_sqm))
+box + geom_boxplot(aes(fill=property_type)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("area/sqm") + 
+  ggtitle("Price per Property Boxplot")
+
+box <- ggplot(data=propDetails, aes(x=property_type, y=area_sqm))
+box + geom_boxplot(aes(fill=property_type)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylim(0,2.5e4)+
+  ylab("Price of Property") + 
+  ggtitle("Price per Property Boxplot") 
+
+ggplot(propDetails, aes(x=property_type)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  geom_bar(stat="count") 
 
 #propertyPrices <- melt(propDetails,id="property_type")
 
