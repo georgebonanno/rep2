@@ -49,13 +49,15 @@ retrievefirstWinnerMoveCount <- function() {
   })  
 }
 
+chessStats <- retrievefirstWinnerMoveCount();
+
 resultCountBarPlot <- function() {
-  chessStats <- retrievefirstWinnerMoveCount();
   resultCountPlot <- 
     ggplot(data=chessStats$resultCount,aes(x=result_type,y=cnt))+
-    geom_bar(stat="identity") +
+    geom_bar(stat="identity",aes(fill=result_type)) +
     ylab("number of occurences") +
-    ggtitle("Number of occurences per result type") +
+    xlab("result outcome") +
+    ggtitle("Number of results per result type") +
     theme_classic();
   
   return(resultCountPlot);
@@ -64,6 +66,9 @@ resultCountBarPlot <- function() {
 generateBuckets <- function(minYr,maxYr,yr) {
   rangeMin<- minYr+((floor((yr-minYr)/5))*5)
   rangeMax <- rangeMin+5
+  if (rangeMax > 2017) {
+    rangeMax<-2017
+  }
   return(paste(rangeMin,"-",rangeMax))
 }
 
@@ -87,15 +92,21 @@ moveInGameBoxPlot <- function() {
   movesInGame <- chessStats$moveCount
   movesInGame <- placeInBuckets(movesInGame)
   box <- ggplot(data=movesInGame, aes(x="move_count", y=move_count))
-  box <- box + geom_boxplot(aes(fill=yearRange)) + ylab("number of moves") +
-    ggtitle("Number of Moves Boxplot") +
+  box <- box + geom_boxplot(aes(fill=yearRange)) + 
+    ylab("number of moves") +
+    xlab("5 year group") +
+    ggtitle("Box Plot of number of Moves to complete chess game") +
      theme_classic()
   return(box)
 }
 
 winningMovesHeatMap <- function() {
   firstWinnerCnt <- chessStats$firstWinnerMoveCount
-  ggplot(data=firstWinnerCnt,aes(x=col,y=rw))+geom_tile(aes(fill=move_count))
+  ggplot(data=firstWinnerCnt,aes(x=rw,y=col))+
+    geom_tile(aes(fill=move_count)) + ylab("row") +
+    xlab("column") +
+    ggtitle("Most Common Starting Move of Winner Heat Map") +
+    theme_classic()
 }
 
 plotYearlyGames <- function() {

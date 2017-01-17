@@ -202,6 +202,9 @@ nextGameIdToInsertWith <- function(conn) {
                               "site varchar(30),",
                               "result varchar(10),",
                               "first_move varchar(10)",
+                              "move_count numeric",
+                              "white_castling_num numeric",
+                              "black_castling_num numeric",
                             ")")
   tableMissing <- (length(tabs[tabs=="games"]) == 0)
   if (tableMissing) {

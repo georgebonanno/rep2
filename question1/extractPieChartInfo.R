@@ -1,13 +1,13 @@
-l=c(9.97,8.34,10.43,0.33)
+segmentLength=c(9.97,8.34,10.43,0.33)
 r=5.63
 
 angle <- function(l){
   round((asin(l/(2*r))/pi)*100,2)
 }
 
-ratios <- sapply(X = l,FUN = angle)
+ratios <- sapply(X = segmentLength,FUN = angle)
 
-remainingPercent <- 100-sum(sapply(X = l,FUN = angle))
+remainingPercent <- 100-sum(sapply(X = segmentLength,FUN = angle))
 
 i<-0
 while(remainingPercent > 0) {
@@ -31,5 +31,6 @@ ggplot(data=countries,
            y=percentage)) +
   geom_bar(aes(fill=countries$country),stat="identity") +
   theme(axis.text.x = element_text(angle = 0, hjust = 1)) +
-  ggtitle("property type count") +
-  labs(x="property type",y="risk")
+  ggtitle("risk percentage of the topmost 3 countries with the \nlargest risk percentage compared to Malta") +
+  labs(x="country",y="risk percentage")  + 
+  guides(fill=guide_legend(title="countries")) + theme_classic()
