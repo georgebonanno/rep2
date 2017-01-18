@@ -57,5 +57,9 @@ model <- naiveBayes(priceRange ~ .,data=trainingData)
 
 predictedPriceRanges <- predict(model,priceRangesToPredict[1:100,])
 
+# build a confusion matrix that compare the predicted
+# with the actual
 cMat <- confusionMatrix(testData$priceRange[1:100],predictedPriceRanges)
+
+# obtain the accuracy
 print(cMat$overall)
