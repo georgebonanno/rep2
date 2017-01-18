@@ -1,4 +1,5 @@
 library('e1071')
+library('caret')
 
 source('csvProcessing.R')
 
@@ -54,6 +55,7 @@ priceRangesToPredict <- testData[,c("location","price_euro","property_type",
 
 model <- naiveBayes(priceRange ~ .,data=trainingData)
 
-predictedPriceRanges <- predict(model,priceRangesToPredict[1:10,])
+predictedPriceRanges <- predict(model,priceRangesToPredict[1:100,])
 
-
+cMat <- confusionMatrix(testData$priceRange[1:100],predictedPriceRanges)
+print(cMat$overall)
