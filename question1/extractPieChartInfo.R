@@ -1,3 +1,5 @@
+library(ggplot2)
+
 segmentLength=c(9.97,8.34,10.43,0.33)
 r=5.63
 
@@ -30,7 +32,8 @@ ggplot(data=countries,
                      }),
            y=percentage)) +
   geom_bar(aes(fill=countries$country),stat="identity") +
+   scale_y_continuous(limits=c(0,40)) +
   theme(axis.text.x = element_text(angle = 0, hjust = 1)) +
-  ggtitle("risk percentage of the topmost 3 countries with the \nlargest risk percentage compared to Malta") +
-  labs(x="country",y="risk percentage")  + 
+  ggtitle("The 3 countries with the highest natural disaster risk and Malta") +
+  labs(x="country",y="risk percentage")  +
   guides(fill=guide_legend(title="countries")) + theme_classic()
