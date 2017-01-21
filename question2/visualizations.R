@@ -72,7 +72,7 @@ mostCommonPropDetails <- propDetails[propDetails$property_type %in% mostPopularL
 
 ggplot(mostCommonPropDetails,
        aes(x=price_euro,color=property_type))+
-       geom_histogram(binwidth = 10000) + xlim(0,2e6) +
+       geom_histogram(binwidth = 10000) +# xlim(0,2e6) +
        theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
        facet_grid(~property_type)
 

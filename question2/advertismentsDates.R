@@ -1,11 +1,12 @@
-exFeatures <- read.csv('extracted_with_date_unique.csv',
+exFeatures <- read.csv('extracted_with_date_unique.csv',sep = ",",
                        col.names = c("date","location","number",
-                                     "property_type","price_euro","area_sqm"),
+                                     "price_euro","property_type","area_sqm"),
                        row.names = NULL)
 
 exFeatures <- exFeatures[!is.na(exFeatures$date),]
 exFeatures$dates <- as.Date(exFeatures$date)
 exFeatures <- exFeatures[!is.na(exFeatures$date),]
+exFeatures$price_euro <- as.numeric(exFeatures$price_euro)
 
 orderDates <- (exFeatures$date[order(exFeatures$date)])
 
@@ -47,16 +48,40 @@ otherDays <- exFeatures[weekdays(exFeatures$dates) != 'Sunday',]
 
 ggplot(sundays,
        aes(x=dates,color=property_type))+
-  geom_bar(stat="count") +
+  geom_line(stat="count") +   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ylab("number of adverstiments")+
-  ggtitle("advertisment date") 
+  xlab("date")+
+  ggtitle("advertisment count for Sundays") 
 
 ggplot(otherDays,
-       aes(x=dates,color=property_type))+
-  geom_bar(stat="count") +
+       aes(x=dates))+
+  geom_line(stat="count") +theme_classic() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  ylab("number of adverstiments") + 
-  ggtitle("number of adverstiments on Days other Than Sunday") 
+  ylab("number of adverstiments")+
+  xlab("date")+
+  ggtitle("number of adverstiments for days other than Sundays") 
+  
+
+
+
+
+exFeatures <- exFeatures[exFeatures$price_euro < 8e6,]
+exFeatures <- exFeatures[exFeatures$price_euro > 1000,]
+
+exFeatures <- na.omit(exFeatures)
+meanPriceAdvertisment <- 
+  aggregate(x= list(mean_price = exFeatures$price_euro),
+            by=list(date=exFeatures$dates),
+            FUN=mean)
+
+ggplot(meanPriceAdvertisment,
+       aes(x=date,y=mean_price))+
+  geom_line() +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("mean price (€)")+
+  xlab("date")+
+  ggtitle("mean price on advertising dates") 
 
 
