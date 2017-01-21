@@ -3,23 +3,21 @@ library(reshape2)
 
 box <- ggplot(data=propDetails, aes(x=property_type, y=price_euro))
 box + geom_boxplot(aes(fill=property_type)) + 
+  theme_classic() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  ylab("Price of Property") + 
-  ggtitle("Price per Property Boxplot")
+  ylab("Price of Property (€)") + 
+  xlab("property type") +
+  ggtitle("Property Type - Price Boxplot")
 
 box <- ggplot(data=propDetails, aes(x=property_type, y=area_sqm))
 box + geom_boxplot(aes(fill=property_type)) + 
+  theme_classic() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ylab("area/sqm") + 
-  ggtitle("Price per Property Boxplot")
+  xlab("property type") +
+  ggtitle("Property type - Area Boxplot")
 
-box <- ggplot(data=propDetails, aes(x=property_type, y=area_sqm))
-box + geom_boxplot(aes(fill=property_type)) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + #+ ylim(0,2.5e4)+
-  ylab("Price of Property") + 
-  ggtitle("Price per Property Boxplot") 
 
-propDetails <- removeOutliers(propDetails)
 
 propertyTypeCount <- function() {
   propDetails["count"] <- 1
@@ -50,15 +48,22 @@ propertyTypeCounts <- propertyTypeCount()
 mostPopularLand <- as.character(propertyTypeCounts$property_type[1:5])
 
 ggplot(subset(propDetails, property_type %in% mostPopularLand),
-       aes(x=price_euro,color=property_type))+
+       aes(x=price_euro,color=property_type,fill=property_type))+
        geom_histogram(binwidth = 10000) + facet_grid(. ~ property_type) +
+       theme_classic() +
        theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+       xlab("price (€)")+
        ylab("number of properties for sale") + 
-       ggtitle("property type for sale") 
+       ggtitle("property type for sale")
 
 ggplot(subset(propDetails, property_type %in% mostPopularLand),
-       aes(x=area_sqm,color=property_type)) + xlim(0,500) +
-       geom_histogram(binwidth = 50)  + facet_grid(. ~ property_type)
+       aes(x=area_sqm,color=property_type,fill=property_type)) + #xlim(0,500) +
+       theme_classic() +
+       geom_histogram(binwidth = 50)  + facet_grid(. ~ property_type) +
+       theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+       xlab("area (sqm)")+
+       ylab("number of properties for sale") + 
+       ggtitle("Property Area Count distribution for the 5 most common property types")
 
 propertyTypeCount()
 #ggplot(p)
@@ -148,8 +153,8 @@ ggplot(popularLocationsPerProperty,
       facet_grid(. ~ property_type,scales="free_x") +
       theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
       ylab("number of properties in location") + 
-      xlab("locations")
-      ggtitle("The 10 most popular location for each property type") 
+      xlab("locations") +
+      ggtitle("The 10 most popular locations of the 5 most common property types") 
 
 #propertyPrices <- melt(propDetails,id="property_type")
 

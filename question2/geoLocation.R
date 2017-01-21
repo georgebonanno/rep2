@@ -1,4 +1,5 @@
 library(ggmap)
+library(ggplot2)
 
 source("visualizations.R")
 
@@ -31,9 +32,15 @@ updateGeoLocWithNAs <- function(geoLocs,meanPriceLoc) {
   meanPriceMap <- 
     ggmap(maltaMap) +
     geom_point(data = meanPricePerLocation, 
-               aes(x = long, y = lat,
-               size=price_euro),colour="blue",alpha = (0.5))
-  
+               
+               aes(x = long, y = lat,colour=location,
+                   
+               size=price_euro),alpha = (0.5)) +
+    ylab("latitude") + 
+    xlab("longitude") +
+    theme(legend.title = element_text("mean price (€)")) +
+    ggtitle("The 10 localities with the highest property mean price") 
+   
   return(meanPriceMap)
   
  }
