@@ -125,6 +125,7 @@ removeOutliers <- function(propDetails) {
 
 
 propDetails <- removeWithMissingValues(propDetails)
+propDetails <- removeOutliers(propDetails)
 
 head(propDetails[order(-propDetails$area_sqm),],50)
 
