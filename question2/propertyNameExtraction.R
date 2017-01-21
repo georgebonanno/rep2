@@ -5,28 +5,24 @@ library(stringr)
 propertyDescriptions <- c("hotel",
                           "apartment",
                           "townhouse",
+                          "palazzino",
                           "farmhouse",
                           "Farm",
                           "penthouse",
-                          "townhouse",
                           "house",
                           "shop",
 			                    "palazzo",
                           "maisonette",
                           "villa",
 			                    "bungalow",
-			                    "garage",
                           "plot",
                           "flat",
                           "office",
 			                    "site",
 			                    "\\sland",
-			                    "palazzino",
 			                    "field",
 			                    "restaurant",
 			                    "hostel",
-			                    "garage",
-			                    "catering",
 			                    "bar"
 			                    )
 
@@ -56,6 +52,7 @@ extractPropertyDescription <- function(line) {
       propertyDesc <- propertyDescriptions[propIndex]
     }
     
+    
     return(propertyDesc);
   }
   
@@ -77,7 +74,10 @@ extractPropertyDescription <- function(line) {
       propertyDesc <- "apartment" 
     }
   }
+  if (!is.na(propertyDesc) && str_to_upper(propertyDesc) == 'PALAZZINO') {
+    propertyDesc <- 'PALAZZO'
+  }
   return(str_to_upper(propertyDesc))
 }
 
-extractPropertyDescription("FILFLA VIEWS. .33hja (three tumojli) plus rooms. &euro;315,000. Phone 7949 2605.")
+extractPropertyDescription("VALLETTA. Converted palazzino, permit for extension. Ideal as a guesthouse / residence. &euro;890,000 FH. Phone 9926 3750.")

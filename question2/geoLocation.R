@@ -16,6 +16,7 @@ updateGeoLocWithNAs <- function(geoLocs,meanPriceLoc) {
 }
 
  showMapWithMeanPriceLocation <- function(meanPricePerLocation) {
+   # load latitude and longitude of
   geoLocs <- read.csv('geoLocations.csv',
                       colClasses = c('character','numeric','numeric'))
   
@@ -25,7 +26,7 @@ updateGeoLocWithNAs <- function(geoLocs,meanPriceLoc) {
   
   maltaMap <- get_map(location = "malta", maptype = "roadmap", zoom = 11)
   
-  print(meanPricePerLocation)
+  #print(meanPricePerLocation)
   
   meanPriceMap <- 
     ggmap(maltaMap) +

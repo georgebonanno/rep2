@@ -109,9 +109,18 @@ propDetails <- imputeArea(propDetails)
 removeWithMissingValues <- function(propDetails) {
   propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
   
-  propDetails <- propDetails[propDetails$price_euro >= 10000,]
+  
   
   return (propDetails)
+}
+
+removeOutliers <- function(propDetails) {
+  propDetails <- propDetails[propDetails$price_euro >= 10000,]
+  propDetails <- propDetails[propDetails$price_euro <= 3e6,]
+  propDetails <- propDetails[propDetails$area_sqm <= 500,]
+  propDetails <- propDetails[propDetails$area_sqm <= 1.5e5,]
+  
+  return(propDetails)
 }
 
 
