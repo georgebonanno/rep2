@@ -42,24 +42,28 @@ propDetails$location <- factor(propDetails$location)
 
 
 propDetails$priceRange <- factor(cut(propDetails$price_euro,
-                  seq(from=minPrice,to=maxPrice, by=5000),
-                  right = TRUE))
+                                  seq(from=minPrice,to=maxPrice, by=5000),
+                                  right = TRUE))
+
+
+propDetails <- propDetails[,c("location","property_type",
+                              "area_sqm","priceRange")]
 
 trainingAndTestData <- obtainTrainingAndTestData()
 
 trainingData <- trainingAndTestData$trainingSet
 testData <- trainingAndTestData$testDataSet
 priceRangesToPredict <- testData
-priceRangesToPredict <- testData[,c("location","price_euro","property_type",
+priceRangesToPredict <- testData[,c("location","property_type",
                                     "area_sqm")]
 
 model <- naiveBayes(priceRange ~ .,data=trainingData)
 
-predictedPriceRanges <- predict(model,priceRangesToPredict[1:100,])
+predictedPriceRanges <- predict(model,priceRangesToPredict)
 
 # build a confusion matrix that compare the predicted
 # with the actual
-cMat <- confusionMatrix(testData$priceRange[1:100],predictedPriceRanges)
+cMat <- confusionMatrix(testData$priceRange,predictedPriceRanges)
 
 # obtain the accuracy
 print(cMat$overall)
