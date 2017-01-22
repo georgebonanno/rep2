@@ -1,19 +1,24 @@
 library(stringr)
 
+# chess.R parses the pgn files passed as argument to the script. Several features
+# of each game parsed are stored in an sqllite database located at db/chess.db. 
+# It is assumed that chess.db already exists.
+
 source("ParseMoves.R")
 source("chessDataSource.R")
 
+# prints a set of string together separated by a space
 pastePrint <- function(...) {
   print(paste(...,sep = " "))
 }
 
+# 
 readNextLine <- function(con,bufferSize) {
   #read next line from buffered line
   #read next bufferSize line in buffer
   #and read again if all buffer read.
   if(bufferPos == -1 || bufferPos > length(buf)) {
     buf <<- readLines(con,n=bufferSize,encoding="UTF-8")  
-    #print(paste(length(buf),"lines read from buffer",bufferSize))
     bufferPos <<- 1
   }
   if (length(buf) > 0) {
@@ -25,6 +30,10 @@ readNextLine <- function(con,bufferSize) {
   return(nextLine)
 }
 
+# reads lines from a buffer of 10000 lines (abstracted in readNextLine)
+# and parses the starts tags of every game. It then takes all the moves
+# and called parseMoves() to returns a structure representing the parsed
+# moves. It finally returns a structure containing the tag and parsed moves.
 readPgnGame <- function(con) {
   i <- 0;
   parseTagPairs = TRUE;
@@ -33,7 +42,6 @@ readPgnGame <- function(con) {
   allMoves <- "";
   readMoveLine <- TRUE
   LINEBUFFER <- 10000
-  #print(paste("start of reading....",parseTagPairs,readMoveLine))
   while(readMoveLine & (length(line <- readNextLine(con,LINEBUFFER))) > 0) {
     i <- i+1
     if (parseTagPairs) {
@@ -89,14 +97,15 @@ readPgnFile <- function(path,gameProcessor,dbConn) {
   return (pgnDoc)
 }
 
+# stores the list of chess games into the database if
+# the list exceed STORE_BUF_SIZE. This buffering is done
+# rather than insert every time a new game is parsed.
 storeGames <- function(con,gameDetails=list()) {
   dbBegin(con)
   bufferedGameCount <- length(gamesToStore)
-  #print(paste("l gamste",length(gamesToStore)))
   if (length(gameDetails) > 0) {
     gamesToStore[[bufferedGameCount+1]] <<- gameDetails
   }
-  #print(paste("l gamste 2",length(gamesToStore),STORE_BUF_SIZE))
   if (length(gameDetails) == 0 || length(gamesToStore) >= STORE_BUF_SIZE) {
     for (i in 1:length(gamesToStore)) {
       
@@ -105,7 +114,6 @@ storeGames <- function(con,gameDetails=list()) {
       if (length(gameDetails) == 0) {
         print(paste("counter",gameCounter))
       } else {
-        #print(paste("inserting",index))
         storeGame(con,gameCounter,gamesToStore[[i]]) 
       }
     }
@@ -115,7 +123,14 @@ storeGames <- function(con,gameDetails=list()) {
 }
 
 gamesToStore <<- list()
+
+# the number of parsed held in a buffer before they are saved.
+# the games are insert in the databse every time STORE_BUF_SIZE
+# become 20.
 STORE_BUF_SIZE <<- 20
+
+# stores the game details in the sqllite database
+# using the connection con.
 gProcessor <- function(gameDetails,con) {
   tryCatch(
     {
@@ -130,6 +145,8 @@ gProcessor <- function(gameDetails,con) {
 
 }
 
+
+# extract the first winning move from the parsed game
 findFirstMoveOfWinning <- function(game) {
   if (!is.na(game[["TagPairs"]]) && !is.na(game$TagPairs[["Result"]])) {
     res <- game$TagPairs$Result
@@ -151,6 +168,9 @@ findFirstMoveOfWinning <- function(game) {
   return (winningMove)
 }
 
+# inserts the information (variable game) in the games table 
+# using connection conn. The record is identified by the 
+# unique number index. 
 storeGame <- function(conn,index,game) {
   firstMove <- findFirstMoveOfWinning(game)
   moveCount <- length(game$Moves)
@@ -177,9 +197,6 @@ storeGame <- function(conn,index,game) {
                       ")",
                       sep = "");
   
-  
-  #print(paste("first move:",game$Moves[[1]][1],game$Moves[[1]][2]))
-  #print(paste("insertquery: ",insertQuery))
   tryCatch({
     q <- dbSendQuery(conn,insertQuery)
     fetch(q,n=-1)  
@@ -218,12 +235,18 @@ nextGameIdToInsertWith <- function(conn) {
   return(count)
 }
 
+# parses a pgn file and stores information as a record
+# in the games table.
 loadPgnFile <- function(fileName) {
   con <- NULL
   tryCatch({
+    # get connection
     con <- dbChessConnection();
+    #get next game number (primary key of record)
     gameCounter <<- nextGameIdToInsertWith(con)
     print(paste("starting inserting games from id ",gameCounter))
+    
+    # parse the pgn file
     readPgnFile(fileName,gProcessor,con)
   },
   finally = {
@@ -235,11 +258,14 @@ loadPgnFile <- function(fileName) {
 
 
 args <- commandArgs(trailingOnly=TRUE)
-print(paste("args: ",args))
+print(paste("files to parse for chess games: ",args))
+
 bufferPos<<--1
 gc()
 for (f in args) {
   print(paste("loading pgns from file",f))
+  
+  # parse the pgn file
   system.time(loadPgnFile(f))
 }
 gc()

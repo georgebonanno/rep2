@@ -1,8 +1,11 @@
 library(RColorBrewer)
 library(ggplot2)
 
-chessStats <- retrievefirstWinnerMoveCount();
+# builds the visualisations using the statistics obtained by running
+# extractChessStats.R.
 
+
+# returns the count of the wins, losses and draws
 resultCountBarPlot <- function() {
   resultCountPlot <- 
     ggplot(data=chessStats$resultCount,aes(x=result_type,y=cnt))+
@@ -15,6 +18,8 @@ resultCountBarPlot <- function() {
   return(resultCountPlot);
 }
 
+# returns 5 years ranges between minYr and maxYr. The cut
+# function could have been used instead...
 generateBuckets <- function(minYr,maxYr,yr) {
   rangeMin<- minYr+((floor((yr-minYr)/5))*5)
   rangeMax <- rangeMin+5
@@ -24,6 +29,8 @@ generateBuckets <- function(minYr,maxYr,yr) {
   return(paste(rangeMin,"-",rangeMax))
 }
 
+# places the games movesInGame inside a given date range (determined)
+# from the games event
 placeInBuckets <- function(movesInGame) {
   movesInGame$game_yr <- as.numeric(movesInGame$game_yr)
   minYear <- floor(min(movesInGame$game_yr)/5)*5
@@ -40,6 +47,8 @@ placeInBuckets <- function(movesInGame) {
   return(movesInGame)
 }
 
+# builds a box plot with the number of moves of the games in
+# 5 year ranges.
 moveInGameBoxPlot <- function() {
   movesInGame <- chessStats$moveCount
   movesInGame <- placeInBuckets(movesInGame)
@@ -52,6 +61,8 @@ moveInGameBoxPlot <- function() {
   return(box)
 }
 
+
+# builds a heat map to show the most common winning first moves.
 winningMovesHeatMap <- function() {
   firstWinnerCnt <- chessStats$firstWinnerMoveCount
   ggplot(data=firstWinnerCnt,aes(x=rw,y=col))+
@@ -61,6 +72,8 @@ winningMovesHeatMap <- function() {
     theme_classic()
 }
 
+
+# plots the number of games played every year
 plotYearlyGames <- function() {
   yGames <- chessStats$yearlyGames
   yGames$yearDate <- as.Date(yGames$game_yr,"%Y")
@@ -71,4 +84,4 @@ plotYearlyGames <- function() {
     ggtitle("A Time series of yearly game count") 
 }
 
-plotYearlyGames()
+

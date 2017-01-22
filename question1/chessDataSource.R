@@ -1,5 +1,8 @@
 library("RSQLite")
 
+# contains helper functions to open and query the database
+# where games are stored.
+
 dbChessConnection <- function() {
   con <- dbConnect(RSQLite::SQLite(), dbname="db/chess.db")
   return(con)

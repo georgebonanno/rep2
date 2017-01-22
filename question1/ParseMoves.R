@@ -1,6 +1,6 @@
-#moveNumber <- parseMoveNumber(i,moves)
-#whiteMove <- parseWhiteMove(i,moves)
-#blackMove <- parseBlackMove(i,moves)
+# ParseMoves.R contains the function to parse the moves of chess game as
+# defined in the pgn format. The parseMoves <- function(moves,endResult)
+# parsed a moves string that end with result endResult.
 
 indexOf <- function(str,i) {
   return (substring(str,i,i))
@@ -103,6 +103,8 @@ updateCastlingMoves <- function(whiteMove,
   return(castlingMoves)
 }
 
+# The parseMoves <- function(moves,endResult)
+# parsed a moves string that end with result endResult.
 parseMoves <- function(moves,endResult) {
   #move pattern consists of a number, space followed
   #by the steps of each players separated by steps

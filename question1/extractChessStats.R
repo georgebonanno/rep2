@@ -1,5 +1,8 @@
 source("chessDataSource.R")
 
+# extracts the statistics needed for visualisation by issuing queries to the
+# sql lite database found in db/chess.db
+
 firstWinnerMoveQuery <- '
 select * from (
 select first_move,
@@ -21,6 +24,8 @@ numberOfMovesCount <- 'select substr(date_of_game,1,4) game_yr,move_count from g
 yearlyGamesQuery <- 'select substr(g.date_of_game,1,4) game_yr,count(*) number_of_games from games g 
 group by substr(g.date_of_game,1,4)'
 
+
+# executes all queries and returns a list with their result.
 retrievefirstWinnerMoveCount <- function() {
   #initialise con to NA to allow finally 
   #block to close con only if a connection
