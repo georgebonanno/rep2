@@ -13,6 +13,7 @@ orderDates <- (exFeatures$date[order(exFeatures$date)])
 orderDates[1]
 orderDates[length(orderDates)]
 
+uniqueDates <- unique(orderDates)
 uniqueDates <- uniqueDates[order(uniqueDates)]
 length(uniqueDates)
 
