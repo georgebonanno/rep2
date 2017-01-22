@@ -3,12 +3,19 @@ library(stringi)
 library(stringr)
 source('propertyFeatureExtraction.R')
 
+# extracts the features from the adverts found int the 'data' folder.
+
+# extract the article date 
 extractDate <- function(dateStr) {
   parsedDate <- gsub('.*?[^,]+, ([^ ]+) ([^,]+), ([0-9]+).*','\\2-\\1-\\3',dateStr)
   extractedDate <- as.Date(c(parsedDate),'%d-%B-%Y')
   return(extractedDate)
 }
 
+# attempts to parse all the adverts in an html file by looking 
+# at the li nodes described by the css selector 'li > p,.classified_date'.
+# every parsed advert (i.e. advert date, locality, price etc) is printed 
+# to standard out.
 readForPropertyForSale <- function(f) {
   html <- read_html(f)
   as <- html %>% html_nodes('li > p,.classified_date') %>% html_text()
@@ -30,15 +37,16 @@ readForPropertyForSale <- function(f) {
   }
 }
 
+# process html files in directory sourceDir.
 extractDataFromDir <- function(sourceDir) {
   htmlFiles <- list.files(sourceDir,pattern="*.html*")
   fileToHtmlTextInfo <- list()
   
-  #htmlFiles <- htmlFiles[1:1]
   for (htmlFile in htmlFiles) {
     pathName <- paste('data','/',htmlFile,sep = "")
     readForPropertyForSale(pathName)
   }
 }
 
+# extract html files from the 'data' folder
 extractDataFromDir('data')

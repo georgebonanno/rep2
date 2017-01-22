@@ -84,4 +84,12 @@ plotYearlyGames <- function() {
     ggtitle("A Time series of yearly game count") 
 }
 
-
+# show graphs 
+plotYearlyGames()
+ggsave("yearlyGames.png")
+winningMovesHeatMap()
+ggsave("winningMoves.png")
+moveInGameBoxPlot()
+ggsave("movesInGame.png")
+resultCountBarPlot()
+ggsave("resultCount.png")

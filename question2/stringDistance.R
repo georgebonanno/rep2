@@ -1,5 +1,8 @@
 library(stringdist)
 
+# functions that allow the string distance to be computed between a given
+# string and the valid location (stored in places.txt)
+
 places <- scan("places.txt",what="",sep="\n")
 
 placeAsPrefix <- function(placeDescription) {

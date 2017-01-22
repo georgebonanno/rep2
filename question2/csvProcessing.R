@@ -1,7 +1,11 @@
+# loads the extracted features from 'unque_features.csv' and performs the
+# necessary imputations, outlier removals and error correction
+
 pastePrint <- function(...,sepr=" ") {
   print(paste(...,sep=sepr))
 } 
 
+# correct errors
 correctErrors <- function(propDetails) {
   #  correction of price since '250m000' was interpreted
   #  as 250m rather than 250,000 EUR for townhouse in 
@@ -16,6 +20,7 @@ correctErrors <- function(propDetails) {
   return(propDetails)
 }
 
+# load extracted attribute from csv
 propertyDetails <- read.csv("unique_features.csv",
                             header = TRUE,sep = ",",
                             na.strings = c(""),
@@ -25,10 +30,12 @@ propertyDetails <- read.csv("unique_features.csv",
 
 
 
+# filter adverts with an undefined location
 propertyDetails <- propertyDetails[!is.na(propertyDetails$location),]
 
 propertyDetails$price_euro <- as.numeric(propertyDetails$price_euro)
 
+# filter adverts with more than one unknown
 propDetails <- 
    propertyDetails[!is.na(propertyDetails$location) &
                   (ifelse(is.na(propertyDetails$price_euro),1,0)+
@@ -36,10 +43,11 @@ propDetails <-
                   ifelse(is.na(propertyDetails$area_sqm),1,0)
                   <= 1),]
 
+# correct any errors
 propDetails <- correctErrors(propDetails)
 
+
 prices <- propDetails[!is.na(propDetails$price_euro),]
-#head(prices[order(-prices$price_euro),],20)
 
 numberOfProperties <- dim(propDetails)[1]
 
@@ -59,6 +67,7 @@ uniqueLocationWithDefinedPrice <- unique(propDetails[is.na(propDetails$price_eur
 
 #  assumption: area of a given property type (e.g. apartment) does not
 #  is almost constant in a given location
+#  price imputation is taken by taken the median price in that location
 imputePrices <- function(propDetails) {
   medianPricePerLocation <-aggregate(list(price=propDetails$price_euro),
                                      by=list(location=propDetails$location),
@@ -82,6 +91,7 @@ imputePrices <- function(propDetails) {
   return(propDetails)
 }
 
+#  area imputation is taken by taken the median area of that property type
 imputeArea <- function(propDetails) {
   medianAreaForPropertyType <- aggregate(x=list(area=propDetails$area_sqm),
                                          by=list(propType=propDetails$property_type),
@@ -106,6 +116,7 @@ imputeArea <- function(propDetails) {
 propDetails <- imputePrices(propDetails)
 propDetails <- imputeArea(propDetails)
 
+# remove 'HOSTELS' since no hostel adverts has a defined price
 removeWithMissingValues <- function(propDetails) {
   propDetails <- propDetails[propDetails$property_type!= 'HOSTEL',]
   
@@ -114,6 +125,7 @@ removeWithMissingValues <- function(propDetails) {
   return (propDetails)
 }
 
+# remove outliers (the ranges were determine after plotting box plot)
 removeOutliers <- function(propDetails) {
   propDetails <- propDetails[propDetails$price_euro >= 10000,]
   propDetails <- propDetails[propDetails$price_euro <= 3e6,]

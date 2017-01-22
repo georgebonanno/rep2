@@ -1,12 +1,17 @@
+# contains helper function to extract features from the adverts such as 
+# locality, price and area.
+
 library(stringr)
 library(stringi)
 source('locationFiltering.R')
 source('propertyNameExtraction.R')
 
+
 pastePrint <- function(...,sepr=" ") {
   print(paste(...,sep=sepr))
 } 
 
+# returns if the argument is a valid advert
 validPropertyDescs <- function(line) {
 
   
@@ -44,6 +49,7 @@ validPropertyDescs <- function(line) {
     
 }
 
+# lists the foreign countries
 foreignCountries <- c(
   "BAHAMAS",
   "FRANCE",
@@ -60,6 +66,8 @@ isNumericFormat <- function(s) {
   return(grepl("^[0-9]+(\\.[0-9]+)?$",s));
 }
 
+
+# attempts to extracts the area from the advert.
 extractArea <- function(propertyDesc) {
   area <- gsub(".*?([,0-9\\.]+) *sqm.*","\\1",propertyDesc,ignore.case = TRUE)
   area <- gsub("[,]",replacement = "",area)
@@ -91,6 +99,9 @@ extractArea <- function(propertyDesc) {
   
 }
 
+# returns the multiplier for the currency values. e.g. 
+# 1000 is returned for currencyValues = 'K', and 
+# 1e6 is returns for currencyValues = 'M'
 multiplierForUnits <- function(currencyValues) {
   if (grepl("[0-9]+[MK]$",currencyValues,ignore.case = TRUE)) {
     if (endsWith(currencyValues,"M")) {
@@ -113,6 +124,8 @@ multiplierForUnits <- function(currencyValues) {
   return(multiplier)
 }
 
+
+# attempts to extract the price from the advert
 extractPrices <- function(line) {
 
   matches <- gregexpr("€(och)?([0-9 ,\\.]+ *[0-9,\\.]+[mk]?)",
@@ -140,6 +153,8 @@ extractPrices <- function(line) {
   return(currencyValues)
 }
 
+# extracts the price from the advert. It will compute the actual price
+# if the advert is defines the price in euro per unit area.
 extractPricePossiblyWithArea <- function(line,area) {
   matches <- gregexpr("€(och)?([0-9 ,\\.]+) *[\\/]sqm",
                       line,ignore.case = TRUE,perl = TRUE)
@@ -157,6 +172,9 @@ extractPricePossiblyWithArea <- function(line,area) {
   return(currencyValues)
 }
 
+
+# returns the first price found if there is more than one price
+# (the second price is probaly a rent value)
 firstPriceFound <- function(extractedPrices) {
   if (length(extractedPrices) > 0) {
     firstPrice <- extractedPrices[[1]][1]
@@ -167,6 +185,7 @@ firstPriceFound <- function(extractedPrices) {
   return(firstPrice)
 }
 
+# returns the second currency value extracted form the advert
 secondPriceFound <- function(extractedPrices) {
   extractedPrices <- unlist(extractedPrices,recursive = TRUE)
   if (length(extractedPrices) > 1) {
@@ -180,10 +199,14 @@ secondPriceFound <- function(extractedPrices) {
   return(secondPrices)
 }
 
+# returns if the location is valid (i.e. is not a foriegn country or there is
+# no 'rent' in the argument)
 validLocation <- function(loc) {
   return (!isForeignCountry(loc) && !grepl("rent",loc,ignore.case = TRUE));
 }
 
+# extracts all attributes from the advert passed as a string (line) and
+# returns them as a comma separated list (location,price,area...)
 extractFeatures <- function(line) {
   if (validPropertyDescs(line)) {
     location <- gsub("([^\\.:]+)[\\.:].*","\\1",line)
@@ -227,4 +250,3 @@ extractFeatures <- function(line) {
   return(entireDescriptions)
 }
 
-extractFeatures("VALLETTA. Converted palazzino, permit for extension. Ideal as a guesthouse / residence. &euro;890,000 FH. Phone 9926 3750.</p>")

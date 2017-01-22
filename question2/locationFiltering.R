@@ -1,7 +1,10 @@
 library(stringr)
 
+# defines functions to filter and correct localities found in adverts
+
 source('stringDistance.R')
 
+# maps locality to the correct (or general) locality
 locationMappings <- list(
   "ŻEBBUĠ"="ĦAŻ-ŻEBBUĠ",
   "KENNEDY GROVE AREA"="ST PAUL'S BAY",
@@ -149,6 +152,7 @@ locationMappings <- list(
   "LANDRIJIET"="RABAT"
 )
 
+# a list of incorrect locations.
 incorrectLocs <- c(
   'APARTMENT',
   'AMAZING',
@@ -262,6 +266,7 @@ incorrectLocs <- c(
 
 )
 
+# returns the corrected location using locationMappings
 correctLocation <- function(location) {
   correctedLoc <- locationMappings[[location]];
   if (!is.null(correctedLoc)) {
@@ -270,6 +275,8 @@ correctLocation <- function(location) {
   return(location)
 }
 
+# extract the extact location from the first phrase of the
+# advert.
 extractExactLocation <- function(locationWithComma) {
   if (grepl(',',locationWithComma)) {
     exactLocation <- (gsub("([^,]+)[ ,]*.*","\\1",locationWithComma))
@@ -281,6 +288,10 @@ extractExactLocation <- function(locationWithComma) {
   return(exactLocation)
 }
 
+# extracts the location from the advert by first checking
+# whether it start with prefixs such as "THE" or "SAN". If yes,
+# it considers other words as the possible location. If not, only
+# the first word is considered for location.
 extractLocationWithPrefix <- function(loc) {
   maltesePrefixes <- c("TA'","SAN","THE","ST")
   
@@ -299,6 +310,7 @@ extractLocationWithPrefix <- function(loc) {
   return(locationWithPrefix)
 }
 
+# extract the location if the first world has an article (e.g HAZ-ZEBBUG)
 nameWithArticle <- function(extractLocation) {
   if (grepl("^([^ ]+ +[A-ZĠŻĦ][A-ZĠŻĦ]*-[^ ]+)$",extractLocation)) {
     location=extractLocation;
@@ -334,6 +346,9 @@ isIncorrectLocation <- function(l) {
              })))
 }
 
+# resolves the location by checking whether the location has prefixes
+# article etc from from the first phrase (sentence) of the advert passed
+# as a argument.
 resolveLocation <- function(extractedLocation) {
   
   extractedLocation <- toupper(extractedLocation)
